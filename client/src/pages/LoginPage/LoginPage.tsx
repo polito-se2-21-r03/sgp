@@ -17,25 +17,35 @@ export function LoginPage() {
 
   const handleSubmit = useCallback(async (_event) => {
     try {
-      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/login', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: email, password: password })
-      })
-      const response = await data.json();
+      // const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/login', {
+      //   method: 'POST',
+      //   credentials: 'include',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({ email: email, password: password })
+      // })
+      // const response = await data.json();
 
-      if (response.status === 'success') {
-        await asyncLocalStorage.setItem('user', JSON.stringify(response.data));
+      // if (response.status === 'success') {
+      //   await asyncLocalStorage.setItem('user', JSON.stringify(response.data));
 
+      //   // Redirect
+      //   // history.push({
+      //   //   pathname: '/',
+      //   //   state: { user: response.data }
+      //   // });
+      //   window.location.href = '/';
+      // } else {
+      //   setLoginError(true);
+      // }
+
+      if (email === 'test@email.com' && password === 'password') {
+        await asyncLocalStorage.setItem('user', JSON.stringify({ firstname: 'Test', lastname: 'Test' }));
         // Redirect
-        // history.push({
-        //   pathname: '/',
-        //   state: { user: response.data }
-        // });
-        window.location.href = '/';
+        history.push({
+          pathname: '/',
+        });
       } else {
         setLoginError(true);
       }

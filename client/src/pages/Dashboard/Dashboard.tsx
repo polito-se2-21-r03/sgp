@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from '@shopify/polaris';
 
-import { TopBarMarkup, NavigationMarkup, DashboardDatePicker, ScadenzeList } from '../../components';
+import { TopBarMarkup, NavigationMarkup, DashboardDatePicker } from '../../components';
 
 import './Dashboard.scss';
 
@@ -160,22 +160,6 @@ export function Dashboard({ user }: any) {
             </Card>
           </div>
         </div>
-      </div>
-      <div className="scadenzeContent">
-        <Layout>
-          <Layout.AnnotatedSection
-            title="Scadenze"
-            description="Elenco delle polizze in scadenza nel periodo indicato."
-          >
-            <ScadenzeList
-              scadenze={scadenze}
-              frontItems={frontItems}
-              isLoading={isLoading}
-              handleFrontItems={handleFrontItems}
-              handleFrontItemsSort={handleFrontItemsSort}
-            />
-          </Layout.AnnotatedSection>
-        </Layout>
       </div>
     </Page>
   );

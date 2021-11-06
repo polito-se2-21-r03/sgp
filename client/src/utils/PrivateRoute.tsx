@@ -4,28 +4,31 @@ import { verifyToken } from './Common';
 
 export function PrivateRoute({ component: Compontent, path, roles, ...rest }: any) {
 
-  const [auth, setAuth] = useState(false);
+  const [auth, setAuth] = useState(true);
   const [goOn, setGoOn] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    firstname: 'Test',
+    lastname: 'Test'
+  });
 
-  useEffect(() => {
-    verifyToken()
-      .then((res: any) => {
-        setAuth(res.status);
-        if (res.data)
-          setUser(res.data.user)
-      })
-      .then(() => {
-        setGoOn(true);
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   verifyToken()
+  //     .then((res: any) => {
+  //       setAuth(res.status);
+  //       if (res.data)
+  //         setUser(res.data.user)
+  //     })
+  //     .then(() => {
+  //       setGoOn(true);
+  //     })
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  if (!goOn) {
-    return (
-      <div>Loading...</div>
-    )
-  }
+  // if (!goOn) {
+  //   return (
+  //     <div>Loading...</div>
+  //   )
+  // }
 
   let res;
 

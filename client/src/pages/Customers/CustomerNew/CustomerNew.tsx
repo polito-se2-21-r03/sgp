@@ -23,7 +23,7 @@ import {
   Toast,
 } from '@shopify/polaris';
 
-import { TopBarMarkup, NavigationMarkup, contextControlMarkup, ModalWithList, } from '../../../components';
+import { TopBarMarkup, NavigationMarkup, contextControlMarkup, } from '../../../components';
 
 import './CustomerNew.scss';
 import { SearchMinor } from '@shopify/polaris-icons';
@@ -727,12 +727,6 @@ export function CustomerNew({ user }: any) {
       </FormLayout>
     </div>);
 
-
-  const emailJSX = (
-    <ModalWithList labelName='Email' modalContent={modalEmail} modalStates={[txtEmailValue, emailType]} handleAdd={handleAddEmail} handleUpdate={handleModEmail}
-      handleAddSave={handleEmailAdd} handleUpdateSave={handleEmailModify} handleDelete={handleDelEmail} />
-  );
-
   const modalPhone = (
     <div>
       <FormLayout>
@@ -749,12 +743,6 @@ export function CustomerNew({ user }: any) {
         </FormLayout.Group>
       </FormLayout>
     </div>);
-
-
-  const phoneJSX = (
-    <ModalWithList labelName='Numero di Telefono' modalContent={modalPhone} modalStates={[txtPhoneValue, txtPhoneReferenceValue]} handleAdd={handleAddPhone} handleUpdate={handleModPhone}
-      handleAddSave={handlePhoneAdd} handleUpdateSave={handlePhoneModify} handleDelete={handleDelPhone} />
-  );
 
   const modalAddress = (
     <div>
@@ -779,12 +767,6 @@ export function CustomerNew({ user }: any) {
         </FormLayout.Group>
       </FormLayout>
     </div>);
-
-
-  const addressJSX = (
-    <ModalWithList labelName='Indirizzo' modalContent={modalAddress} modalStates={[txtAddressValue, txtCityValue, txtPostalCodeValue, txtCountryValue, txtAddressReferenceValue]} handleAdd={handleAddAddress} handleUpdate={handleModAddress}
-      handleAddSave={handleAddressAdd} handleUpdateSave={handleAddressModify} handleDelete={handleDelAddress} />
-  );
 
   /**
    * Search jobs
@@ -1055,10 +1037,10 @@ export function CustomerNew({ user }: any) {
                 }
               </FormLayout.Group>
               <FormLayout.Group>
-                {emailJSX}
+                {/* {emailJSX} */}
               </FormLayout.Group>
               <FormLayout.Group>
-                {phoneJSX}
+                {/* {phoneJSX} */}
               </FormLayout.Group>
             </FormLayout>
           </Card>
@@ -1068,7 +1050,7 @@ export function CustomerNew({ user }: any) {
           title="Indirizzo"
         >
           <Card sectioned>
-            {addressJSX}
+            {/* {addressJSX} */}
           </Card>
         </Layout.AnnotatedSection>
         {/* Note */}
