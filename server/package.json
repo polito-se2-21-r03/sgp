@@ -1,0 +1,17 @@
+{
+  "name": "se2-r03-spg-server",
+  "version": "1.0.0",
+  "description": "SE2 Office Queue management server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Team R3",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "express-validator": "^6.11.1",
+    "sqlite3": "^5.0.2"
+  }
+}

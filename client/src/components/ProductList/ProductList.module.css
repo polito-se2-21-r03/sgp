@@ -1,0 +1,21 @@
+.dataScroll {
+  overflow-x: auto;
+}
+
+.dataContainer {
+  display: table-row;
+}
+
+.dataCol {
+  z-index: 1;
+  text-align: left;
+  padding: .8rem 1.6rem;
+  white-space: nowrap;
+  display: table-cell;
+}
+
+.dataCol:first-child {
+  max-width: 35rem;
+  text-overflow: ellipsis;
+  padding-left: 0;
+}

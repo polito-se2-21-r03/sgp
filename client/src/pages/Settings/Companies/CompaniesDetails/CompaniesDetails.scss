@@ -1,0 +1,193 @@
+$nav-collapsed: 769px;
+$top-bar-height: 56px;
+
+.ContextControl {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  height: $top-bar-height;
+}
+
+.ShopName {
+  margin-left: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--p-text, black);
+
+  @media only screen and (min-width: $nav-collapsed) {
+    color: var(--p-text, white);
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.polizzeSectionHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  border-bottom: .1rem solid var(--p-border-subdued);
+}
+
+.polizzeSectionInitial {
+  position: relative;
+  display: flex;
+  padding: 0;
+
+  @media (min-width: 30.625em) {
+    padding: 0 2rem .4rem 1.6rem;
+  }
+
+  @media (max-width: 48.0625em) and (min-width: 30.625em),
+  (min-width: 45.625em) {
+    padding: 0 2rem .4rem 1.6rem;
+  }
+}
+
+.polizzeSectionAvatar {
+  z-index: 4;
+  display: none;
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    bottom: 0;
+    z-index: -1;
+    left: 3.45rem;
+    width: .3rem;
+    background: var(--p-border-subdued, #dfe3e8);
+  }
+
+  @media (min-width: 30.625em) {
+    display: block;
+    flex: 0 0 auto;
+    margin-top: .4rem;
+    margin-right: .8rem;
+  }
+
+  @media (max-width: 48.0625em) and (min-width: 30.625em),
+  (min-width: 45.625em) {
+    display: block;
+    flex: 0 0 auto;
+    margin-top: .4rem;
+    margin-right: .8rem;
+  }
+}
+
+.notaContainer {
+  margin-top: 2rem;
+}
+
+.polizzeMarkup {
+  display: block;
+
+  @media (max-width: 1044px) {
+    display: none;
+  }
+}
+
+.polizzeSection {
+  display: none;
+
+  @media (max-width: 1044px) {
+    display: block;
+  }
+}
+
+.polizzeSectionBlock:first-child .polizzeSectionSubheading:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  left: 3.45rem;
+  width: .3rem;
+  background: var(--p-border-subdued, #dfe3e8);
+}
+
+.polizzeSectionBlock:not(:first-child) .polizzeSectionSubheading:after {
+  content: "";
+  position: absolute;
+  top: -3.1rem;
+  bottom: 0;
+  z-index: 1;
+  left: 3.45rem;
+  width: .3rem;
+  background: var(--p-border-subdued, #dfe3e8);
+}
+
+.polizzeSectionBlock:not(:first-child) .polizzeSectionSubheading:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  border-top: var(--p-override-none, .1rem solid var(--p-border-subdued));
+}
+
+.polizzeSectionBlock.error .polizzeSectionSubheading {
+  color: #bf0711;
+}
+
+.polizzeSectionSubheading {
+  position: relative;
+  color: var(--p-text-subdued, #637381);
+  padding: 1rem 0 1rem 6.15rem;
+}
+
+.polizzeSectionBlock:not(:first-child) .polizzeSectionSubheading {
+  position: relative;
+  padding-top: 2rem;
+}
+
+.polizzeSectionBlock:not(:first-child) .polizzeSectionSubheading {
+  padding-top: 3.2rem;
+}
+
+.polizzeSectionUl {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.polizzeSectionLi {
+  position: relative;
+  break-inside: avoid-page;
+}
+
+.polizzeSectionMargin {
+  margin-bottom: 1.6rem;
+}
+
+.polizzeSectionText {
+  display: flex;
+  align-items: center;
+}
+
+.polizzeSectionPoint {
+  z-index: 2;
+  flex-shrink: 0;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin-right: 1.6rem;
+  margin-left: 2.65rem;
+  border: 3px solid var(--p-background, #dfe3e8);
+  border-radius: 100%;
+  background-color: var(--p-icon-subdued, #c4cdd5);
+}
+
+.polizzeSectionBlock.error .polizzeSectionP {
+  color: #de3618;
+}
+
+.polizzeSectionP {
+  flex: 1 1 auto;
+  padding-right: 1.6rem;
+  word-break: break-word;
+}
