@@ -1,6 +1,6 @@
 const express = require('express');
-const { check, validationResult } = require('express-validator');
-
+const Validator = require('jsonschema').Validator;
+const OrderRequestSchema = require("./schemas/order-request");
 const dao = require("./dao");
 const PORT = 3001;
 
@@ -71,10 +71,6 @@ app.post('/api/tickets', [
     check('officeId').isInt(),
     check('serviceTypeId').isInt(),
 ], async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() })
-    }
     try {
         const ticket = {
             officeId: req.body.officeId,
@@ -87,6 +83,37 @@ app.post('/api/tickets', [
             .catch(() => res.status(503).json({ error: `Database error during the creation of ticket.` }))
     } catch (err) {
         res.status(503).json({ error: `Database error during the creation of ticket.` });
+    }
+
+});
+
+app.post('/api/order', async (req, res) => {
+    const v = new Validator();
+    if (!v.validate(req.body, OrderRequestSchema)) {
+        return res.status(422).json({ errors: "Invalid json schema in the body" })
+    }
+    try {
+        const data = JSON.stringify(req.body);
+        const {employeeId, clientId, products} = data
+        const order = {
+            clientId: clientId,
+            employeeId: employeeId,
+            status: "CREATED",
+            createDate: Date.now()
+        };
+        await dao.createOrder(order)
+            .then(async orderId => {
+                if (orderId) {
+                    for (let product in products){
+                        await dao.insertOrderProduct(orderId, product.productId, product.amount, product.price)
+                            .then(() => res.json({ ticketId: newTicket, ewt: ticket.ewt }))
+                            .catch(() => res.status(503).json({ error: `Database error during the insertion of products.` }))
+                    }
+                }
+            })
+            .catch(() => res.status(503).json({ error: `Database error during the creation of order.` }))
+    } catch (err) {
+        res.status(503).json({ error: `Database error during the creation of order.` });
     }
 
 });
