@@ -4,7 +4,7 @@
   "description": "SE2 Office Queue management server",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Team R3",
   "license": "ISC",
@@ -14,5 +14,8 @@
     "express-validator": "^6.11.1",
     "sqlite3": "^5.0.2",
     "jsonschema": "^1.4.0"
+  },
+  "devDependencies": {
+    "jest": "^27.3.1"
   }
 }
