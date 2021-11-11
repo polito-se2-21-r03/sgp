@@ -87,6 +87,14 @@ app.use(express.json());
 //
 // });
 
+app.get('/api/order', async (req, res) => await dao.getOrders()
+    .then(data => res.json(data))
+    .catch(err => res.status(500).json(err.message)));
+
+app.get('/api/product', async (req, res) => await dao.getProducts()
+    .then(data => res.json(data))
+    .catch(err => res.status(500).json(err.message)));
+
 app.post('/api/order', async (req, res) => {
     const v = new Validator();
     const body = v.validate(req.body, OrderRequestSchema.orderRequestSchema);
