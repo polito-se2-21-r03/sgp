@@ -1,4 +1,4 @@
-export const orderRequestSchema = {
+exports.orderRequestSchema = {
     "id": "/OrderRequestSchema",
     "type": "object",
     "properties": {
