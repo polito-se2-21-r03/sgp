@@ -144,8 +144,8 @@ exports.createOrder = (order) => {
 
 exports.insertOrderProduct = (orderId, productId, amount, price) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO order_product (orderId, productId, amount, price) VALUES(?, ?, ?, ?)';
-        db.run(sql, [orderId, productId, amount, price], function (err) {
+        const sql = 'INSERT INTO order_product (orderId, productId, amount) VALUES(?, ?, ?)';
+        db.run(sql, [orderId, productId, amount], function (err) {
             if (err) {
                 reject(err);
                 return;

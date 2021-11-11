@@ -111,7 +111,7 @@ app.post('/api/order', async (req, res) => {
                         if(!await dao.checkProductAvailability(product.productId, product.amount)){
                             res.status(503).json({ error: `Product ${product.productId} not found or not available` })
                         }
-                        await dao.insertOrderProduct(orderId, product.productId, product.amount, product.price)
+                        await dao.insertOrderProduct(orderId, product.productId, product.amount)
                     }))
                         .then(() => res.json({ orderId: orderId}))
                         .catch(err => res.status(503).json({ error: err.message }))
