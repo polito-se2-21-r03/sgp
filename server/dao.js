@@ -129,6 +129,32 @@ exports.createTicket = (ticket) => {
     })
 };
 
+exports.getOrders = () => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM orders";
+        db.all(sql, [], (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+    });
+}
+
+exports.getProducts = () => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM product";
+        db.all(sql, [], (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+    });
+}
+
 exports.createOrder = (order) => {
     return new Promise((resolve, reject) => {
         const sql = 'INSERT INTO orders (clientId, employeeId, status, creationDate) VALUES(?, ?, ?, ?)';
