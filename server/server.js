@@ -94,26 +94,26 @@ app.post('/api/order', async (req, res) => {
         return res.status(422).json({ errors: body.errors })
     }
     try {
-        const {employeeId, clientId, products} = req.body
+        const { employeeId, clientId, products } = req.body
         const order = {
             clientId: clientId,
             employeeId: employeeId,
             status: "CREATED",
             creationDate: Date.now()
         };
-        if(!await dao.getClientById(clientId) || !await dao.getEmployeeById(employeeId)){
+        if (!await dao.getClientById(clientId) || !await dao.getEmployeeById(employeeId)) {
             res.status(503).json({ error: `Client or Employee not found` })
         }
         await dao.createOrder(order)
             .then(async orderId => {
                 if (orderId) {
                     await Promise.all(products.map(async product => {
-                        if(!await dao.checkProductAvailability(product.productId, product.amount)){
+                        if (!await dao.checkProductAvailability(product.productId, product.amount)) {
                             res.status(503).json({ error: `Product ${product.productId} not found or not available` })
                         }
                         await dao.insertOrderProduct(orderId, product.productId, product.amount)
                     }))
-                        .then(() => res.json({ orderId: orderId}))
+                        .then(() => res.status(200).json({ orderId: orderId }))
                         .catch(err => res.status(503).json({ error: err.message }))
                 }
             })
@@ -125,3 +125,5 @@ app.post('/api/order', async (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}/`));
+
+module.exports = app;
