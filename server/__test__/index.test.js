@@ -1,5 +1,6 @@
 const supertest = require('supertest');
 const app = require('../server');
+const dao = require('../dao');
 
 /**
  * Test model for non-API calls
@@ -86,5 +87,35 @@ describe("Testing the movies API", () => {
   // })
 
 });
+
+describe("Test getClientById", () => {  
+  it("Should get value from client table", async () => {
+    const client = await dao.getClientById(1);
+    expect(client.clientId).toBe(1); 
+  })
+})
+
+describe("Test getEmployeeById", () => {  
+  it("Should get value from employee table", async () => {
+    const employee = await dao.getEmployeeById(1);
+    expect(employee.employeeId).toBe(1); 
+  })
+})
+
+describe("Test checkProductAvailability", () => {  
+  it("Should get boolean from product table", async () => {
+    const productAvailability = await dao.checkProductAvailability(1, 100);
+    expect(productAvailability).toBe(true); //verificare anche il caso false?
+  })
+})
+
+describe("Test insertOrderProduct", () => {  
+  it("Should get boolean from order_product table", async () => {
+    const insertOrderProduct = await dao.insertOrderProduct(2, 2, 20)
+    expect(insertOrderProduct).toBe(true); 
+  })
+})
+
+
 
 

@@ -168,7 +168,7 @@ exports.createOrder = (order) => {
     })
 };
 
-exports.insertOrderProduct = (orderId, productId, amount, price) => {
+exports.insertOrderProduct = (orderId, productId, amount) => {
     return new Promise((resolve, reject) => {
         const sql = 'INSERT INTO order_product (orderId, productId, amount) VALUES(?, ?, ?)';
         db.run(sql, [orderId, productId, amount], function (err) {
