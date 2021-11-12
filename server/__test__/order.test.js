@@ -3,24 +3,6 @@ const app = require('../server');
 
 /**
  * Test create order API
- * 
- * 
-{
-  "clientId": 1,
-  "employeeId": 1,
-  "products": [
-    {
-      "productId": 1,
-      "amount": 3,
-      "price": 3.4
-    },
-    {
-      "productId": 2,
-      "amount": 1,
-      "price": 0.4
-    }
-  ]
-}
  */
 describe("Testing the movies API", () => {
 
@@ -45,7 +27,7 @@ describe("Testing the movies API", () => {
 
     const response = await supertest(app).post('/api/order').send(body)
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(503);
 
   });
 
