@@ -12,6 +12,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "express-validator": "^6.11.1",
+    "sequelize": "^6.3.3",
     "sqlite3": "^5.0.2",
     "jsonschema": "^1.4.0"
   },
