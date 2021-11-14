@@ -3,6 +3,9 @@ export { Dashboard } from './Dashboard';
 
 export { ForgotPasswordPage } from './ForgotPasswordPage';
 
+/** Orders */
+export * from './Orders';
+
 /** Products */
 export * from './Products';
 

@@ -80,7 +80,7 @@ export function Dashboard({ user }: any) {
       <div className="dashboardHeader">
         <Stack alignment="center">
           <DashboardDatePicker handleAnalytics={handleAnalytics} />
-          <TextStyle variation="subdued">Usato per la visualizzazione delle scadenze</TextStyle>
+          <TextStyle variation="subdued">Change time window</TextStyle>
         </Stack>
       </div>
       <div className="dashboardContent">
@@ -95,7 +95,7 @@ export function Dashboard({ user }: any) {
                   preferredPosition="above"
                 >
                   <Heading>
-                    <span className="cardTitle">Premio netto</span>
+                    <span className="cardTitle">Total sales</span>
                   </Heading>
                 </Tooltip>
                 {isLoading ? (
@@ -120,7 +120,7 @@ export function Dashboard({ user }: any) {
                   preferredPosition="above"
                 >
                   <Heading>
-                    <span className="cardTitle">Provvigioni</span>
+                    <span className="cardTitle">Orders</span>
                   </Heading>
                 </Tooltip>
                 {isLoading ? (
@@ -146,7 +146,7 @@ export function Dashboard({ user }: any) {
                   preferredPosition="above"
                 >
                   <Heading>
-                    <span className="cardTitle">Clienti</span>
+                    <span className="cardTitle">Customers</span>
                   </Heading>
                 </Tooltip>
                 {isLoading ? (

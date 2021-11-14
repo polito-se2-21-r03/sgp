@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../../nano_b.svg';
+import logo from '../../logo_transparent.png';
 
 export const contextControlMarkup = (
   <div className="ContextControl">
