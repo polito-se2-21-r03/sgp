@@ -1,13 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    sequelize.define('User', {
-        userId: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: DataTypes.INTEGER
-        },
+    sequelize.define('user', {
         username: {
             allowNull: false,
             type: DataTypes.STRING,
@@ -35,8 +29,8 @@ module.exports = (sequelize) => {
                 isIn: [['ADMIN', 'EMPLOYEE', 'DELIVERYMAN', 'CLIENT']]
             }
         },
-        creationDate: {
-            allowNull: false,
+        createdAt: {
+            allowNull: true,
             type: DataTypes.DATE
         },
     });

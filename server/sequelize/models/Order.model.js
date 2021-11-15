@@ -1,13 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    sequelize.define('Order', {
-        orderId: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: DataTypes.INTEGER
-        },
+    sequelize.define('order', {
         clientId: {
             allowNull: false,
             type: DataTypes.INTEGER,
@@ -19,12 +13,13 @@ module.exports = (sequelize) => {
         status: {
             allowNull: false,
             type: DataTypes.STRING,
-            validate: {
-                isIn: [['ISSUED', 'CREATED', 'DELIVERED', 'COMPLETED']]
-            }
         },
-        creationDate: {
-            allowNull: false,
+        createdAt: {
+            allowNull: true,
+            type: DataTypes.DATE
+        },
+        updatedAt: {
+            allowNull: true,
             type: DataTypes.DATE
         }
     });

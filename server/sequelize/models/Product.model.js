@@ -1,13 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    sequelize.define('Product', {
-        productId: {
-            allowNull: false,
-            autoIncrement: true,
-            primaryKey: true,
-            type: DataTypes.INTEGER
-        },
+    sequelize.define('product', {
         producerId: {
             allowNull: false,
             type: DataTypes.INTEGER,
@@ -19,16 +13,21 @@ module.exports = (sequelize) => {
         name: {
             allowNull: false,
             type: DataTypes.STRING,
-            validate: {
-                isIn: [['ISSUED', 'CREATED', 'DELIVERED', 'COMPLETED']]
-            }
         },
         price: {
             allowNull: false,
             type: DataTypes.DOUBLE,
         },
-        creationDate: {
+        type: {
             allowNull: false,
+            type: DataTypes.STRING
+        },
+        createdAt: {
+            allowNull: true,
+            type: DataTypes.DATE
+        },
+        updatedAt: {
+            allowNull: true,
             type: DataTypes.DATE
         }
     });
