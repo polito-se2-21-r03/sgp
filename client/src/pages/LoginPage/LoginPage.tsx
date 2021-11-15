@@ -5,7 +5,7 @@ import { Button, Form, FormLayout, TextField, InlineError } from "@shopify/polar
 import asyncLocalStorage from '../../utils/async-localstorage';
 
 import './Login.css';
-import logo from '../../nano_b.svg';
+import logo from '../../logo_transparent.svg';
 import { useHistory } from 'react-router';
 
 export function LoginPage() {
