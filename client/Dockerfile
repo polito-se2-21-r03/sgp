@@ -1,9 +1,9 @@
-FROM node:16 
+FROM node:14
+
 WORKDIR /client
 COPY . /client/
-
-#RUN npm run build
 RUN npm install
-EXPOSE 80
 
-CMD npm start
+EXPOSE 3000
+
+CMD ["npm", "start"]

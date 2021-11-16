@@ -1,18 +1,29 @@
 version: "3"
 services:
   server:
-    build: ./server
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
     container_name: server
+    image: server
     ports:
       - "3001:3001"
   client:
-    build: ./client
-    container_name: client
-    ports:
-      - "80:80"
-  sqlite3:
-    image: nouchka/sqlite3:latest
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
     stdin_open: true
-    tty: true
-    volumes:
-      - ./db/:/root/db/
+    container_name: client
+    image: client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+    links:
+      - server
+#  sqlite3:
+#    image: nouchka/sqlite3:latest
+#    stdin_open: true
+#    tty: true
+#    volumes:
+#      - ./db/:/root/db/
