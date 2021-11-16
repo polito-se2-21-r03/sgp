@@ -57,8 +57,14 @@ export function OrderList() {
         })
         const response = await data.json();
         if (response) {
-          setItems(response.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1));
-          setFrontItems(response.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1));
+          const tmp = [];
+          for (const item of response) {
+            item.name = customersMap.get(item.clientId);
+            tmp.push(item);
+          }
+
+          setItems(tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1));
+          setFrontItems(tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1));
           setIsLoading(false);
         } else {
           setIsLoading(false);
@@ -142,6 +148,26 @@ export function OrderList() {
     handleSelectionChange,
   } = useIndexResourceState(frontItems);
 
+  const renderStatusMarkup = (status) => {
+    switch (status) {
+      case 'COMPLETED':
+        return (<Badge progress="complete" status="success">Completed</Badge>);
+        break;
+      case 'CREATED':
+        return (<Badge progress="incomplete">Created</Badge>);
+        break;
+      case 'DELIVERED':
+        return (<Badge progress="partiallyComplete" status="attention">Issued</Badge>);
+        break;
+      case 'PENDING':
+        return (<Badge progress="partiallyComplete" status="warning">Pending</Badge>);
+        break;
+
+      default:
+        break;
+    }
+  }
+
   const rowMarkup = frontItems.map(
     (item, index) => (
       <IndexTable.Row
@@ -163,10 +189,10 @@ export function OrderList() {
           {dayjs(item.createdAt).format('DD MMM HH:mm')}
         </IndexTable.Cell>
         <IndexTable.Cell>
-          {item.status}
+          {renderStatusMarkup(item.status)}
         </IndexTable.Cell>
         <IndexTable.Cell>
-          {customersMap.get(item.clientId)}
+          {item.name}
         </IndexTable.Cell>
       </IndexTable.Row>
     ),
@@ -250,7 +276,7 @@ export function OrderList() {
           headings={[
             { title: 'Order' },
             { title: 'Date' },
-            { title: 'State' },
+            { title: 'Status' },
             { title: 'Customer' },
           ]}
           sort
