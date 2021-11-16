@@ -5,18 +5,10 @@ module.exports = (sequelize) => {
         orderId: {
             type: DataTypes.INTEGER,
             foreignKey: true,
-            references: {
-                model: 'order',
-                key: 'id'
-            }
         },
         productId: {
             type: DataTypes.INTEGER,
             foreignKey: true,
-            references: {
-                model: 'product',
-                key: 'id'
-            }
         },
         amount: {
             allowNull: false,

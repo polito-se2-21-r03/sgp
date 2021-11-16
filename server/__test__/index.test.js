@@ -60,6 +60,9 @@ describe("Testing get all products", () => {
  * Test get all orders
  */
 describe("Testing get all orders", () => {
+  beforeAll(async () => {
+    await reset();
+  })
   it("tests the base route and returns an array of orders", async () => {
     const response = await supertest(app).get('/api/order');
     expect(response.status).toBe(200);
@@ -70,6 +73,10 @@ describe("Testing get all orders", () => {
  * Test create order API
  */
 describe("Testing the movies API", () => {
+  beforeAll(async () => {
+    await reset();
+  })
+
   it("tests the base route and returns true for status", async () => {
     const body = {
       "clientId": 1,
@@ -123,8 +130,8 @@ describe("Test checkProductAvailability", () => {
 
 describe("Test insertOrderProduct", () => {  
   it("Should get boolean", async () => {
-    const insertOrderProduct = await models.order_product.create({orderId: 2, productId: 2,amount: 20})
-    expect(insertOrderProduct).toBe(true); 
+    const insertOrderProduct = await models.order_product.create({orderId: 2, productId: 2,amount: 20});
+    expect(insertOrderProduct.orderId).toBe(2);
   })
 })
 
