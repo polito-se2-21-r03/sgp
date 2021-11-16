@@ -1,6 +1,9 @@
 const supertest = require('supertest');
-const app = require('../server');
-const dao = require('../dao');
+const app = require('../index');
+const { reset } = require('../setup');
+const {models} = require("../sequelize");
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 /**
  * Test model for non-API calls
@@ -38,16 +41,28 @@ const dao = require('../dao');
  * Test get all products
  */
 describe("Testing get all products", () => {
+
+  beforeAll(async () => {
+    await reset();
+  })
+
   it("tests the base route and returns an array of products", async () => {
     const response = await supertest(app).get('/api/product');
     expect(response.status).toBe(200);
   });
+
+  // afterAll(async () => {
+  //   await sequelize.close()
+  // })
 });
 
 /**
  * Test get all orders
  */
 describe("Testing get all orders", () => {
+  beforeAll(async () => {
+    await reset();
+  })
   it("tests the base route and returns an array of orders", async () => {
     const response = await supertest(app).get('/api/order');
     expect(response.status).toBe(200);
@@ -58,6 +73,10 @@ describe("Testing get all orders", () => {
  * Test create order API
  */
 describe("Testing the movies API", () => {
+  beforeAll(async () => {
+    await reset();
+  })
+
   it("tests the base route and returns true for status", async () => {
     const body = {
       "clientId": 1,
@@ -90,29 +109,29 @@ describe("Testing the movies API", () => {
 
 describe("Test getClientById", () => {  
   it("Should get value from client table", async () => {
-    const client = await dao.getClientById(1);
-    expect(client.clientId).toBe(1); 
+    const client = await models.client.findByPk(1);
+    expect(client.id).toBe(1);
   })
 })
 
 describe("Test getEmployeeById", () => {  
   it("Should get value from employee table", async () => {
-    const employee = await dao.getEmployeeById(1);
-    expect(employee.employeeId).toBe(1); 
+    const employee = await models.employee.findByPk(1);
+    expect(employee.id).toBe(1);
   })
 })
 
 describe("Test checkProductAvailability", () => {  
-  it("Should get boolean from product table", async () => {
-    const productAvailability = await dao.checkProductAvailability(1, 100);
-    expect(productAvailability).toBe(true); //verificare anche il caso false?
+  it("Should get integer", async () => {
+    const productAvailability = await models.product.count({where: {id: 1, quantity: {[Op.gt]: 100}}});
+    expect(productAvailability).toBe(1);
   })
 })
 
 describe("Test insertOrderProduct", () => {  
-  it("Should get boolean from order_product table", async () => {
-    const insertOrderProduct = await dao.insertOrderProduct(2, 2, 20)
-    expect(insertOrderProduct).toBe(true); 
+  it("Should get boolean", async () => {
+    const insertOrderProduct = await models.order_product.create({orderId: 2, productId: 2,amount: 20});
+    expect(insertOrderProduct.orderId).toBe(2);
   })
 })
 

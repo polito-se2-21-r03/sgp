@@ -1,8 +1,9 @@
-FROM node:16
+FROM node:14
+
 WORKDIR /server
 COPY . /server/
 RUN npm install
 
 EXPOSE 3001
 
-CMD node server.js
+CMD ["node", "index.js"]

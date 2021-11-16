@@ -56,10 +56,9 @@ export function OrderList() {
           },
         })
         const response = await data.json();
-
         if (response) {
-          setItems(response.sort((a, b) => dayjs(b.creationDate).isAfter(a.creationDate) ? 1 : -1));
-          setFrontItems(response.sort((a, b) => dayjs(b.creationDate).isAfter(a.creationDate) ? 1 : -1));
+          setItems(response.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1));
+          setFrontItems(response.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1));
           setIsLoading(false);
         } else {
           setIsLoading(false);
@@ -123,12 +122,12 @@ export function OrderList() {
     if (sortValue === 'DATE_CREATED_DESC') {
       const tmp = [...items];
       // @ts-ignore
-      tmp.sort((a, b) => dayjs(b.creationDate).isAfter(a.creationDate) ? 1 : -1);
+      tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1);
       setFrontItems(tmp);
     } else if (sortValue === 'DATE_CREATED_ASC') {
       const tmp = [...items];
       // @ts-ignore
-      tmp.sort((a, b) => dayjs(b.creationDate).isAfter(a.creationDate) ? -1 : 1);
+      tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? -1 : 1);
       setFrontItems(tmp);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -146,22 +145,25 @@ export function OrderList() {
   const rowMarkup = frontItems.map(
     (item, index) => (
       <IndexTable.Row
-        id={item.orderId}
-        key={item.orderId}
-        selected={selectedResources.includes(item.orderId)}
+        id={item.id}
+        key={item.id}
+        selected={selectedResources.includes(item.id)}
         position={index}
       >
         <IndexTable.Cell>
           <TextStyle variation="strong">
-            <Link url={`/orders/${item.orderId}`} removeUnderline monochrome passHref>
+            <Link url={`/orders/${item.id}`} removeUnderline monochrome passHref>
               <a
                 style={{ color: 'inherit', textDecoration: 'none' }}
-                data-primary-link>#{item.orderId}</a>
+                data-primary-link>#{item.id}</a>
             </Link>
           </TextStyle>
         </IndexTable.Cell>
         <IndexTable.Cell>
-          {dayjs(item.creationDate).format('DD MMM HH:mm')}
+          {dayjs(item.createdAt).format('DD MMM HH:mm')}
+        </IndexTable.Cell>
+        <IndexTable.Cell>
+          {item.status}
         </IndexTable.Cell>
         <IndexTable.Cell>
           {customersMap.get(item.clientId)}
@@ -248,6 +250,7 @@ export function OrderList() {
           headings={[
             { title: 'Order' },
             { title: 'Date' },
+            { title: 'State' },
             { title: 'Customer' },
           ]}
           sort
