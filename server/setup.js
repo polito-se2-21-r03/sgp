@@ -12,12 +12,22 @@ async function reset()  {
         },
         {
             clientId: 2,
-            status: 'ISSUED',
+            status: 'PENDING',
             employeeId: 1,
         },
         {
             clientId: 1,
-            status: 'CREATED',
+            status: 'COMPLETED',
+            employeeId: 1,
+        },
+        {
+            clientId: 2,
+            status: 'PENDING',
+            employeeId: 1,
+        },
+        {
+            clientId: 2,
+            status: 'DELIVERED',
             employeeId: 1,
         },
     ]);
