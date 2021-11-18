@@ -41,13 +41,13 @@ export function ProductAll({ user }: any) {
   const actualPageMarkup = (
     <Page
       fullWidth
-      title="Polizze"
+      title="Products"
       primaryAction={
         <Button
           primary
           url='/products/new'
         >
-          Aggiungi polizza
+          Add product
         </Button>
       }
     >

@@ -48,24 +48,24 @@ export function NavigationMarkup({ user }: any) {
             },
             url: '/orders',
           },
-          // {
-          //   label: 'Products',
-          //   icon: ProductsMajor,
-          //   onClick: () => {
-          //     toggleIsLoading();
-          //     setNavItemActive('products');
-          //   },
-          //   url: '/products',
-          // },
-          // {
-          //   label: 'Customers',
-          //   icon: CustomersMajor,
-          //   onClick: () => {
-          //     toggleIsLoading();
-          //     setNavItemActive('customers');
-          //   },
-          //   url: '/customers',
-          // },
+          {
+            label: 'Products',
+            icon: ProductsMajor,
+            onClick: () => {
+              toggleIsLoading();
+              setNavItemActive('products');
+            },
+            url: '/products',
+          },
+          {
+            label: 'Customers',
+            icon: CustomersMajor,
+            onClick: () => {
+              toggleIsLoading();
+              setNavItemActive('customers');
+            },
+            url: '/customers',
+          },
         ]}
       />
       {user && user.role === 'admin' && (

@@ -41,13 +41,13 @@ export function CustomerAll({ user }: any) {
   const actualPageMarkup = (
     <Page
       fullWidth
-      title="Cliente"
+      title="Customers"
       primaryAction={
         <Button
           primary
           url='/customers/new'
         >
-          Aggiungi cliente
+          Add customer
         </Button>
       }
     >

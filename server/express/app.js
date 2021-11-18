@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const routes = {
     order: require('./routes/order'),
     product: require('./routes/product'),
+    client: require('./routes/client')
 };
 
 const app = express();
@@ -11,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 function makeHandlerAwareOfAsyncErrors(handler) {
-    return async function(req, res, next) {
+    return async function (req, res, next) {
         try {
             await handler(req, res);
         } catch (error) {
