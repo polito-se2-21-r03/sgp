@@ -7,6 +7,7 @@ import {
   SettingsMajor,
   NoteMajor,
   FraudProtectUnprotectedMajor,
+  OrdersMajor,
 } from '@shopify/polaris-icons';
 
 import { Navigation } from '@shopify/polaris';
@@ -39,50 +40,32 @@ export function NavigationMarkup({ user }: any) {
             exactMatch: true
           },
           {
-            label: 'Clienti',
-            icon: CustomersMajor,
+            label: 'Orders',
+            icon: OrdersMajor,
             onClick: () => {
               toggleIsLoading();
-              setNavItemActive('customers');
+              setNavItemActive('orders');
             },
-            url: '/customers',
+            url: '/orders',
           },
-          {
-            label: 'Preventivi',
-            icon: NoteMajor,
-            onClick: () => {
-              toggleIsLoading();
-              setNavItemActive('quotes');
-            },
-            url: '/quotes',
-          },
-          {
-            label: 'Polizze',
-            icon: ProductsMajor,
-            onClick: () => {
-              toggleIsLoading();
-              setNavItemActive('polizze');
-            },
-            url: '/products',
-          },
-          {
-            label: 'Sinistri',
-            icon: FraudProtectUnprotectedMajor,
-            onClick: () => {
-              toggleIsLoading();
-              setNavItemActive('claims');
-            },
-            url: '/claims',
-          },
-          {
-            label: 'Note',
-            icon: NoteMajor,
-            onClick: () => {
-              toggleIsLoading();
-              setNavItemActive('notes');
-            },
-            url: '/notes',
-          },
+          // {
+          //   label: 'Products',
+          //   icon: ProductsMajor,
+          //   onClick: () => {
+          //     toggleIsLoading();
+          //     setNavItemActive('products');
+          //   },
+          //   url: '/products',
+          // },
+          // {
+          //   label: 'Customers',
+          //   icon: CustomersMajor,
+          //   onClick: () => {
+          //     toggleIsLoading();
+          //     setNavItemActive('customers');
+          //   },
+          //   url: '/customers',
+          // },
         ]}
       />
       {user && user.role === 'admin' && (
@@ -105,13 +88,13 @@ export function NavigationMarkup({ user }: any) {
       <Navigation.Section
         items={[
           {
-            label: 'Impostazioni',
+            label: 'Settings',
             icon: SettingsMajor,
             onClick: () => {
               toggleIsLoading();
               setNavItemActive('settings');
             },
-            url: '/settings',
+            url: '#',
             exactMatch: true
           },
         ]}

@@ -129,6 +129,112 @@ exports.createTicket = (ticket) => {
     })
 };
 
+exports.getOrders = () => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM orders";
+        db.all(sql, [], (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+    });
+}
+
+exports.getProducts = () => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM product";
+        db.all(sql, [], (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+    });
+}
+
+exports.createOrder = (order) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO orders (clientId, employeeId, status, creationDate) VALUES(?, ?, ?, ?)';
+        db.run(sql, [order.clientId, order.employeeId, order.status, order.creationDate], function (err) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(this.lastID);
+        });
+    })
+};
+
+exports.insertOrderProduct = (orderId, productId, amount) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO order_product (orderId, productId, amount) VALUES(?, ?, ?)';
+        db.run(sql, [orderId, productId, amount], function (err) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(true);
+        });
+    })
+};
+
+exports.getClientById = (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM client WHERE clientId=?';
+        db.get(sql, [id], (err, row) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(row);
+        });
+    });
+};
+
+exports.getEmployeeById = (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM employee WHERE employeeId=?';
+        db.get(sql, [id], (err, row) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(row);
+        });
+    });
+};
+
+exports.getProductById = (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM product WHERE productId=?';
+        db.get(sql, [id], (err, row) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(row);
+        });
+    });
+};
+
+exports.checkProductAvailability = (id, amount) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT COUNT(*) as available FROM product WHERE productId=? AND quantity > ?';
+        db.get(sql, [id, amount], (err, row) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            if(row.available > 0){
+                resolve(true);
+            }
+        });
+    });
+};
+
 exports.insertSelectTypeTicket = (serviceTypeId, ticketId) => {
     return new Promise((resolve, reject) => {
         const sql = 'INSERT INTO service_type_ticket (serviceTypeId, ticketId, status) VALUES(?, ?, ?)';

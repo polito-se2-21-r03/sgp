@@ -6,8 +6,9 @@ import * as serviceWorker from './serviceWorker';
 
 import { AppProvider } from '@shopify/polaris';
 import itTranslation from '@shopify/polaris/locales/it.json';
+import enTranslation from '@shopify/polaris/locales/en.json';
 
-import logo from './logo_w.svg';
+import logo from './logo_transparent.png';
 
 ReactDOM.render(
   <AppProvider
@@ -17,11 +18,8 @@ ReactDOM.render(
         contextualSaveBarSource:
           logo
       },
-      colors: {
-        primary: '#f0672f'
-      }
     }}
-    i18n={itTranslation}
+    i18n={enTranslation}
   >
     <App />
   </AppProvider>,

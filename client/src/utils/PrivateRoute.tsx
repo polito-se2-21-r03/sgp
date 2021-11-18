@@ -1,15 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
+import asyncLocalStorage from './async-localstorage';
 import { verifyToken } from './Common';
 
 export function PrivateRoute({ component: Compontent, path, roles, ...rest }: any) {
 
-  const [auth, setAuth] = useState(true);
+  const [auth, setAuth] = useState(false);
   const [goOn, setGoOn] = useState(false);
   const [user, setUser] = useState({
     firstname: 'Test',
     lastname: 'Test'
   });
+
+  // Set auth based on localStorage
+  useEffect(() => {
+    asyncLocalStorage.getItem('user')
+      .then((data) => {
+        if (data)
+          setAuth(true);
+      })
+      .then(() => {
+        console.log(2);
+        setGoOn(true);
+      })
+  }, [])
+
 
   // useEffect(() => {
   //   verifyToken()
@@ -24,11 +39,11 @@ export function PrivateRoute({ component: Compontent, path, roles, ...rest }: an
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, []);
 
-  // if (!goOn) {
-  //   return (
-  //     <div>Loading...</div>
-  //   )
-  // }
+  if (!goOn) {
+    return (
+      <div>Loading...</div>
+    )
+  }
 
   let res;
 

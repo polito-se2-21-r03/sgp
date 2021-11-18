@@ -5,8 +5,11 @@ import { contextControlMarkup } from '../ContextControlMarkup';
 import { CircleRightMajor } from '@shopify/polaris-icons';
 
 import asyncLocalStorage from '../../utils/async-localstorage';
+import { useHistory } from 'react-router';
 
 export function TopBarMarkup({ handleMobileNavigation }: any) {
+  const history = useHistory();
+
   const [searchActive, setSearchActive] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [userMenuActive, setUserMenuActive] = useState(false);
@@ -36,19 +39,22 @@ export function TopBarMarkup({ handleMobileNavigation }: any) {
   /** Logout */
   const logout = async () => {
     try {
-      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/logout', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      })
-      const response = await data.json();
+      // const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/logout', {
+      //   method: 'POST',
+      //   credentials: 'include',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      // })
+      // const response = await data.json();
 
-      if (response.status === 'success') {
-        await asyncLocalStorage.removeItem('user');
-        window.location.href = '/login';
-      }
+      // if (response.status === 'success') {
+      //   await asyncLocalStorage.removeItem('user');
+      //   window.location.href = '/login';
+      // }
+
+      await asyncLocalStorage.removeItem('user');
+      history.push('/login');
     } catch (error) {
       console.log(error);
     }

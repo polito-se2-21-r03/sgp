@@ -5,7 +5,7 @@ import { Button, Form, FormLayout, TextField, InlineError } from "@shopify/polar
 import asyncLocalStorage from '../../utils/async-localstorage';
 
 import './Login.css';
-import logo from '../../nano_b.svg';
+import logo from '../../logo_transparent.png';
 import { useHistory } from 'react-router';
 
 export function LoginPage() {
@@ -71,8 +71,8 @@ export function LoginPage() {
 
           <div className="login-card__content">
             <div className="main-card-section">
-              <h2 className="ui-heading">Accedi</h2>
-              <h3 className="ui-subheading ui-subheading--subdued">Continua verso la tua dashboard</h3>
+              <h2 className="ui-heading">Access</h2>
+              <h3 className="ui-subheading ui-subheading--subdued">Continue to the dashboard</h3>
               <Form onSubmit={handleSubmit}>
                 <FormLayout>
                   <TextField
@@ -86,10 +86,10 @@ export function LoginPage() {
                     onChange={handlePwdChange}
                     label="Password"
                     type="password"
-                    labelAction={{ content: 'Password dimenticata?', url: '/forgot-password', }}
+                    labelAction={{ content: 'Forgot password?', url: '#', }}
                   />
                   {(loginError === true) ? (
-                    <InlineError message="Controllare i dati di accesso." fieldID="myFieldID" />
+                    <InlineError message="Check authentication data." fieldID="myFieldID" />
                   ) : ''}
                   <Button primary size="large" submit>Login</Button>
                 </FormLayout>
@@ -99,9 +99,9 @@ export function LoginPage() {
           </div>
         </div>
         <footer className="login-footer">
-          <a className="login-footer__link" target="_blank" href="#" title="Help Center">Assistenza</a>
+          <a className="login-footer__link" target="_blank" href="#" title="Help Center">Help</a>
           <a className="login-footer__link" target="_blank" href="#" title="Privacy Policy">Privacy</a>
-          <a className="login-footer__link" target="_blank" href="#" title="Terms of service">Termini</a>
+          <a className="login-footer__link" target="_blank" href="#" title="Terms of service">Terms</a>
         </footer>
       </div>
     </div>

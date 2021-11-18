@@ -2,9 +2,10 @@
   "name": "se2-r03-spg-server",
   "version": "1.0.0",
   "description": "SE2 Office Queue management server",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "jest"
   },
   "author": "Team R3",
   "license": "ISC",
@@ -12,6 +13,13 @@
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "express-validator": "^6.11.1",
-    "sqlite3": "^5.0.2"
+    "sequelize": "^6.3.3",
+    "sqlite3": "^5.0.2",
+    "body-parser": "^1.19.0",
+    "jsonschema": "^1.4.0"
+  },
+  "devDependencies": {
+    "jest": "^27.3.1",
+    "supertest": "^6.1.6"
   }
 }

@@ -1,9 +1,13 @@
-import { Dashboard, CustomerAll, ProductAll, Settings, Account, CustomerNew, ProductNew, ProductDetails, CustomerDetails, UserAll, UserNew, UserDetails } from './pages';
+import { Dashboard, CustomerAll, ProductAll, Settings, Account, CustomerNew, ProductNew, ProductDetails, CustomerDetails, UserAll, UserNew, UserDetails, OrderAll, OrderNew, OrderDetails } from './pages';
 
 const routes = [
   { path: '/', name: 'Dashboard', component: Dashboard, exact: true },
+  /** Orders */
+  { path: '/orders', name: 'Orders', component: OrderAll, exact: true },
+  { path: '/orders/new', name: 'New Order', component: OrderNew, exact: true },
+  { path: '/orders/:id', name: 'Order Details', component: OrderDetails, exact: true },
   /** Customers */
-  { path: '/customers', name: 'Customer', component: CustomerAll, exact: true },
+  { path: '/customers', name: 'Customers', component: CustomerAll, exact: true },
   { path: '/customers/new', name: 'New Customer', component: CustomerNew, exact: true },
   { path: '/customers/:id', name: 'Customer Details', component: CustomerDetails, exact: true },
   /** Products */
