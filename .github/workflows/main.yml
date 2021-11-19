@@ -16,14 +16,12 @@ jobs:
         fetch-depth: 0
     - name: Get main
       run: git fetch origin main
-    - name: Go to the server folder
-      run: cd ./server
     - name: Install dependencies
-      run:  npm install
+      run:  cd ../server && npm install
     - name: Install Jest globally
       run:  sudo npm install -g jest
     - name: Run Tests
-      run:  npm run test
+      run:  cd ../server && npm run test
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@master
       env:
