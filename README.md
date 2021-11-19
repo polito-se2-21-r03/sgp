@@ -28,4 +28,4 @@
                     ticketId      INTEGER                not null
                         references ticket,
                     status        text default "CREATED" not null
-                )
+                ) 
