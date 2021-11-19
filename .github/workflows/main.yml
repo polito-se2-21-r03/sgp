@@ -17,7 +17,7 @@ jobs:
     - name: Get main
       run: git fetch origin main
     - name: Go to the server folder
-      run: cd server && rm -rf node_modules && npm cache clean && rm package-lock.json
+      run: cd server && rm -rf node_modules && npm cache verify && rm package-lock.json
     - name: Install dependencies
       run:  npm install
     - name: Install Jest globally
