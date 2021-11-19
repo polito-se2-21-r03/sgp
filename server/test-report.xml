@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
   <file path="/Users/aleloco/Documents/SoftEng2/spg/server/__test__/index.test.js">
-    <testCase name="Testing get all products tests the base route and returns an array of products" duration="84"/>
-    <testCase name="Testing get all orders tests the base route and returns an array of orders" duration="11"/>
-    <testCase name="Testing the movies API tests the base route and returns true for status" duration="60"/>
-    <testCase name="Test getClientById Should get value from client table" duration="6"/>
-    <testCase name="Test getEmployeeById Should get value from employee table" duration="5"/>
-    <testCase name="Test checkProductAvailability Should get integer" duration="6"/>
-    <testCase name="Test insertOrderProduct Should get boolean" duration="14"/>
+    <testCase name="Testing get all products tests the base route and returns an array of products" duration="185"/>
+    <testCase name="Testing get all orders tests the base route and returns an array of orders" duration="30"/>
+    <testCase name="Testing the movies API tests the base route and returns true for status" duration="119"/>
+    <testCase name="Test getClientById Should get value from client table" duration="12"/>
+    <testCase name="Test getEmployeeById Should get value from employee table" duration="6"/>
+    <testCase name="Test checkProductAvailability Should get integer" duration="13"/>
+    <testCase name="Test insertOrderProduct Should get boolean" duration="16"/>
   </file>
 </testExecutions>
