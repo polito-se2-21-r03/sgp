@@ -17,11 +17,11 @@ jobs:
     - name: Get main
       run: git fetch origin main
     - name: Install dependencies
-      run:  cd ../server && npm install
+      run:  cd ./server && npm install
     - name: Install Jest globally
       run:  sudo npm install -g jest
     - name: Run Tests
-      run:  cd ../server && npm run test
+      run:  cd ./server && npm run test
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@master
       env:
