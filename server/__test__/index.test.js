@@ -1,5 +1,5 @@
 const supertest = require('supertest');
-const app = require('../index');
+const app = require('../express/app');
 const { reset } = require('../setup');
 const {models} = require("../sequelize");
 const Sequelize = require('sequelize');
@@ -42,39 +42,55 @@ const Op = Sequelize.Op;
  */
 describe("Testing get all products", () => {
 
+  let server = null;
+
   beforeAll(async () => {
     await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
 
   it("tests the base route and returns an array of products", async () => {
-    const response = await supertest(app).get('/api/product');
+    const response = await supertest(server).get('/api/product');
     expect(response.status).toBe(200);
   });
 
-  // afterAll(async () => {
-  //   await sequelize.close()
-  // })
+  afterAll(async () => {
+     await server.close()
+  })
 });
 
 /**
  * Test get all orders
  */
 describe("Testing get all orders", () => {
+
+  let server = null;
+
   beforeAll(async () => {
     await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
+
   it("tests the base route and returns an array of orders", async () => {
-    const response = await supertest(app).get('/api/order');
+    const response = await supertest(server).get('/api/order');
     expect(response.status).toBe(200);
   });
+
+  afterAll(async () => {
+    await server.close()
+  })
 });
 
 /**
  * Test create order API
  */
 describe("Testing the movies API", () => {
+
+  let server = null;
+
   beforeAll(async () => {
     await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
 
   it("tests the base route and returns true for status", async () => {
@@ -94,44 +110,77 @@ describe("Testing the movies API", () => {
         }
       ]
     }
-    const response = await supertest(app).post('/api/order').send(body)
+    const response = await supertest(server).post('/api/order').send(body)
     expect(response.status).toBe(200);
   });
 
-  // This is run after 
-  // afterEach(async () => {
-  //   await Movies.deleteOne({
-  //     title: 'New Movie'
-  //   })
-  // })
+  afterAll(async () => {
+    await server.close()
+  })
 
 });
 
-describe("Test getClientById", () => {  
+describe("Test getClientById", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+  })
   it("Should get value from client table", async () => {
     const client = await models.client.findByPk(1);
     expect(client.id).toBe(1);
   })
+  afterAll(async () => {
+    await server.close()
+  })
 })
 
-describe("Test getEmployeeById", () => {  
+describe("Test getEmployeeById", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+  })
   it("Should get value from employee table", async () => {
     const employee = await models.employee.findByPk(1);
     expect(employee.id).toBe(1);
   })
+  afterAll(async () => {
+    await server.close()
+  })
 })
 
-describe("Test checkProductAvailability", () => {  
+describe("Test checkProductAvailability", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+  })
   it("Should get integer", async () => {
     const productAvailability = await models.product.count({where: {id: 1, quantity: {[Op.gt]: 100}}});
     expect(productAvailability).toBe(1);
   })
+  afterAll(async () => {
+    await server.close()
+  })
 })
 
-describe("Test insertOrderProduct", () => {  
+describe("Test insertOrderProduct", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+  })
   it("Should get boolean", async () => {
     const insertOrderProduct = await models.order_product.create({orderId: 2, productId: 2,amount: 20});
     expect(insertOrderProduct.orderId).toBe(2);
+  })
+  afterAll(async () => {
+    await server.close()
   })
 })
 
