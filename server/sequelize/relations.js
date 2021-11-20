@@ -3,16 +3,13 @@ function applyExtraSetup(sequelize) {
         order,
         product,
         order_product,
-        user,
-        client,
-        employee
+        wallet,
+        user
     } = sequelize.models;
 
     order.belongsToMany(product, {through: order_product});
     product.belongsToMany(order, {through: order_product});
-
-    user.hasOne(client)
-    user.hasOne(employee)
+    user.hasOne(wallet)
 }
 
 module.exports = { applyExtraSetup };

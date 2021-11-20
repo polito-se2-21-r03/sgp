@@ -34,61 +34,61 @@ async function reset()  {
 
     await sequelize.models.user.bulkCreate([
         {
-            username: 'pippo',
+            password: 'pass',
+            email: 'mark@email.com',
+            firstname: 'Mark',
+            lastname: 'Mendez',
+            is_tmp_password: 0,
+            role: 'CLIENT',
+        },
+        {
+            password: 'pass',
+            email: 'john@email.com',
+            firstname: 'John',
+            lastname: 'White',
+            is_tmp_password: 0,
+            role: 'CLIENT',
+        },
+        {
+            password: 'pass',
+            email: 'maria@email.com',
+            firstname: 'Maria',
+            lastname: 'Brown',
+            is_tmp_password: 0,
+            role: 'CLIENT',
+        },
+        {
             password: 'pass',
             email: 'pippo@email.com',
             firstname: 'Pippo',
             lastname: 'Rossi',
+            is_tmp_password: 0,
             role: 'ADMIN',
         },
         {
-            username: 'pluto',
             password: 'pass',
-            email: 'pippo@email.com',
-            firstname: 'Pippo',
-            lastname: 'Rossi',
+            email: 'robert@email.com',
+            firstname: 'Robert',
+            lastname: 'Wesley',
+            is_tmp_password: 0,
             role: 'EMPLOYEE',
-        },
-        {
-            username: 'topolino',
-            password: 'pass',
-            email: 'pippo@email.com',
-            firstname: 'Pippo',
-            lastname: 'Rossi',
-            role: 'EMPLOYEE',
-        },
-        {
-            username: 'giacomo',
-            password: 'pass',
-            email: 'pippo@email.com',
-            firstname: 'Pippo',
-            lastname: 'Rossi',
-            role: 'ADMIN',
-        },
-        {
-            username: 'francesco',
-            password: 'pass',
-            email: 'pippo@email.com',
-            firstname: 'Pippo',
-            lastname: 'Rossi',
-            role: 'ADMIN',
-        },
+        }
     ]).then(async () => {
-        await sequelize.models.client.create(
+        await sequelize.models.wallet.bulkCreate([
             {
-                name: 'Robert',
-                walletId: 1,
-                userId: 1,
-            });
-
-        await sequelize.models.employee.create(
-            {
-                name: 'Leonard',
-                userId: 2,
-                type: 'DELIVERYMAN'
+                userEmail: 'mark@email.com',
+                credit: 33.45,
             },
-        );
-    })
+            {
+                userEmail: 'john@email.com',
+                credit: 113.45,
+            },
+            {
+                userEmail: 'maria@email.com',
+                credit: 1233.45,
+            },
+        ]);
+    }).catch(err => console.log(err))
 
     await sequelize.models.product.bulkCreate([
         {
