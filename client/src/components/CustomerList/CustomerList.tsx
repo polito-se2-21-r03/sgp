@@ -1,23 +1,22 @@
 // @ts-nocheck
 
 import {
-  Card, EmptyState, Filters, TextStyle, Badge,
-  Pagination, IndexTable, useIndexResourceState, Select, TextField, Link
+  Avatar, Card, EmptyState, FilterInterface, Filters, ResourceItem, ResourceList, TextStyle, Badge,
+  Pagination,
+  Stack
 } from '@shopify/polaris';
 import React, { useCallback, useState, useEffect } from 'react';
-import { useHistory } from 'react-router';
 
 import styles from './CustomerList.module.css';
 
 export function CustomerList() {
-  const history = useHistory();
-
   const [selectedItems, setSelectedItems] = useState([]);
-  const [taggedWith, setTaggedWith] = useState(null);
+  const [taggedWith, setTaggedWith] = useState('VIP');
   const [queryValue, setQueryValue] = useState(null);
   const [sortValue, setSortValue] = useState('DATE_CREATED_DESC');
   const [items, setItems] = useState([]);
   const [frontItems, setFrontItems] = useState([]);
+  const [total, setTotal] = useState(-1);
   const [isFirstPage, setIsFirstPage] = useState(true);
   const [isLastPage, setIsLastPage] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,25 +33,18 @@ export function CustomerList() {
   }, [handleQueryValueRemove, handleTaggedWithRemove]);
 
   const resourceName = {
-    singular: 'cliente',
-    plural: 'clienti',
+    singular: 'customer',
+    plural: 'customers',
   };
-
-  const promotedBulkActions = [
-    {
-      content: 'Modifica clienti',
-      onAction: () => console.log('Todo: implement bulk edit'),
-    },
-  ];
 
   /**
    * Data fetching
    */
   useEffect(() => {
-    const fetchClients = async () => {
+    const fetchUsers = async () => {
       try {
         setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/customers', {
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/client', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -61,9 +53,17 @@ export function CustomerList() {
         })
         const response = await data.json();
 
-        if (response.status === 'success') {
-          setItems(response.data);
-          setFrontItems(response.data);
+        if (response) {
+          console.log(response)
+          const tmp = [];
+          for (const item of response) {
+            // item.name = customersMap.get(item.clientId);
+            tmp.push(item);
+          }
+
+          setItems(tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1));
+          setFrontItems(tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1));
+          setTotal(tmp.length);
           setIsLoading(false);
         } else {
           setIsLoading(false);
@@ -73,52 +73,37 @@ export function CustomerList() {
         setIsLoading(false);
       }
     }
-    fetchClients();
+    fetchUsers();
   }, [])
 
-  /**
-   * Filters
-   */
-  function disambiguateLabel(key, value) {
-    switch (key) {
-      case 'taggedWith':
-        return `Tagged with ${value}`;
-      default:
-        return value;
-    }
-  }
-
-  function isEmpty(value) {
-    if (Array.isArray(value)) {
-      return value.length === 0;
-    } else {
-      return value === '' || value == null;
-    }
-  }
-
   const filters = [];
-
-  const appliedFilters = !isEmpty(taggedWith)
-    ? [
-      {
-        key: 'taggedWith',
-        label: disambiguateLabel('taggedWith', taggedWith),
-        onRemove: handleTaggedWithRemove,
-      },
-    ]
-    : [];
 
   // Filtering
   useEffect(() => {
     const filterItems = () => {
       const filteredItems = items.filter(item => {
-        return item.name.toLowerCase().includes(queryValue ? queryValue.toLowerCase() : '');
+        return item.name.toLowerCase().includes(queryValue.toLowerCase());
       })
       setFrontItems(filteredItems);
     }
     filterItems()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryValue])
+
+  const handleQueryChange = useCallback((e) => {
+    setQueryValue(e);
+  }, []);
+
+  const filterControl = (
+    <Filters
+      queryValue={queryValue}
+      filters={filters}
+      onQueryChange={handleQueryChange}
+      onQueryClear={handleQueryValueRemove}
+      onClearAll={handleClearAll}
+    >
+    </Filters>
+  );
 
   /**
    * Handle sort
@@ -127,84 +112,68 @@ export function CustomerList() {
     if (sortValue === 'DATE_CREATED_DESC') {
       const tmp = [...items];
       // @ts-ignore
-      tmp.sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
-      setItems(tmp);
+      tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1);
+      setFrontItems(tmp);
     } else if (sortValue === 'DATE_CREATED_ASC') {
       const tmp = [...items];
       // @ts-ignore
-      tmp.sort((a, b) => new Date(a.date_created) - new Date(b.date_created));
-      setItems(tmp);
+      tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? -1 : 1);
+      setFrontItems(tmp);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortValue]);
 
   /**
-   * Row markup
+   * Render item
    */
-  const {
-    selectedResources,
-    allResourcesSelected,
-    handleSelectionChange,
-  } = useIndexResourceState(frontItems);
+  function renderItem(item: any, _: any, index: number | undefined) {
+    const { _id, name } = item;
+    const media = <Avatar customer={false} size="medium" name={'_id'} />;
+    const url = `/admin/users/${_id}`;
 
-  const rowMarkup = frontItems.map(
-    (item, index) => (
-      <IndexTable.Row
-        id={item._id}
-        key={item._id}
-        selected={selectedResources.includes(item._id)}
-        position={index}
+    return (
+      <ResourceItem
+        id={index}
+        url={url}
+        media={media}
+        sortOrder={index}
+        accessibilityLabel={`View details for ${name}`}
       >
-        <IndexTable.Cell>
-          <TextStyle variation="strong">
-            <Link url={`/customers/${item._id}`} removeUnderline monochrome passHref>
-              <a
-                style={{ color: 'inherit', textDecoration: 'none' }}
-                data-primary-link>{item.name}</a>
-            </Link>
-          </TextStyle>
-        </IndexTable.Cell>
-        <IndexTable.Cell>
-          {item.type === 'company' ? (
-            <Badge status="attention" progress="incomplete">Azienda</Badge>
-          ) : (
-            <Badge progress="incomplete">Privato</Badge>
-          )}
-        </IndexTable.Cell>
-        <IndexTable.Cell>
-          {item.address.length > 0 ?
-            `${item.address[0].city}, ${item.address[0].line}, ${item.address[0].postal_code}` :
-            (<Badge>Mancante</Badge>)
-          }
-        </IndexTable.Cell>
-        <IndexTable.Cell>
-          {item.email.length > 0 ?
-            item.email[0].address :
-            (<Badge>Mancante</Badge>)
-          }
-        </IndexTable.Cell>
-        <IndexTable.Cell>
-          {item.phone.length > 0 ?
-            item.phone[0].number :
-            (<Badge>Mancante</Badge>)
-          }
-        </IndexTable.Cell>
-      </IndexTable.Row>
-    ),
-  );
+        {/* <div className={styles.dataScroll}>
+          <div>
+            <TextStyle variation="strong">{item.name}</TextStyle>
+          </div>
+          <div>
+            <p>
+              <TextStyle variation="subdued">Ruolo: </TextStyle>
+            </p>
+          </div>
+        </div> */}
+        <Stack>
+          <Stack.Item>
+            <TextStyle variation="strong">{item.name}</TextStyle>
+          </Stack.Item>
+          <Stack.Item>
 
-  /**
-   * Empty state markup
-   */
+          </Stack.Item>
+        </Stack>
+      </ResourceItem>
+    );
+  }
+
+  function resolveItemIds({ id }: any) {
+    return id;
+  }
+
   let customerListMarkup = (
     <Card>
       <Card.Section>
         <EmptyState
-          heading="Gestisci i clienti"
+          heading="Manage customers"
           image="https://cdn.shopify.com/shopifycloud/web/assets/v1/e7b58a8b2e612fe6cf6f8c9e53830b70.svg"
         >
           <p>
-            Qua è dove puoi gestire le informazioni dei tuoi clienti
+            Here you can manage your customers
           </p>
         </EmptyState>
       </Card.Section>
@@ -212,75 +181,29 @@ export function CustomerList() {
   );
 
   /**
-   * Pagination markup
-   */
-  const paginationMarkup = items.length > 50
-    ? (
-      <div className={styles.CustomerListFooter}>
-        <Pagination
-          hasPrevious={!isFirstPage}
-          hasNext={!isLastPage}
-        // onPrevious={this.handlePreviousPage}
-        // onNext={this.handleNextPage}
-        />
-      </div>
-    )
-    : null;
-
-  /**
    * Markup with items
    */
   if (items.length > 0) {
     customerListMarkup = (
       <Card>
-        <div style={{ padding: '16px', display: 'flex' }}>
-          <div style={{ flex: 1 }}>
-            <Filters
-              queryValue={queryValue}
-              filters={filters}
-              appliedFilters={appliedFilters}
-              queryPlaceholder={'Filtra clienti'}
-              onQueryChange={setQueryValue}
-              onQueryClear={handleQueryValueRemove}
-              onClearAll={handleClearAll}
-            />
-          </div>
-          <div style={{ paddingLeft: '0.4rem' }}>
-            <Select
-              labelInline
-              label="Ordina per"
-              options={[
-                { label: 'Data aggiunta cliente (dal più recente)', value: 'DATE_CREATED_DESC' },
-                { label: 'Data aggiunta cliente (dal meno recente)', value: 'DATE_CREATED_ASC' },
-              ]}
-              value={sortValue}
-              onChange={(selected) => {
-                setSortValue(selected);
-              }}
-            />
-          </div>
-        </div>
-        <IndexTable
+        <ResourceList
           resourceName={resourceName}
-          itemCount={frontItems.length}
-          selectedItemsCount={
-            allResourcesSelected ? 'All' : selectedResources.length
-          }
-          hasMoreItems
-          promotedBulkActions={promotedBulkActions}
-          onSelectionChange={handleSelectionChange}
-          headings={[
-            { title: 'Nome' },
-            { title: 'Tipologia' },
-            { title: 'Indirizzo' },
-            { title: 'Email' },
-            { title: 'Telefono' },
+          items={frontItems}
+          renderItem={renderItem}
+          selectedItems={selectedItems}
+          onSelectionChange={setSelectedItems}
+          resolveItemId={resolveItemIds}
+          filterControl={filterControl}
+          sortValue={sortValue}
+          sortOptions={[
+            { label: 'Customer added date (from the most recent)', value: 'DATE_CREATED_DESC' },
+            { label: 'Customer added date (from the least recent)', value: 'DATE_CREATED_ASC' },
           ]}
-          sort
-        >
-          {rowMarkup}
-        </IndexTable>
-        {paginationMarkup}
+          onSortChange={(selected) => {
+            setSortValue(selected);
+          }}
+          totalItemsCount={total}
+        />
       </Card>
     )
   }

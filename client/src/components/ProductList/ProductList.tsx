@@ -3,6 +3,8 @@
 import { Card, EmptyState, Badge, Filters, TextStyle, IndexTable, Link, Select, useIndexResourceState } from '@shopify/polaris';
 import React, { useCallback, useState, useEffect } from 'react';
 
+import dayjs from 'dayjs';
+
 export function ProductList() {
   const [queryValue, setQueryValue] = useState(null);
   const [taggedWith, setTaggedWith] = useState(null);
@@ -16,77 +18,14 @@ export function ProductList() {
     plural: 'polizze',
   };
 
-  const promotedBulkActions = [
-    {
-      content: 'Modifica polizze',
-      onAction: () => console.log('Todo: implement bulk edit'),
-    },
-  ];
-
   /**
    * Data fetching
    */
   useEffect(() => {
-    let customers = [];
-    const branchesMap = new Map();
-
-    const fetchClients = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/customers', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        })
-        const response = await data.json();
-
-        if (response.status === 'success') {
-          let tmp = [];
-          for (const item of response.data) {
-            tmp.push({ id: item._id, name: item.name });
-          }
-          // @ts-ignore
-          customers = tmp;
-          setIsLoading(false);
-        } else {
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchClients();
-
-    // Fetch Branches
-    const fetchBranches = async () => {
-      try {
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/branches', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        })
-        const response = await data.json();
-
-        if (response.status === 'success') {
-          for (const item of response.data) {
-            branchesMap.set(item._id, item.label);
-          }
-        }
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false)
-      }
-    }
-    fetchBranches();
-
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/products', {
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/product', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -95,25 +34,16 @@ export function ProductList() {
         })
         const response = await data.json();
 
-        if (response.status === 'success') {
-          let tmp = [];
-          for (const item of response.data) {
-            const itemCustomer = item.customer_id;
-            const itemDealer = item.dealer_id;
-            let customerName = '';
-            let dealerName = '';
-
-            customers.forEach((customer) => {
-              if (customer.id === itemCustomer)
-                customerName = customer.name;
-            });
-
-            item.branch_id = branchesMap.get(item.branch_id);
-
-            tmp.push({ ...item, dealer: dealerName, customer: customerName });
+        if (response) {
+          console.log(response);
+          const tmp = [];
+          for (const item of response) {
+            // item.name = customersMap.get(item.clientId);
+            tmp.push(item);
           }
-          setItems(tmp);
-          setFrontItems(tmp);
+
+          setItems(tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1));
+          setFrontItems(tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1));
           setIsLoading(false);
         } else {
           setIsLoading(false);
@@ -170,7 +100,7 @@ export function ProductList() {
   useEffect(() => {
     const filterItems = () => {
       const filteredItems = items.filter(item => {
-        return item.customer.toLowerCase().includes(queryValue ? queryValue.toLowerCase() : '');
+        return item.name.toLowerCase().includes(queryValue ? queryValue.toLowerCase() : '');
       })
       setFrontItems(filteredItems);
     }
@@ -182,35 +112,15 @@ export function ProductList() {
    * Handle sort
    */
   useEffect(() => {
-    if (sortValue === 'PREMIOTOT_ASC') {
-      const tmp = [...frontItems];
+    if (sortValue === 'DATE_CREATED_DESC') {
+      const tmp = [...items];
       // @ts-ignore
-      tmp.sort((a, b) => a.premio_netto - b.premio_netto);
-      setFrontItems(tmp);
-    } else if (sortValue === 'PREMIOTOT_DESC') {
-      const tmp = [...frontItems];
-      // @ts-ignore
-      tmp.sort((a, b) => b.premio_netto - a.premio_netto);
-      setFrontItems(tmp);
-    } else if (sortValue === 'PROVV_ASC') {
-      const tmp = [...frontItems];
-      // @ts-ignore
-      tmp.sort((a, b) => a.provvtotali - b.provvtotali);
-      setFrontItems(tmp);
-    } else if (sortValue === 'PROVV_DESC') {
-      const tmp = [...frontItems];
-      // @ts-ignore
-      tmp.sort((a, b) => b.provvtotali - a.provvtotali);
+      tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1);
       setFrontItems(tmp);
     } else if (sortValue === 'DATE_CREATED_ASC') {
-      const tmp = [...frontItems];
+      const tmp = [...items];
       // @ts-ignore
-      tmp.sort((a, b) => new Date(a.date_created) - new Date(b.date_created));
-      setFrontItems(tmp);
-    } else if (sortValue === 'DATE_CREATED_DESC') {
-      const tmp = [...frontItems];
-      // @ts-ignore
-      tmp.sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
+      tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? -1 : 1);
       setFrontItems(tmp);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -227,53 +137,31 @@ export function ProductList() {
 
   const rowMarkup = frontItems.map(
     (item, index) => {
-      const str = item.status.charAt(0).toUpperCase() + item.status.slice(1);
-      let statusMarkup;
-      if (item.status === 'annullata') {
-        statusMarkup = (
-          <Badge status="critical" progress="incomplete">{str}</Badge>
-        );
-      } else if (item.status === 'agli atti legali') {
-        statusMarkup = (
-          <Badge status="critical" progress="incomplete">{str}</Badge>
-        );
-      } else if (item.status === 'disdettata') {
-        statusMarkup = (
-          <Badge progress="complete">{str}</Badge>
-        );
-      } else if (item.status === 'in vigore') {
-        statusMarkup = (
-          <Badge status="success" progress="complete">{str}</Badge>
-        );
-      } else if (item.status === 'sostituita') {
-        statusMarkup = (
-          <Badge status="attention" progress="complete">{str}</Badge>
-        );
-      }
 
       return (
         <IndexTable.Row
-          id={item._id}
-          key={item._id}
-          selected={selectedResources.includes(item._id)}
+          id={item.id}
+          key={item.id}
+          selected={selectedResources.includes(item.id)}
           position={index}
         >
           <IndexTable.Cell>
             <TextStyle variation="strong">
-              <Link url={`/products/${item._id}`} removeUnderline monochrome passHref data-primary-link>
+              <Link url={`/products/${item.id}`} removeUnderline monochrome passHref data-primary-link>
                 <a
                   style={{ color: 'inherit', textDecoration: 'none' }}
                   data-primary-link>
-                  {item.customer}
+                  {item.name}
                 </a>
               </Link>
             </TextStyle>
           </IndexTable.Cell>
-          <IndexTable.Cell>{statusMarkup}</IndexTable.Cell>
-          <IndexTable.Cell>{item.branch_id}</IndexTable.Cell>
-          <IndexTable.Cell>{item.customer}</IndexTable.Cell>
-          <IndexTable.Cell>{Number(item.premio_lordo).toFixed(2)} €</IndexTable.Cell>
-          <IndexTable.Cell>{(Number(item.provvtotali / 100) * Number(item.premio_netto)).toFixed(2)} €</IndexTable.Cell>
+          <IndexTable.Cell>
+            {item.quantity}
+          </IndexTable.Cell>
+          <IndexTable.Cell>
+            Fornitore
+          </IndexTable.Cell>
         </IndexTable.Row>
       )
     }
@@ -281,11 +169,11 @@ export function ProductList() {
 
   const emptyList = (
     <EmptyState
-      heading="Gestisci il portafoglio"
+      heading="Manage products"
       image="https://cdn.shopify.com/shopifycloud/web/assets/v1/e7b58a8b2e612fe6cf6f8c9e53830b70.svg"
     >
       <p>
-        Qua è dove puoi gestire il tuo portafoglio
+        Here you can manage your products
       </p>
     </EmptyState>
   );
@@ -306,7 +194,7 @@ export function ProductList() {
             queryValue={queryValue}
             filters={filters}
             appliedFilters={appliedFilters}
-            queryPlaceholder={'Filtra clienti'}
+            queryPlaceholder={'Filter products'}
             onQueryChange={setQueryValue}
             onQueryClear={handleQueryValueRemove}
             onClearAll={handleClearAll}
@@ -315,14 +203,10 @@ export function ProductList() {
         <div style={{ paddingLeft: '0.4rem' }}>
           <Select
             labelInline
-            label="Ordina per"
+            label="Sort by"
             options={[
-              { label: 'Data aggiunta polizza (dalla più recente)', value: 'DATE_CREATED_DESC' },
-              { label: 'Data aggiunta polizza (dalla meno recente)', value: 'DATE_CREATED_ASC' },
-              { label: 'Premio crescente', value: 'PREMIOTOT_ASC' },
-              { label: 'Premio decrescente', value: 'PREMIOTOT_DESC' },
-              { label: 'Provvigioni crescenti', value: 'PROVV_ASC' },
-              { label: 'Provvigioni decrescenti', value: 'PROVV_DESC' },
+              { label: 'Product added date (from the most recent)', value: 'DATE_CREATED_DESC' },
+              { label: 'Product added date (from the least recent)', value: 'DATE_CREATED_ASC' },
             ]}
             value={sortValue}
             onChange={(selected) => {
@@ -339,15 +223,11 @@ export function ProductList() {
           allResourcesSelected ? 'All' : selectedResources.length
         }
         hasMoreItems
-        promotedBulkActions={promotedBulkActions}
         onSelectionChange={handleSelectionChange}
         headings={[
-          { title: 'Cliente' },
-          { title: 'Stato' },
-          { title: 'Ramo' },
-          { title: 'Scadenza' },
-          { title: 'Premio Lordo' },
-          { title: 'Provvigioni' },
+          { title: 'Product' },
+          { title: 'Inventory' },
+          { title: 'Supplier' },
         ]}
         sort
       >

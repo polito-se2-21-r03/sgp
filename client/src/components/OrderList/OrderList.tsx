@@ -253,7 +253,7 @@ export function OrderList() {
           <div style={{ paddingLeft: '0.4rem' }}>
             <Select
               labelInline
-              label="Ordina per"
+              label="Sort by"
               options={[
                 { label: 'Order added date (from the most recent)', value: 'DATE_CREATED_DESC' },
                 { label: 'Order added date (from the least recent)', value: 'DATE_CREATED_ASC' },
