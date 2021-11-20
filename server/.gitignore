@@ -10,6 +10,8 @@
 
 # production
 /build
+./server/se2.db
+./test-report.xml
 
 # misc
 .DS_Store
