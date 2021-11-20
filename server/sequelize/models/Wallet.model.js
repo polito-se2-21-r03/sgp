@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
     sequelize.define('wallet', {
         credit: {
             allowNull: false,
-            type: Sequelize.DECIMAL(2, 2),
+            type: Sequelize.DECIMAL(10, 2),
             validate: {
                 isDecimal: true
             }
