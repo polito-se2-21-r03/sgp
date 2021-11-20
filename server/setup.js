@@ -76,15 +76,15 @@ async function reset()  {
     ]).then(async () => {
         await sequelize.models.wallet.bulkCreate([
             {
-                userEmail: 'mark@email.com',
+                userId: 1,
                 credit: 33.45,
             },
             {
-                userEmail: 'john@email.com',
+                userId: 2,
                 credit: 113.45,
             },
             {
-                userEmail: 'maria@email.com',
+                userId: 3,
                 credit: 1233.45,
             },
         ]);

@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
     sequelize.define('product', {
@@ -16,7 +17,10 @@ module.exports = (sequelize) => {
         },
         price: {
             allowNull: false,
-            type: DataTypes.DOUBLE,
+            type: Sequelize.DECIMAL(10, 2),
+            validate: {
+                isDecimal: true
+            }
         },
         type: {
             allowNull: false,

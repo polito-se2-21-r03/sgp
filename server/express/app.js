@@ -4,7 +4,9 @@ const bodyParser = require('body-parser');
 const routes = {
     order: require('./routes/order'),
     product: require('./routes/product'),
-    client: require('./routes/client')
+    client: require('./routes/client'),
+    employee: require('./routes/employee'),
+    wallet: require('./routes/wallet'),
 };
 
 const app = express();
@@ -28,30 +30,30 @@ for (const [routeName, routeController] of Object.entries(routes)) {
             makeHandlerAwareOfAsyncErrors(routeController.getAll)
         );
     }
-    // if (routeController.getById) {
-    //     app.get(
-    //         `/api/${routeName}/:id`,
-    //         makeHandlerAwareOfAsyncErrors(routeController.getById)
-    //     );
-    // }
+    if (routeController.getById) {
+        app.get(
+            `/api/${routeName}/:id`,
+            makeHandlerAwareOfAsyncErrors(routeController.getById)
+        );
+    }
     if (routeController.create) {
         app.post(
             `/api/${routeName}`,
             makeHandlerAwareOfAsyncErrors(routeController.create)
         );
     }
-    // if (routeController.update) {
-    //     app.put(
-    //         `/api/${routeName}/:id`,
-    //         makeHandlerAwareOfAsyncErrors(routeController.update)
-    //     );
-    // }
-    // if (routeController.remove) {
-    //     app.delete(
-    //         `/api/${routeName}/:id`,
-    //         makeHandlerAwareOfAsyncErrors(routeController.remove)
-    //     );
-    // }
+    if (routeController.update) {
+        app.put(
+            `/api/${routeName}/:id`,
+            makeHandlerAwareOfAsyncErrors(routeController.update)
+        );
+    }
+    if (routeController.remove) {
+        app.delete(
+            `/api/${routeName}/:id`,
+            makeHandlerAwareOfAsyncErrors(routeController.remove)
+        );
+    }
 }
 
 module.exports = app;

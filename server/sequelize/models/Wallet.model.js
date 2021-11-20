@@ -1,10 +1,14 @@
 const { DataTypes } = require('sequelize');
+const Sequelize = require('sequelize');
 
 module.exports = (sequelize) => {
     sequelize.define('wallet', {
         credit: {
             allowNull: false,
-            type: DataTypes.FLOAT,
+            type: Sequelize.DECIMAL(2, 2),
+            validate: {
+                isDecimal: true
+            }
         },
         createdAt: {
             allowNull: true,
