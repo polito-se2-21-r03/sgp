@@ -49,10 +49,8 @@ describe("Testing get all products", () => {
     server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
 
-  it("tests the base route and returns an array of products", async () => {
-    const response = await supertest(server).get('/api/product');
-    expect(response.status).toBe(200);
-  });
+
+  
 
   afterAll(async () => {
      await server.close()
@@ -99,14 +97,17 @@ describe("Testing the movies API", () => {
       "employeeId": 1,
       "products": [
         {
-          "productId": 1,
-          "amount": 3,
-          "price": 3.4
-        },
+          name: 'uova',
+          producerId: 1,
+          quantity: 50,
+          type: 'BIO',
+          price: 1.2},
         {
-          "productId": 2,
-          "amount": 1,
-          "price": 0.4
+          name: 'pomodoro',
+          producerId: 1,
+          quantity: 20,
+          type: 'BIO',
+          price: 1.2
         }
       ]
     }
@@ -128,7 +129,7 @@ describe("Test getClientById", () => {
     server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
   it("Should get value from client table", async () => {
-    const client = await models.client.findByPk(1);
+    const client = await models.user.findByPk(1);
     expect(client.id).toBe(1);
   })
   afterAll(async () => {
@@ -144,8 +145,8 @@ describe("Test getEmployeeById", () => {
     server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
   it("Should get value from employee table", async () => {
-    const employee = await models.employee.findByPk(1);
-    expect(employee.id).toBe(1);
+    const employee = await models.user.findOne({where: {role: "EMPLOYEE", id: 5}});
+    expect(employee.email).toBe('robert@email.com');
   })
   afterAll(async () => {
     await server.close()
@@ -175,7 +176,7 @@ describe("Test insertOrderProduct", () => {
     await reset();
     server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
-  it("Should get boolean", async () => {
+  it("Should get orderId", async () => {
     const insertOrderProduct = await models.order_product.create({orderId: 2, productId: 2,amount: 20});
     expect(insertOrderProduct.orderId).toBe(2);
   })
@@ -183,6 +184,42 @@ describe("Test insertOrderProduct", () => {
     await server.close()
   })
 })
+
+
+describe("Test getAll from wallet", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+  })
+  it("tests the base route and returns an array of wallets", async () => {
+    const response = await supertest(server).get('/api/wallet');
+    expect(response.status).toBe(200);
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
+
+describe("Test update wallet", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+    const body = 200;
+  })
+  it("tests the base route and returns an array of wallets", async () => {
+    const response = await (await supertest(server).put('/api/wallet/1')).send(body);
+    expect(response).toBeGreaterThen(200);
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
+
+
 
 
 
