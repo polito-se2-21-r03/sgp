@@ -40,7 +40,7 @@ const Op = Sequelize.Op;
 /**
  * Test get all products
  */
-describe("Testing get all products", () => {
+ describe("Testing get all products", () => {
 
   let server = null;
 
@@ -49,11 +49,13 @@ describe("Testing get all products", () => {
     server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
 
-
-  
+  it("tests the base route and returns an array of orders", async () => {
+    const response = await supertest(server).get('/api/product');
+    expect(response.status).toBe(200);
+  });
 
   afterAll(async () => {
-     await server.close()
+    await server.close()
   })
 });
 
@@ -82,7 +84,7 @@ describe("Testing get all orders", () => {
 /**
  * Test create order API
  */
-describe("Testing the movies API", () => {
+describe("Testing ", () => {
 
   let server = null;
 
@@ -91,7 +93,7 @@ describe("Testing the movies API", () => {
     server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
 
-  it("tests the base route and returns true for status", async () => {
+  it("Insert a new order should return code 200", async () => {
     const body = {
       "clientId": 1,
       "employeeId": 1,
@@ -208,11 +210,32 @@ describe("Test update wallet", () => {
   beforeAll(async () => {
     await reset();
     server = app.listen(3001, () => console.log('Listening on port 3001'));
-    const body = 200;
+    
+  
   })
-  it("tests the base route and returns an array of wallets", async () => {
-    const response = await (await supertest(server).put('/api/wallet/1')).send(body);
-    expect(response).toBeGreaterThen(200);
+  it("tests the base route and return a wallet updated", async () => {
+    body = {credit: 300};
+    const response = await supertest(server).put('/api/wallet/1').send(body);
+    expect(response.status).toBe(200);
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
+
+describe("Test body validation", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+    
+  
+  })
+  it("tests the body of req and return with error for body not validawait models.wallet.findOne({where: {userId: req.params.id}})", async () => {
+    body = {createdAt: 200 };
+    const response = await supertest(server).put('/api/wallet/1').send(body);
+    expect(response.status).toBe(422);
   });
   afterAll(async () => {
     await server.close()
@@ -220,7 +243,20 @@ describe("Test update wallet", () => {
 })
 
 
+describe("Test update wallet for valid client", () => {
+  let server = null;
 
-
-
-
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+    
+  
+  })
+  it("tests update of wallet for not valid client and return with error", async () => {
+    const response = await models.wallet.findOne({where: {userId: 20}});
+    expect(response).toBe(null);
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
