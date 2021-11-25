@@ -9,12 +9,11 @@ const sequelize = new Sequelize({
 });
 
 const modelDefiners = [
-    require('./models/Client.model'),
-    require('./models/Employee.model'),
     require('./models/Order.model'),
     require('./models/OrderProduct.model'),
     require('./models/Product.model'),
     require('./models/User.model'),
+    require('./models/Wallet.model'),
 ];
 
 for (const modelDefiner of modelDefiners) {

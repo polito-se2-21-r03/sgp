@@ -2,9 +2,11 @@ exports.clientRequestSchema = {
     "id": "/ClientRequestSchema",
     "type": "object",
     "properties": {
-        "walletId": {"type": "integer"},
-        "userId": {"type": "integer"},
-        "name": {"type": "string"}
+        "firstname": {"type": "string"},
+        "lastname": {"type": "string"},
+        "password": {"type": "string"},
+        "email": {"type": "string"},
+        "is_tmp_password": {"type": "integer"},
     },
-    "required": ["walletId", "userId", "name"]
+    "required": ["email", "password", "is_tmp_password"]
 };

@@ -2,36 +2,40 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
     sequelize.define('user', {
-        username: {
-            allowNull: false,
+        email: {
             type: DataTypes.STRING,
+            unique: true,
         },
         password: {
             allowNull: false,
             type: DataTypes.STRING,
         },
-        email: {
+        is_tmp_password: {
             allowNull: false,
-            type: DataTypes.STRING,
+            type: DataTypes.BOOLEAN,
         },
         firstname: {
-            allowNull: false,
+            allowNull: true,
             type: DataTypes.STRING,
         },
         lastname: {
-            allowNull: false,
+            allowNull: true,
             type: DataTypes.STRING,
         },
         role: {
             allowNull: false,
             type: DataTypes.STRING,
             validate: {
-                isIn: [['ADMIN', 'EMPLOYEE', 'DELIVERYMAN', 'CLIENT']]
+                isIn: [['ADMIN', 'EMPLOYEE', 'CLIENT', 'FARMER', 'MANAGER']]
             }
         },
         createdAt: {
             allowNull: true,
             type: DataTypes.DATE
         },
+        updatedAt: {
+            allowNull: true,
+            type: DataTypes.DATE
+        }
     });
 };

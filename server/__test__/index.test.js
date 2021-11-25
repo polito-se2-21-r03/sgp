@@ -40,7 +40,7 @@ const Op = Sequelize.Op;
 /**
  * Test get all products
  */
-describe("Testing get all products", () => {
+ describe("Testing get all products", () => {
 
   let server = null;
 
@@ -49,13 +49,13 @@ describe("Testing get all products", () => {
     server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
 
-  it("tests the base route and returns an array of products", async () => {
+  it("tests the base route and returns an array of orders", async () => {
     const response = await supertest(server).get('/api/product');
     expect(response.status).toBe(200);
   });
 
   afterAll(async () => {
-     await server.close()
+    await server.close()
   })
 });
 
@@ -84,7 +84,7 @@ describe("Testing get all orders", () => {
 /**
  * Test create order API
  */
-describe("Testing the movies API", () => {
+describe("Testing ", () => {
 
   let server = null;
 
@@ -93,20 +93,23 @@ describe("Testing the movies API", () => {
     server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
 
-  it("tests the base route and returns true for status", async () => {
+  it("Insert a new order should return code 200", async () => {
     const body = {
       "clientId": 1,
       "employeeId": 1,
       "products": [
         {
-          "productId": 1,
-          "amount": 3,
-          "price": 3.4
-        },
+          name: 'uova',
+          producerId: 1,
+          quantity: 50,
+          type: 'BIO',
+          price: 1.2},
         {
-          "productId": 2,
-          "amount": 1,
-          "price": 0.4
+          name: 'pomodoro',
+          producerId: 1,
+          quantity: 20,
+          type: 'BIO',
+          price: 1.2
         }
       ]
     }
@@ -128,7 +131,7 @@ describe("Test getClientById", () => {
     server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
   it("Should get value from client table", async () => {
-    const client = await models.client.findByPk(1);
+    const client = await models.user.findByPk(1);
     expect(client.id).toBe(1);
   })
   afterAll(async () => {
@@ -144,8 +147,8 @@ describe("Test getEmployeeById", () => {
     server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
   it("Should get value from employee table", async () => {
-    const employee = await models.employee.findByPk(1);
-    expect(employee.id).toBe(1);
+    const employee = await models.user.findOne({where: {role: "EMPLOYEE", id: 5}});
+    expect(employee.email).toBe('robert@email.com');
   })
   afterAll(async () => {
     await server.close()
@@ -175,7 +178,7 @@ describe("Test insertOrderProduct", () => {
     await reset();
     server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
-  it("Should get boolean", async () => {
+  it("Should get orderId", async () => {
     const insertOrderProduct = await models.order_product.create({orderId: 2, productId: 2,amount: 20});
     expect(insertOrderProduct.orderId).toBe(2);
   })
@@ -183,6 +186,198 @@ describe("Test insertOrderProduct", () => {
     await server.close()
   })
 })
+
+
+describe("Test getAll from wallet", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+  })
+  it("tests the base route and returns an array of wallets", async () => {
+    const response = await supertest(server).get('/api/wallet');
+    expect(response.status).toBe(200);
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
+
+describe("Test update wallet", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+    
+  
+  })
+  it("tests the base route and return a wallet updated", async () => {
+    body = {credit: 300};
+    const response = await supertest(server).put('/api/wallet/1').send(body);
+    expect(response.status).toBe(200);
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
+
+describe("Test body validation for wallet update", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+    
+  
+  })
+  it("tests the body of req and return with error for body not valid", async () => {
+    body = {createdAt: 200 };
+    const response = await supertest(server).put('/api/wallet/1').send(body);
+    expect(response.status).toBe(422);
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
+
+
+describe("Test update wallet for valid client", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+    
+  
+  })
+  it("tests update of wallet for not valid client and return with error", async () => {
+    const response = await models.wallet.findOne({where: {userId: 20}});
+    expect(response).toBe(null);
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
+
+
+describe("Test client creation", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+  })
+  it("Should return userId", async () => {
+    body = ({
+      password: "passWord",
+      email: "mario@email.com",
+      firstname: "Mario",
+      lastname: "Rossi",
+      is_tmp_password: 0,
+      role: "CLIENT",
+      createdAt: Date.now(),
+    });
+    const response = await models.user.create(body);
+    expect(response.id).toBe(6);
+  })
+  afterAll(async () => {
+    await server.close()
+  })
+})
+
+describe("Test body validation of client creation", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+  })
+  it("Should return userId", async () => {
+    const body = {
+      "clientId": 1,
+      "employeeId": 1,
+      "products": [
+        {
+          name: 'uova',
+          producerId: 1,
+          quantity: 50,
+          type: 'BIO',
+          price: 1.2},
+        {
+          name: 'pomodoro',
+          producerId: 1,
+          quantity: 20,
+          type: 'BIO',
+          price: 1.2
+        }
+      ]
+    }
+    const response = await supertest(server).post('/api/user').send(body);
+    expect(response.status).toBe(422); //come si fa?
+  })
+  afterAll(async () => {
+    await server.close()
+  })
+})
+
+
+describe("Test getAll from client", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+  })
+  it("tests the get from user to filter only clients", async () => {
+    const clients = await models.user.count({where: {role: 'CLIENT'}})
+    expect(clients).toBe(3); 
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
+
+
+
+describe("Test email that already exists", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+  })
+  it("tests the get from user to search the email amoung the registered clients", async () => {
+    const client = await models.user.findByPk('maria@email.com') //la Pk è l'userId non l'email, come faccio a inserire l'email?
+    expect(client.id).toBe(3); 
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
+
+
+
+describe("Test association wallet to new client", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+  })
+  it("tests the creation of wallet for new registered client and return id of new wallet", async () => {
+    const response = await models.wallet.create({userEmail: 'john@email.com', credit: 0 })
+    expect(response.id).toBe(4); 
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
+
+
+
+
 
 
 
