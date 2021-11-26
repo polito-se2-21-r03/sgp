@@ -9,6 +9,8 @@ import React, { useCallback, useState, useEffect } from 'react';
 
 import styles from './CustomerList.module.css';
 
+import dayjs from 'dayjs';
+
 export function CustomerList() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [taggedWith, setTaggedWith] = useState('VIP');
@@ -127,9 +129,9 @@ export function CustomerList() {
    * Render item
    */
   function renderItem(item: any, _: any, index: number | undefined) {
-    const { _id, name } = item;
     const media = <Avatar customer={false} size="medium" name={'_id'} />;
-    const url = `/admin/users/${_id}`;
+    const url = `#`;
+    const name = `${item.firstname} ${item.lastname}`
 
     return (
       <ResourceItem
@@ -151,7 +153,12 @@ export function CustomerList() {
         </div> */}
         <Stack>
           <Stack.Item>
-            <TextStyle variation="strong">{item.name}</TextStyle>
+            <div>
+              <TextStyle variation="strong">{name}</TextStyle>
+            </div>
+            <div>
+              <TextStyle>{item.email}</TextStyle>
+            </div>
           </Stack.Item>
           <Stack.Item>
 

@@ -56,56 +56,27 @@ export function ProductNew({ user, location }: any) {
   }
 
   /**
-   * Company States
+   * Product States
    */
-  const [company, setCompany] = useState({});
-  const [companies, setCompanies] = useState([]);
-  const [branches, setBranches] = useState([]);
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useState('0');
+  const [type, setType] = useState('');
+  const [url, setUrl] = useState('');
 
   /**
-   * Customer States
+   * Search farmers
    */
-  const [customerName, setCustomerName] = useState('');
-  const [customerId, setCustomerId] = useState((location.state && location.state.customer) ? location.state.customer : '');
-
-  /**
-   * Status
-   */
-  const [selectedStatus, setSelectedStatus] = useState('in vigore');
-
-  const statusOptions = [
-    { label: 'In vigore', value: 'in vigore' },
-    { label: 'Disdettata', value: 'disdettata' },
-    { label: 'Annullata', value: 'annullata' },
-    { label: 'Sostituita', value: 'sostituita' },
-    { label: 'Agli atti legali', value: 'agli atti legali' },
-  ];
-
-  /**
-   * Policy States
-   */
-  const [numeroPolizza, setNumeroPolizza] = useState('');
-  const [branchType, setBranchType] = useState('0');
-
-  const [monthCreated, setMonthCreated] = useState(new Date().getMonth());
-  const [yearCreated, setYearCreated] = useState(new Date().getFullYear());
-  const [dateCreatedSelection, setDateCreatedSelection] = useState(false);
-  const [selectedDatesCreated, setSelectedDatesCreated] = useState({ start: new Date(), end: new Date() });
-
-  const [monthExpired, setMonthExpired] = useState(new Date().getMonth());
-  const [yearExpired, setYearExpired] = useState(new Date().getFullYear());
-  const [dateExpiredSelection, setDateExpiredSelection] = useState(false);
-  const [selectedDatesExpired, setSelectedDatesExpired] = useState({ start: new Date(), end: new Date() });
-
-  const [paymentTime, setPaymentTime] = useState('12');
-
-  const [premioNetto, setPremioNetto] = useState(0);
-  const [premioLordo, setPremioLordo] = useState('0,00');
-
-  const [provvTot, setProvvTot] = useState(0);
+  const [farmer, setFarmer] = useState(-1);
+  const [selectedFarmerOptions, setSelectedFarmerOptions] = useState([]);
+  const [inputFarmerValue, setInputFarmerValue] = useState('');
+  const deselectedCustomerOptions = [
+    { value: '1', label: 'Francesco' },
+    { value: '2', label: 'Alessandro' },
+  ]
+  const [farmerOptions, setFarmerOptions] = useState(deselectedCustomerOptions);
 
   const handleDiscard = useCallback(() => {
-    setCustomerName('');
     setIsDirty(false);
   }, []);
 
@@ -114,33 +85,26 @@ export function ProductNew({ user, location }: any) {
    */
   const handleSave = useCallback(async () => {
     try {
-      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/products/new', {
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/product', {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          // @ts-ignore
-          company_id: company.company_id,
-          customer_id: customerId,
-          numero_polizza: numeroPolizza,
-          branch_id: Number(branchType),
-          selected_dates_created: selectedDatesCreated.start,
-          selected_dates_expired: selectedDatesExpired.start,
-          payment_time: paymentTime,
-          premio_netto: premioNetto,
-          premio_lordo: premioLordo,
-          provv_tot: provvTot,
-          status: selectedStatus
+          producerId: farmer,
+          quantity: Number(quantity),
+          price: Number(price),
+          name: name,
+          type: type,
         })
       })
       const response = await data.json();
 
-      if (response.status === 'success') {
+      if (response) {
         setActive(true);
         setTimeout(() => {
-          history.push(`/products/${response.data._id}`);
+          history.push(`/products/${response.productId}`);
         }, 3000);
         setIsDirty(false);
       } else {
@@ -150,94 +114,24 @@ export function ProductNew({ user, location }: any) {
       console.log(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [company, customerId, numeroPolizza, branchType, selectedDatesCreated, selectedDatesExpired, paymentTime, premioNetto, provvTot, selectedStatus]);
+  }, [farmer, quantity, price, name, type]);
 
   /**
-   * Company Handlers
+   * Product Handlers
    */
-  const handleCompanyChange = useCallback((id) => {
-    setCompany(companies[+id - 1]);
-    //@ts-ignore
-    setBranches(companies[+id - 1].branches.map((branch: any) => ({ label: branch.branch_name, value: String(branch.branch_id), provv: branch.provv })));
-    setBranchType('0');
-    // Set default provvTot value
-    // @ts-ignore
-    handleProvvTotChange(companies[+id - 1].branches[0].provv);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [companies]);
-
-
-  /**
-   * Customer Handlers
-   */
-  const handleCustomerNameChange = useCallback((e) => {
-    setCustomerName(e);
+  const handleNameChange = useCallback((e) => {
+    setName(e);
   }, []);
-  const handleCustomerIdChange = useCallback((e) => {
-    setCustomerId(e);
+  const handlePriceChange = useCallback((e) => {
+    setPrice(e);
+  }, []);
+  const handleQuantityChange = useCallback((e) => {
+    setQuantity(e);
+  }, []);
+  const handleTypeChange = useCallback((e) => {
+    setType(e);
   }, []);
 
-  /**
-   * Policy Handlers
-   */
-  const handleProvvTotChange = useCallback((e) => {
-    setProvvTot(e);
-    // const num: number = (+provvTot) + (+1 * +100) - (+e);
-    setPremioLordo((Number(e / 100) * Number(premioNetto) + Number(premioNetto)).toString());
-    // setProvvAtt(num);
-  }, [premioNetto]);
-
-  const handleNumeroPolizzaChange = useCallback((e) => {
-    setNumeroPolizza(e);
-  }, []);
-  const handleBranchTypeChange = useCallback((e) => {
-    setBranchType(e);
-    //@ts-ignore
-    handleProvvTotChange(branches[e].provv);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [branches, handleProvvTotChange]);
-
-  const handleMonthCreatedChange = useCallback((month: number, year: number) => {
-    setMonthCreated(month);
-    setYearCreated(year);
-  }, [{ monthCreated, yearCreated }]);
-  const handleDateCreatedSelection = useCallback(() => {
-    setDateCreatedSelection(true);
-  }, []);
-  const handleSelectedDatesCreated = useCallback((e) => {
-    setSelectedDatesCreated(e);
-    if (dateCreatedSelection)
-      setDateCreatedSelection(false);
-  }, [dateCreatedSelection]);
-
-  const handleMonthExpiredChange = useCallback((month: number, year: number) => {
-    setMonthExpired(month);
-    setYearExpired(year);
-  }, [{ monthExpired, yearExpired }]);
-  const handleDateExpiredSelection = useCallback(() => {
-    setDateExpiredSelection(true);
-  }, []);
-  const handleSelectedDatesExpired = useCallback((e) => {
-    setSelectedDatesExpired(e);
-    if (dateExpiredSelection)
-      setDateExpiredSelection(false);
-  }, [dateExpiredSelection]);
-
-  const handlePaymentTimeChange = useCallback((e) => {
-    setPaymentTime(e);
-  }, []);
-
-  const handlePremioNettoChange = useCallback((e) => {
-    setPremioNetto(e);
-    setPremioLordo((Number(e) + Number(e) * Number(provvTot / 100)).toString());
-  }, [provvTot]);
-  const handlePremioLordoChange = useCallback((e) => {
-    setPremioLordo(e);
-  }, []);
-
-  const handleSelectChange = useCallback((e) => {
-    setSelectedStatus(e);
-  }, []);
 
   const contextualSaveBarMarkup = isDirty ? (
     <ContextualSaveBar
@@ -255,34 +149,6 @@ export function ProductNew({ user, location }: any) {
 
   const loadingMarkup = isLoading ? <Loading /> : null;
 
-  /**
-   * Insurance Payment Time Options
-   */
-  const paymentTimeOptions = [
-    { label: 'Mensile', value: '1' },
-    { label: 'Bimestrale', value: '2' },
-    { label: 'Trimestrale', value: '3' },
-    { label: 'Quadrimestrale', value: '4' },
-    { label: 'Semestrale', value: '6' },
-    { label: 'Annuale', value: '12' },
-  ]
-
-  /**
-   * Search client
-   */
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  const [inputValue, setInputValue] = useState((location.state && location.state.customerName) ? location.state.customerName : '');
-  const [deselectedOptions, setDeselectedOptions] = useState([]);
-  const [options, setOptions] = useState([]);
-
-  /**
-   * Search company
-   */
-  const [selectedOptionsCompany, setSelectedOptionsCompany] = useState([]);
-  const [inputValueCompany, setInputValueCompany] = useState('');
-  const [deselectedOptionsCompany, setDeselectedOptionsCompany] = useState([]);
-  const [optionsCompany, setOptionsCompany] = useState([]);
-
 
   /**
    * Fetch data
@@ -290,169 +156,86 @@ export function ProductNew({ user, location }: any) {
    * - Fetch Companies
    */
   useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/customers', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        })
-        const response = await data.json();
+    // const fetchClients = async () => {
+    //   try {
+    //     setIsLoading(true);
+    //     const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/customers', {
+    //       method: 'GET',
+    //       credentials: 'include',
+    //       headers: {
+    //         'Content-Type': 'application/json'
+    //       },
+    //     })
+    //     const response = await data.json();
 
-        if (response.status === 'success') {
-          let tmp = [];
-          for (const item of response.data) {
-            tmp.push({ value: item._id, label: item.name });
-          }
-          // @ts-ignore
-          setDeselectedOptions(tmp);
-          // @ts-ignore
-          setOptions(tmp);
-          setIsLoading(false);
-        } else {
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    const fetchCompanies = async () => {
-      try {
-        setIsLoading(true);
-        //@ts-ignore
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : `/api`) + `/users/${user.id}`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        })
-        const response = await data.json();
-
-        if (response.status === 'success') {
-
-          const tmp = response.data.provv_matrix;
-          setCompanies(tmp);
-          let opTmp = [];
-          for (const item of tmp) {
-            opTmp.push({ value: item.company_id, label: item.company_name });
-          }
-          // @ts-ignore
-          setDeselectedOptionsCompany(opTmp);
-          // @ts-ignore
-          setOptionsCompany(opTmp);
-
-
-          setIsLoading(false);
-        } else {
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
-    }
-    fetchCompanies();
-    fetchClients();
+    //     if (response.status === 'success') {
+    //       let tmp = [];
+    //       for (const item of response.data) {
+    //         tmp.push({ value: item._id, label: item.name });
+    //       }
+    //       // @ts-ignore
+    //       setDeselectedOptions(tmp);
+    //       // @ts-ignore
+    //       setOptions(tmp);
+    //       setIsLoading(false);
+    //     } else {
+    //       setIsLoading(false);
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
+    // fetchClients();
   }, [user.id])
 
   /**
    * Autocomplete Controls
    */
-  const updateText = useCallback(
+
+  /** Farmer */
+  const updateFarmerText = useCallback(
     (value) => {
-      setInputValue(value);
+      setInputFarmerValue(value);
 
       if (value === '') {
-        setOptions(deselectedOptions);
+        setFarmerOptions(deselectedCustomerOptions);
         return;
       }
 
       const filterRegex = new RegExp(value, 'i');
-      const resultOptions = deselectedOptions.filter((option) => {
+      const resultOptions = deselectedCustomerOptions.filter((option) => {
         // @ts-ignore
-        option.label.match(filterRegex)
+        return option.label.match(filterRegex)
       });
-      setOptions(resultOptions);
+      setFarmerOptions(resultOptions);
     },
-    [deselectedOptions],
+    [deselectedCustomerOptions]
   );
 
-  const updateSelection = useCallback(
+  const updateFarmerSelection = useCallback(
     (selected) => {
       const selectedValue = selected.map((selectedItem: any) => {
-        const matchedOption = options.find((option) => {
+        const matchedOption = farmerOptions.find((option) => {
           // @ts-ignore
           return option.value.match(selectedItem);
         });
         // @ts-ignore
         return matchedOption;
       });
-      setSelectedOptions(selected);
-      setInputValue(selectedValue[0].label);
-      handleCustomerNameChange(selected);
-      handleCustomerIdChange(selectedValue[0].value);
+      setSelectedFarmerOptions(selected);
+      setInputFarmerValue(selectedValue[0].label);
+      setFarmer(Number(selectedValue[0].value));
     },
-    [handleCustomerIdChange, handleCustomerNameChange, options],
+    [farmerOptions],
   );
 
-  const updateTextCompany = useCallback(
-    (value) => {
-      setInputValueCompany(value);
-
-      if (value === '') {
-        setOptionsCompany(deselectedOptionsCompany);
-        return;
-      }
-
-      const filterRegex = new RegExp(value, 'i');
-      const resultOptions = deselectedOptions.filter((option) => {
-        // @ts-ignore
-        option.label.match(filterRegex)
-      });
-      setOptionsCompany(resultOptions);
-    },
-    [deselectedOptions, deselectedOptionsCompany],
-  );
-
-  const updateSelectionCompany = useCallback(
-    (selected) => {
-      const selectedValue = selected.map((selectedItem: any) => {
-        const matchedOption = optionsCompany.find((option) => {
-          // @ts-ignore
-          if (option.value == selectedItem)
-            return option;
-        });
-        // @ts-ignore
-        return matchedOption;
-      });
-      setSelectedOptionsCompany(selected);
-      setInputValueCompany(selectedValue[0].label);
-      handleCompanyChange(selectedValue[0].value);
-    },
-    [handleCompanyChange, optionsCompany],
-  );
-
-  const customerTextField = (
+  const farmerTextField = (
     <Autocomplete.TextField
-      onChange={updateText}
-      label="Cliente"
-      value={inputValue}
+      onChange={updateFarmerText}
+      label="Farmer"
+      value={inputFarmerValue}
       prefix={<Icon source={SearchMinor} color="base" />}
-      placeholder="Cerca"
-    />
-  );
-
-  const companyTextField = (
-    <Autocomplete.TextField
-      onChange={updateTextCompany}
-      label="Compagnia"
-      value={inputValueCompany}
-      prefix={<Icon source={SearchMinor} color="base" />}
-      placeholder="Cerca"
+      placeholder="Search"
     />
   );
 
@@ -475,158 +258,67 @@ export function ProductNew({ user, location }: any) {
     </Layout.Section>
   )
 
-  /**
-   * Rata Component
-   */
-  const rataForm = (
-    <Layout.AnnotatedSection
-      title="Rata"
-    >
-      <Card sectioned>
-        <FormLayout>
-          <FormLayout.Group>
-            <Select label="Tipologia Rata" options={paymentTimeOptions} onChange={handlePaymentTimeChange} value={paymentTime} />
-          </FormLayout.Group>
-        </FormLayout>
-      </Card>
-    </Layout.AnnotatedSection>);
-
   // ---- Page markup ----
   const actualPageMarkup = (
     <Page
-      title='Polizza'
-      breadcrumbs={[{ content: 'Polizze', url: '/products' }]}
+      title='Products'
+      breadcrumbs={[{ content: 'Products', url: '/products' }]}
     >
       <Layout>
         {/* Banner */}
         {saveErrorMarkup}
 
-        {/* Panoramica Compagnia */}
-        <Layout.AnnotatedSection
-          title="Dettagli Compagnia"
-        >
+        {/* Left section */}
+        <Layout.Section>
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <Autocomplete
-                  options={optionsCompany}
-                  selected={selectedOptionsCompany}
-                  onSelect={updateSelectionCompany}
-                  textField={companyTextField}
-                />
+                <TextField type="text" label="Title" value={name} onChange={handleNameChange} />
               </FormLayout.Group>
             </FormLayout>
           </Card>
-        </Layout.AnnotatedSection>
-
-        {/* Panoramica cliente */}
-        <Layout.AnnotatedSection
-          title="Dettagli cliente"
-        >
-          <Card sectioned>
-            <FormLayout>
-              <FormLayout.Group>
-                <Autocomplete
-                  options={options}
-                  selected={selectedOptions}
-                  onSelect={updateSelection}
-                  textField={customerTextField}
-                />
-              </FormLayout.Group>
-              {/*<FormLayout.Group>
-                <TextField type="text" disabled={true} label="Nominativo Cliente" value={customerName} />
-              </FormLayout.Group>*/}
-            </FormLayout>
-          </Card>
-        </Layout.AnnotatedSection>
-        {/* Dettagli Polizza */}
-        <Layout.AnnotatedSection
-          title="Dettagli Polizza"
-        >
-          <Card sectioned>
-            <FormLayout>
-              <FormLayout.Group>
-                <TextField type="text" label="Numero Polizza" value={numeroPolizza} onChange={handleNumeroPolizzaChange} />
-              </FormLayout.Group>
-
-              <FormLayout.Group>
-                <Select label="Ramo Polizza" options={branches} onChange={handleBranchTypeChange} value={branchType} />
-              </FormLayout.Group>
-
-              <FormLayout.Group>
-                <TextField type="text" disabled={true} labelHidden={true} label="Data di Inizio" value={selectedDatesCreated.start.toLocaleDateString()} />
-                <Button onClick={handleDateCreatedSelection}>Seleziona Data di Decorrenza Polizza</Button>
-              </FormLayout.Group>
-              <FormLayout.Group>
-                {dateCreatedSelection && <DatePicker month={monthCreated} year={yearCreated} onChange={handleSelectedDatesCreated} onMonthChange={handleMonthCreatedChange}
-                  selected={selectedDatesCreated} allowRange={false} weekStartsOn={1} />}
-              </FormLayout.Group>
-
-              <FormLayout.Group>
-                <TextField type="text" disabled={true} labelHidden={true} label="Data di Scadenza" value={selectedDatesExpired.start.toLocaleDateString()} />
-                <Button onClick={handleDateExpiredSelection}>Seleziona Data di Scadenza Polizza</Button>
-              </FormLayout.Group>
-              <FormLayout.Group>
-                {dateExpiredSelection && <DatePicker month={monthExpired} year={yearExpired} onChange={handleSelectedDatesExpired} onMonthChange={handleMonthExpiredChange}
-                  selected={selectedDatesExpired} allowRange={false} weekStartsOn={1} />}
-              </FormLayout.Group>
-
-
-
-            </FormLayout>
-          </Card>
-        </Layout.AnnotatedSection>
-        {/* Calcolo Premio */}
-        <Layout.AnnotatedSection
-          title="Calcolo Premio"
-        >
-          <Card sectioned>
+          <Card title="Inventory" sectioned>
             <FormLayout>
               <FormLayout.Group>
                 <TextField
                   type="text"
-                  label="Premio Netto (in €)"
-                  value={premioNetto.toString()}
-                  onChange={handlePremioNettoChange}
+                  label="Price"
+                  value={price}
+                  suffix="USD"
+                  onChange={handlePriceChange}
+                />
+                <TextField
+                  type="number"
+                  label="Available"
+                  value={quantity}
+                  onChange={handleQuantityChange}
                 />
               </FormLayout.Group>
-              <FormLayout.Group>
-                {premioNetto !== 0 &&
-                  <TextField
-                    type="text"
-                    label="Premio Lordo (in €)"
-                    value={premioLordo.toString()}
-                    placeholder="0,00"
-                    onChange={handlePremioLordoChange}
-                    suffix="€"
-                  />
-                }
-              </FormLayout.Group>
-              {premioNetto !== 0 &&
-                <FormLayout.Group>
-                  <TextField type="text" label="Provvigioni (in %)" value={provvTot.toString()} onChange={handleProvvTotChange} />
-                  <TextField type="number" label="Valore Provvigioni (in €)" disabled={true} value={(+premioNetto * (+provvTot / 100)).toFixed(2)} />
-                </FormLayout.Group>
-              }
             </FormLayout>
           </Card>
-        </Layout.AnnotatedSection>
+        </Layout.Section>
 
-        {/* Status */}
-        <Layout.AnnotatedSection
-          title="Stato"
-        >
-          <Card sectioned>
-            <Select
-              label="Stato"
-              options={statusOptions}
-              onChange={handleSelectChange}
-              value={selectedStatus}
-            />
+        {/* Right section */}
+        <Layout.Section secondary>
+          <Card title="Organization" sectioned>
+            <FormLayout>
+              <FormLayout.Group>
+                <TextField
+                  type="text"
+                  label="Category"
+                  value={type}
+                  onChange={handleTypeChange}
+                />
+                <Autocomplete
+                  options={farmerOptions}
+                  selected={selectedFarmerOptions}
+                  onSelect={updateFarmerSelection}
+                  textField={farmerTextField}
+                />
+              </FormLayout.Group>
+            </FormLayout>
           </Card>
-        </Layout.AnnotatedSection>
-
-        {premioNetto !== 0 && rataForm}
+        </Layout.Section>
 
       </Layout>
     </Page>

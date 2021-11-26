@@ -39,22 +39,19 @@ export function TopBarMarkup({ handleMobileNavigation }: any) {
   /** Logout */
   const logout = async () => {
     try {
-      // const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/logout', {
-      //   method: 'POST',
-      //   credentials: 'include',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      // })
-      // const response = await data.json();
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      const response = await data.json();
 
-      // if (response.status === 'success') {
-      //   await asyncLocalStorage.removeItem('user');
-      //   window.location.href = '/login';
-      // }
-
-      await asyncLocalStorage.removeItem('user');
-      history.push('/login');
+      if (response) {
+        await asyncLocalStorage.removeItem('user');
+        history.push('/login');
+      }
     } catch (error) {
       console.log(error);
     }

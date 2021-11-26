@@ -51,6 +51,8 @@ export function CustomerNew({ user }: any) {
 
   const [phone, setPhone] = useState('');
 
+  const [password, setPassword] = useState('');
+
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
@@ -92,30 +94,30 @@ export function CustomerNew({ user }: any) {
         return;
       }
 
-      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/customers/new', {
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/client', {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: firstname + " " + lastname,
+          firstname: firstname,
+          lastname: lastname,
           email: email,
           phone: phone,
-          address: address,
-          city: city,
-          postal_code: postalCode,
+          password: password,
+          is_tmp_password: 1
         })
       })
       const response = await data.json();
 
-      if (response.status === 'success') {
+      if (response.status === 'customer_exists') {
+        setExistError(true);
+      } else if (response) {
         setActive(true);
         setTimeout(() => {
-          history.push(`/customers/${response.data._id}`);
+          history.push(`/customers/`);
         }, 3000);
-      } else if (response.status === 'customer_exists') {
-        setExistError(true)
       } else {
         setSaveError(true);
       }
@@ -123,7 +125,7 @@ export function CustomerNew({ user }: any) {
       console.log(error);
     }
     setIsDirty(false);
-  }, [firstname, lastname, email, phone, address, city, postalCode, history]);
+  }, [firstname, lastname, email, phone, password, history]);
 
   /** Handler */
   const handleFirstnameChange = useCallback((e) => {
@@ -140,14 +142,8 @@ export function CustomerNew({ user }: any) {
   const handlePhoneChange = useCallback((e) => {
     setPhone(e);
   }, []);
-  const handleAddressChange = useCallback((e) => {
-    setAddress(e);
-  }, []);
-  const handleCityChange = useCallback((e) => {
-    setCity(e);
-  }, []);
-  const handlePostalCodeChange = useCallback((e) => {
-    setPostalCode(e);
+  const handlePasswordChange = useCallback((e) => {
+    setPassword(e);
   }, []);
 
   const contextualSaveBarMarkup = isDirty ? (
@@ -170,17 +166,17 @@ export function CustomerNew({ user }: any) {
    * Error markups & toast
    */
   const toastMarkup = active ? (
-    <Toast content="Il cliente è stato creato con successo." onDismiss={toggleActive} />
+    <Toast content="Customer has been created." onDismiss={toggleActive} />
   ) : null;
 
   const saveErrorMarkup = saveError && (
     <Layout.Section>
       <Banner
-        title="Si è verificato un errore nel salvataggio dei dati"
+        title="An error occurred"
         status="critical"
         onDismiss={() => setSaveError(false)}
       >
-        <p>Si è pregati di riprovare più tardi.</p>
+        <p>Please try again later.</p>
       </Banner>
     </Layout.Section>
   )
@@ -188,11 +184,11 @@ export function CustomerNew({ user }: any) {
   const existErrorMarkup = existError && (
     <Layout.Section>
       <Banner
-        title="Esiste già un cliente associato a questo codice fiscale"
+        title="A customer with this email already exists"
         status="critical"
         onDismiss={() => setExistError(false)}
       >
-        <p>Si è pregati di controllare il codice fiscale se si desidera proseguire.</p>
+        <p>Please check the email and try again.</p>
       </Banner>
     </Layout.Section>
   )
@@ -214,14 +210,21 @@ export function CustomerNew({ user }: any) {
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField type="text" label="Name" value={firstname} onChange={handleFirstnameChange} error={validationNameError && "Il nome è obbligatorio"} />
-                <TextField type="text" label="Surname" value={lastname} onChange={handleLastnameChange} error={validationLastnameError && "Il cognome è obbligatorio"} />
+                <TextField type="text" label="Name" value={firstname} onChange={handleFirstnameChange} error={validationNameError && "Firstname is compulsory"} />
+                <TextField type="text" label="Surname" value={lastname} onChange={handleLastnameChange} error={validationLastnameError && "Surname is compulsory"} />
               </FormLayout.Group>
               <FormLayout.Group>
                 <TextField type="email" label="Email" value={email} onChange={handleEmailChange} />
               </FormLayout.Group>
               <FormLayout.Group>
                 <TextField type="tel" label="Phone number" value={phone} onChange={handlePhoneChange} />
+              </FormLayout.Group>
+            </FormLayout>
+          </Card>
+          <Card title="Password" sectioned>
+            <FormLayout>
+              <FormLayout.Group>
+                <TextField type="text" label="Temporary password" value={password} onChange={handlePasswordChange} />
               </FormLayout.Group>
             </FormLayout>
           </Card>

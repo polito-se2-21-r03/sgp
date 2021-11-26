@@ -7,8 +7,8 @@ const { models } = require('../sequelize');
 const bcrypt = require('bcrypt');
 
 const jwtSecret = 'Zv3SNmakJYZP9JTKzCOfmoNmxgv36Vp0g0csh6LSLMf543iQSfxC161wCQxUisR';
-const expireTime = 1000*3000; //  50 minutes
-const authErrorObj = { errors: [{  'param': 'Server', 'msg': 'Authorization error' }] };
+const expireTime = 1000 * 3000; //  50 minutes
+const authErrorObj = { errors: [{ 'param': 'Server', 'msg': 'Authorization error' }] };
 
 const routes = {
     order: require('./routes/order'),
@@ -22,22 +22,24 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const checkPassword = (user,password) => bcrypt.compareSync(password, user.hash);
+
+// const checkPassword = (user, password) => bcrypt.compareSync(password, user.hash);
+const checkPassword = (user, password) => user === password;
 
 // Authentication endpoint
 app.post('/api/login', async (req, res) =>
-    await models.user.findOne({where: {email: req.body.email}})
+    await models.user.findOne({ where: { email: req.body.email } })
         .then(async user => {
             if (!user) {
-                res.status(404).send({errors: [{'param': 'Server', 'msg': 'Invalid e-mail'}]});
+                res.status(404).send({ errors: [{ 'param': 'Server', 'msg': 'Invalid e-mail' }] });
             } else {
-                if (!checkPassword(user.password,req.body.password)) {
-                    res.status(401).send({errors: [{'param': 'Server', 'msg': 'Wrong password'}]});
-                }else{
+                if (!checkPassword(user.password, req.body.password)) {
+                    res.status(401).send({ errors: [{ 'param': 'Server', 'msg': 'Wrong password' }] });
+                } else {
                     //AUTHENTICATION SUCCESS
-                    const token = jsonwebtoken.sign({user: user.id}, jwtSecret, {expiresIn: expireTime});
-                    res.cookie('token', token, {httpOnly: true, sameSite: true, maxAge: expireTime});
-                    res.json({id: user.id, name: user.name});
+                    const token = jsonwebtoken.sign({ user: user.id }, jwtSecret, { expiresIn: expireTime });
+                    res.cookie('token', token, { httpOnly: true, sameSite: true, maxAge: expireTime });
+                    res.json({ id: user.id, firstname: user.firstname, lastname: user.lastname, role: user.role });
                 }
             }
         }).catch(
@@ -48,14 +50,40 @@ app.post('/api/login', async (req, res) =>
         ));
 
 app.use(cookieParser());
-app.post('/api/logout', (req, res) => res.clearCookie('token').end());
+app.post('/api/logout', (req, res) => {
+    res.cookie('token', { expires: Date.now() });
+    return res.status(200).json({});
+});
+
+/**
+* Check Authentication
+* 
+* @param {*} req 
+* @param {*} res 
+* @param {*} next 
+*/
+const checkAuth = (req, res, next) => {
+    const token = req.cookies.token;
+
+    if (token === null || token === undefined)
+        return res.status(401).json({ status: 'failed' });
+
+    jsonwebtoken.verify(token, jwtSecret, (err, user) => {
+        if (err) {
+            console.log(err);
+            return res.status(403).json({ status: 'failed' });
+        }
+
+        return res.status(200).json({ status: 'success', data: user });
+    })
+}
+app.post('/api/auth', checkAuth);
 
 // // For the rest of the code, all APIs require authentication
 // app.use(jwt({
 //     secret: jwtSecret,
 //     getToken: req => req.cookies.token
 // }));
-
 // To return a better object in case of errors
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {

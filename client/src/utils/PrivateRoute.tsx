@@ -7,37 +7,34 @@ export function PrivateRoute({ component: Compontent, path, roles, ...rest }: an
 
   const [auth, setAuth] = useState(false);
   const [goOn, setGoOn] = useState(false);
-  const [user, setUser] = useState({
-    firstname: 'Test',
-    lastname: 'Test'
-  });
+  const [user, setUser] = useState(null);
 
-  // Set auth based on localStorage
-  useEffect(() => {
-    asyncLocalStorage.getItem('user')
-      .then((data) => {
-        if (data)
-          setAuth(true);
-      })
-      .then(() => {
-        console.log(2);
-        setGoOn(true);
-      })
-  }, [])
-
-
+  // // Set auth based on localStorage
   // useEffect(() => {
-  //   verifyToken()
-  //     .then((res: any) => {
-  //       setAuth(res.status);
-  //       if (res.data)
-  //         setUser(res.data.user)
+  //   asyncLocalStorage.getItem('user')
+  //     .then((data) => {
+  //       if (data)
+  //         setAuth(true);
   //     })
   //     .then(() => {
+  //       console.log(2);
   //       setGoOn(true);
   //     })
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  // }, [])
+
+
+  useEffect(() => {
+    verifyToken()
+      .then((res: any) => {
+        setAuth(res.status);
+        if (res.data)
+          setUser(res.data.user)
+      })
+      .then(() => {
+        setGoOn(true);
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!goOn) {
     return (
