@@ -8,7 +8,6 @@
 ./server/package-lock.json
 
 # testing
-/coverage
 
 # production
 /build
