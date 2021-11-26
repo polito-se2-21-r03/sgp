@@ -1,39 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
-  <file path="/home/lupusdei/spg/server/__test__/index.test.js">
-    <testCase name="Testing get all products tests the base route and returns an array of orders" duration="64"/>
-    <testCase name="Testing get all orders tests the base route and returns an array of orders" duration="8"/>
-    <testCase name="Testing  Insert a new order should return code 200" duration="30">
-      <failure message="Error: expect(received).toBe(expected) // Object.is equality"><![CDATA[Error: expect(received).toBe(expected) // Object.is equality
-
-Expected: 200
-Received: 422
-    at Object.it (/home/lupusdei/spg/server/__test__/index.test.js:117:29)
-    at process._tickCallback (internal/process/next_tick.js:68:7)]]></failure>
-    </testCase>
-    <testCase name="Test getClientById Should get value from client table" duration="9"/>
-    <testCase name="Test getEmployeeById Should get value from employee table" duration="6"/>
-    <testCase name="Test checkProductAvailability Should get integer" duration="9"/>
-    <testCase name="Test insertOrderProduct Should get orderId" duration="18"/>
-    <testCase name="Test getAll from wallet tests the base route and returns an array of wallets" duration="11"/>
-    <testCase name="Test update wallet tests the base route and return a wallet updated" duration="28"/>
-    <testCase name="Test body validation for wallet update tests the body of req and return with error for body not valid" duration="7"/>
-    <testCase name="Test update wallet for valid client tests update of wallet for not valid client and return with error" duration="6"/>
-    <testCase name="Test client creation Should return userId" duration="20"/>
-    <testCase name="Test body validation of client creation Should return userId" duration="4">
-      <failure message="Error: expect(received).toBe(expected) // Object.is equality"><![CDATA[Error: expect(received).toBe(expected) // Object.is equality
-
-Expected: 422
-Received: 404
-    at Object.it (/home/lupusdei/spg/server/__test__/index.test.js:318:29)
-    at process._tickCallback (internal/process/next_tick.js:68:7)]]></failure>
-    </testCase>
-    <testCase name="Test getAll from client tests the get from user to filter only clients" duration="8"/>
-    <testCase name="Test email that already exists tests the get from user to search the email amoung the registered clients" duration="4">
-      <failure message="TypeError: Cannot read property &apos;id&apos; of null"><![CDATA[TypeError: Cannot read property 'id' of null
-    at Object.it (/home/lupusdei/spg/server/__test__/index.test.js:352:19)
-    at process._tickCallback (internal/process/next_tick.js:68:7)]]></failure>
-    </testCase>
-    <testCase name="Test association wallet to new client tests the creation of wallet for new registered client and return id of new wallet" duration="18"/>
+  <file path="/home/paci/spg/server/__test__/index.test.js">
+    <testCase name="Testing get all products tests the base route and returns an array of orders" duration="29"/>
+    <testCase name="Testing get all orders tests the base route and returns an array of orders" duration="6"/>
+    <testCase name="Testing  Insert a new order should return code 200" duration="39"/>
+    <testCase name="Test getClientById Should get value from client table" duration="2"/>
+    <testCase name="Test getEmployeeById Should get value from employee table" duration="4"/>
+    <testCase name="Test checkProductAvailability Should get integer" duration="2"/>
+    <testCase name="Test insertOrderProduct Should get orderId" duration="4"/>
+    <testCase name="Test getAll from wallet tests the base route and returns an array of wallets" duration="5"/>
+    <testCase name="Test update wallet tests the base route and return a wallet updated" duration="9"/>
+    <testCase name="Test body validation for wallet update tests the body of req and return with error for body not valid" duration="2"/>
+    <testCase name="Test update wallet for valid client tests update of wallet for not valid client and return with error" duration="2"/>
+    <testCase name="Test client creation Should return userId" duration="5"/>
+    <testCase name="Test body validation of client creation Should return userId" duration="3"/>
+    <testCase name="Test getAll from client tests the get from user to filter only clients" duration="2"/>
+    <testCase name="Test email that already exists tests the get from user to search the email amoung the registered clients" duration="2"/>
+    <testCase name="Test association wallet to new client tests the creation of wallet for new registered client and return id of new wallet" duration="4"/>
   </file>
 </testExecutions>

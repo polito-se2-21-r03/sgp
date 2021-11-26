@@ -18,7 +18,7 @@ async function create(req, res) {
     }
     try {
         const { employeeId, clientId, products } = req.body
-        if (!await models.client.findByPk(clientId) || !await models.employee.findByPk(employeeId)) {
+        if (!await models.user.findByPk(clientId) || !await models.user.findByPk(employeeId)) {
             res.status(503).json({ error: `Client or Employee not found` })
         }
         return await models.order.create({
