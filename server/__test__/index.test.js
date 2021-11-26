@@ -99,16 +99,13 @@ describe("Testing ", () => {
       "employeeId": 1,
       "products": [
         {
-          name: 'uova',
-          producerId: 1,
-          quantity: 50,
-          type: 'BIO',
-          price: 1.2},
+          productId: 1,
+          amount: 20,
+          price: 1.2
+        },
         {
-          name: 'pomodoro',
-          producerId: 1,
-          quantity: 20,
-          type: 'BIO',
+          productId: 2,
+          amount: 150,
           price: 1.2
         }
       ]
@@ -277,7 +274,6 @@ describe("Test client creation", () => {
       lastname: "Rossi",
       is_tmp_password: 0,
       role: "CLIENT",
-      createdAt: Date.now(),
     });
     const response = await models.user.create(body);
     expect(response.id).toBe(6);
@@ -296,25 +292,12 @@ describe("Test body validation of client creation", () => {
   })
   it("Should return userId", async () => {
     const body = {
-      "clientId": 1,
-      "employeeId": 1,
-      "products": [
-        {
-          name: 'uova',
-          producerId: 1,
-          quantity: 50,
-          type: 'BIO',
-          price: 1.2},
-        {
-          name: 'pomodoro',
-          producerId: 1,
-          quantity: 20,
-          type: 'BIO',
-          price: 1.2
-        }
-      ]
+      firstname: "Mario",
+      lastname: "Rossi",
+      is_tmp_password: 0,
+      role: "CLIENT",
     }
-    const response = await supertest(server).post('/api/user').send(body);
+    const response = await supertest(server).post('/api/client').send(body);
     expect(response.status).toBe(422); //come si fa?
   })
   afterAll(async () => {
@@ -349,7 +332,7 @@ describe("Test email that already exists", () => {
     server = app.listen(3001, () => console.log('Listening on port 3001'));
   })
   it("tests the get from user to search the email amoung the registered clients", async () => {
-    const client = await models.user.findByPk('maria@email.com') //la Pk è l'userId non l'email, come faccio a inserire l'email?
+    const client = await models.user.findOne({where: {email: 'maria@email.com'}})
     expect(client.id).toBe(3); 
   });
   afterAll(async () => {
