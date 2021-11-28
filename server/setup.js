@@ -4,7 +4,7 @@ const mock = require('./mock-products');
 const randomFloat = (min,max) => Math.round((Math.random() * (max - min) + min + Number.EPSILON) * 100) / 100;
 const randomInt = (min,max) => Math.floor(Math.random() * (max - min + 1) + min);
 
-async function reset()  {
+async function reset() {
 
     await sequelize.sync({ force: true });
 

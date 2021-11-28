@@ -18,3 +18,6 @@ export * from './Settings';
 
 /** Admin */
 export * from './Admin';
+
+/** Clients */
+export * from './Clients';

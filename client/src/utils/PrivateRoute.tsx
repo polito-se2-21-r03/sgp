@@ -9,20 +9,6 @@ export function PrivateRoute({ component: Compontent, path, roles, ...rest }: an
   const [goOn, setGoOn] = useState(false);
   const [user, setUser] = useState(null);
 
-  // // Set auth based on localStorage
-  // useEffect(() => {
-  //   asyncLocalStorage.getItem('user')
-  //     .then((data) => {
-  //       if (data)
-  //         setAuth(true);
-  //     })
-  //     .then(() => {
-  //       console.log(2);
-  //       setGoOn(true);
-  //     })
-  // }, [])
-
-
   useEffect(() => {
     verifyToken()
       .then((res: any) => {
@@ -44,12 +30,28 @@ export function PrivateRoute({ component: Compontent, path, roles, ...rest }: an
 
   let res;
 
+  const routesMap = new Map();
+  routesMap.set('CLIENT', '/client');
+
+  const getRoute = (role: string) => {
+    if (routesMap.has(role))
+      return routesMap.get(role);
+    else
+      return '/';
+  }
+
   if (auth) {
     // @ts-ignore
-    if ((roles && roles.includes(user.role)) || !roles)
-      res = <Route {...rest} render={props => <Compontent path={props.location.pathname} user={user} {...props} />} />
-    else
-      res = <Route {...rest} render={props => <Redirect to={{ pathname: '/', state: { from: props.location } }} />} />
+    if (user.is_tmp_password) {
+      res = <Route {...rest} render={props => <Redirect to={{ pathname: '/reset-password', state: { from: props.location } }} />} />
+    } else {
+      // @ts-ignore
+      if ((roles && roles.includes(user.role)) || !roles)
+        res = <Route {...rest} render={props => <Compontent path={props.location.pathname} user={user} {...props} />} />
+      else
+        // @ts-ignore
+        res = <Route {...rest} render={props => <Redirect to={{ pathname: getRoute(user.role), state: { from: props.location } }} />} />
+    }
   } else {
     res = <Route {...rest} render={props => <Redirect to={{ pathname: '/login', state: { from: props.location } }} />} />
   }
