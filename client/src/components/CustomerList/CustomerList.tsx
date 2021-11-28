@@ -84,7 +84,8 @@ export function CustomerList() {
   useEffect(() => {
     const filterItems = () => {
       const filteredItems = items.filter(item => {
-        return item.name.toLowerCase().includes(queryValue.toLowerCase());
+        const name = `${item.firstname} ${item.lastname}`;
+        return name.toLowerCase().includes(queryValue.toLowerCase());
       })
       setFrontItems(filteredItems);
     }
