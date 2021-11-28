@@ -43,9 +43,6 @@ export function OrderNew({ user }: any) {
   const [isDirty, setIsDirty] = useState(true);
   const [active, setActive] = useState(false);
   const [saveError, setSaveError] = useState(false);
-  const [existError, setExistError] = useState(false);
-  const [validationNameError, setValidationNameError] = useState(false);
-  const [validationLastnameError, setValidationLastnameError] = useState(false);
 
   const toggleActive = useCallback(() => setActive((active) => !active), []);
 
@@ -386,18 +383,6 @@ export function OrderNew({ user }: any) {
     </Layout.Section>
   )
 
-  const existErrorMarkup = existError && (
-    <Layout.Section>
-      <Banner
-        title="Esiste già un cliente associato a questo codice fiscale"
-        status="critical"
-        onDismiss={() => setExistError(false)}
-      >
-        <p>Si è pregati di controllare il codice fiscale se si desidera proseguire.</p>
-      </Banner>
-    </Layout.Section>
-  )
-
   // ---- Page markup ----
   const actualPageMarkup = (
     <Page
@@ -407,7 +392,6 @@ export function OrderNew({ user }: any) {
       <Layout>
         {/* Banner */}
         {saveErrorMarkup}
-        {existErrorMarkup}
         {/* First column */}
         <Layout.Section>
           {/* Product */}

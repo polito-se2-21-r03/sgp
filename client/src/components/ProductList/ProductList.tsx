@@ -14,9 +14,13 @@ export function ProductList() {
   const [isLoading, setIsLoading] = useState(false);
 
   const resourceName = {
-    singular: 'polizza',
-    plural: 'polizze',
+    singular: 'product',
+    plural: 'products',
   };
+
+  const farmersMap = new Map();
+  farmersMap.set(1, "Francesco");
+  farmersMap.set(2, "Alessandro");
 
   /**
    * Data fetching
@@ -160,7 +164,7 @@ export function ProductList() {
             {item.quantity}
           </IndexTable.Cell>
           <IndexTable.Cell>
-            Fornitore
+            {farmersMap.get(item.producerId)}
           </IndexTable.Cell>
         </IndexTable.Row>
       )

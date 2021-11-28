@@ -243,17 +243,17 @@ export function ProductNew({ user, location }: any) {
    * Error markups & toast
    */
   const toastMarkup = active ? (
-    <Toast content="La polizza è stata creata con successo." onDismiss={toggleActive} />
+    <Toast content="Product has been createrd." onDismiss={toggleActive} />
   ) : null;
 
   const saveErrorMarkup = saveError && (
     <Layout.Section>
       <Banner
-        title="Si è verificato un errore nel salvataggio dei dati"
+        title="An error occurred saving data"
         status="critical"
         onDismiss={() => setSaveError(false)}
       >
-        <p>Si è pregati di riprovare più tardi.</p>
+        <p>Please try again later.</p>
       </Banner>
     </Layout.Section>
   )
