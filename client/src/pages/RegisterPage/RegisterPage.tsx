@@ -36,7 +36,7 @@ export function RegisterPage() {
           email: email,
           phone: phone,
           password: password,
-          is_tmp_password: 1
+          is_tmp_password: 0
         })
       })
       const response = await data.json();
