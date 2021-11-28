@@ -35,20 +35,9 @@ export function LoginPage() {
           pathname: '/',
           state: { user: response }
         });
-        // window.location.href = '/';
       } else {
         setLoginError(true);
       }
-
-      // if (email === 'test@email.com' && password === 'password') {
-      //   await asyncLocalStorage.setItem('user', JSON.stringify({ firstname: 'Test', lastname: 'Test' }));
-      //   // Redirect
-      //   history.push({
-      //     pathname: '/',
-      //   });
-      // } else {
-      //   setLoginError(true);
-      // }
     } catch (error) {
       console.log(error);
     }
@@ -86,7 +75,6 @@ export function LoginPage() {
                     onChange={handlePwdChange}
                     label="Password"
                     type="password"
-                    labelAction={{ content: 'Forgot password?', url: '#', }}
                   />
                   {(loginError === true) ? (
                     <InlineError message="Check authentication data." fieldID="myFieldID" />
@@ -98,11 +86,6 @@ export function LoginPage() {
             </div>
           </div>
         </div>
-        <footer className="login-footer">
-          <a className="login-footer__link" target="_blank" href="#" title="Help Center">Help</a>
-          <a className="login-footer__link" target="_blank" href="#" title="Privacy Policy">Privacy</a>
-          <a className="login-footer__link" target="_blank" href="#" title="Terms of service">Terms</a>
-        </footer>
       </div>
     </div>
   )
