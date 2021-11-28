@@ -39,7 +39,7 @@ app.post('/api/login', async (req, res) =>
                     //AUTHENTICATION SUCCESS
                     const token = jsonwebtoken.sign({ user: user.id }, jwtSecret, { expiresIn: expireTime });
                     res.cookie('token', token, { httpOnly: true, sameSite: true, maxAge: expireTime });
-                    res.json({ id: user.id, firstname: user.firstname, lastname: user.lastname, role: user.role });
+                    res.json({ id: user.id, firstname: user.firstname, lastname: user.lastname, role: user.role, is_tmp_password: user.is_tmp_password });
                 }
             }
         }).catch(

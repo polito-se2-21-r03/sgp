@@ -14,6 +14,7 @@ function App() {
         <Switch>
           <Route exact path="/login" component={LoginPage} />
           <Route exact path="/register" component={RegisterPage} />
+          <Route exact path="/reset-password" component={ForgotPasswordPage} />
           {routes.map((route, idx) => {
             return route.component && (
               <PrivateRoute
