@@ -1,33 +1,25 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
-  Button,
-  OptionList,
-  Modal,
   Card,
   ContextualSaveBar,
-  FormLayout,
   Frame,
   Layout,
   Loading,
   Page,
-  Select,
   SkeletonBodyText,
   SkeletonDisplayText,
   SkeletonPage,
   TextContainer,
-  TextField,
   Autocomplete,
   Icon,
   Banner,
   Toast,
   Stack,
   TextStyle,
-  ResourceItem,
-  ResourceList,
 } from '@shopify/polaris';
 
-import { TopBarMarkup, NavigationMarkup, contextControlMarkup, } from '../../../components';
+import { TopBarMarkup, NavigationMarkup, contextControlMarkup } from '../../../components';
 
 import { SearchMinor } from '@shopify/polaris-icons';
 import { useHistory } from 'react-router';
