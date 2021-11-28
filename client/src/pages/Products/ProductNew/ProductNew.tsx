@@ -70,11 +70,11 @@ export function ProductNew({ user, location }: any) {
   const [farmer, setFarmer] = useState(-1);
   const [selectedFarmerOptions, setSelectedFarmerOptions] = useState([]);
   const [inputFarmerValue, setInputFarmerValue] = useState('');
-  const deselectedCustomerOptions = [
+  const deselectedFarmerOptions = [
     { value: '1', label: 'Francesco' },
     { value: '2', label: 'Alessandro' },
   ]
-  const [farmerOptions, setFarmerOptions] = useState(deselectedCustomerOptions);
+  const [farmerOptions, setFarmerOptions] = useState(deselectedFarmerOptions);
 
   const handleDiscard = useCallback(() => {
     setIsDirty(false);
@@ -198,18 +198,18 @@ export function ProductNew({ user, location }: any) {
       setInputFarmerValue(value);
 
       if (value === '') {
-        setFarmerOptions(deselectedCustomerOptions);
+        setFarmerOptions(deselectedFarmerOptions);
         return;
       }
 
       const filterRegex = new RegExp(value, 'i');
-      const resultOptions = deselectedCustomerOptions.filter((option) => {
+      const resultOptions = deselectedFarmerOptions.filter((option) => {
         // @ts-ignore
         return option.label.match(filterRegex)
       });
       setFarmerOptions(resultOptions);
     },
-    [deselectedCustomerOptions]
+    [deselectedFarmerOptions]
   );
 
   const updateFarmerSelection = useCallback(
