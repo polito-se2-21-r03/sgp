@@ -30,7 +30,7 @@ export function AddedProductRow({ item, addProduct }: any) {
         <Stack distribution="equalSpacing" alignment="center">
           <Stack.Item>
             <TextStyle variation="strong">{item.name}</TextStyle>
-            <p><TextStyle variation="subdued">Farmer: -</TextStyle></p>
+            <p><TextStyle variation="subdued">Farmer: {item.farmer}</TextStyle></p>
           </Stack.Item>
           <Stack.Item>
             <Stack alignment="center">

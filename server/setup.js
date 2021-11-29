@@ -76,6 +76,54 @@ async function reset() {
             lastname: 'Wesley',
             is_tmp_password: 0,
             role: 'EMPLOYEE',
+        },
+        {
+            password: 'pass',
+            email: 'nicole@email.com',
+            firstname: 'Nicole',
+            lastname: 's.p.a',
+            is_tmp_password: 0,
+            role: 'FARMER',
+        },
+        {
+            password: 'pass',
+            email: 'frank@email.com',
+            firstname: 'Frank',
+            lastname: 's.n.c',
+            is_tmp_password: 0,
+            role: 'FARMER',
+        },
+        {
+            password: 'pass',
+            email: 'albertengo@email.com',
+            firstname: 'Albertengo',
+            lastname: 's.a.s',
+            is_tmp_password: 0,
+            role: 'FARMER',
+        },
+        {
+            password: 'pass',
+            email: 'bio@email.com',
+            firstname: 'Bio',
+            lastname: 's.n.c',
+            is_tmp_password: 0,
+            role: 'FARMER',
+        },
+        {
+            password: 'pass',
+            email: 'fruttafresca@email.com',
+            firstname: 'FruttaFresca',
+            lastname: 's.r.l.s',
+            is_tmp_password: 0,
+            role: 'FARMER',
+        },
+        {
+            password: 'pass',
+            email: 'vegetables@email.com',
+            firstname: 'Yummy Vegetables',
+            lastname: 's.r.l.s',
+            is_tmp_password: 0,
+            role: 'FARMER',
         }
     ]).then(async () => {
         await sequelize.models.wallet.bulkCreate([
@@ -90,13 +138,13 @@ async function reset() {
             {
                 userId: 3,
                 credit: 1233.45,
-            },
+            }
         ]);
     }).catch(err => console.log(err))
 
     await sequelize.models.product.bulkCreate(Array.from({length: 21},
         (_, i) => ({
-            "producerId": 1,
+            "producerId": randomInt(6,10),
             "quantity": randomInt(450,730),
             "price": randomFloat(1,90),
             "src": mock.vegetables[i].img,
@@ -106,7 +154,7 @@ async function reset() {
     )
     await sequelize.models.product.bulkCreate(Array.from({length: 24},
         (_, i) => ({
-            "producerId": randomInt(2,5),
+            "producerId": randomInt(6,10),
             "quantity": randomInt(1,230),
             "price": randomFloat(1,90),
             "src": mock.fruits[i].img,
@@ -116,7 +164,7 @@ async function reset() {
     )
     await sequelize.models.product.bulkCreate(Array.from({length: 5},
         (_, i) => ({
-            "producerId": randomInt(2,5),
+            "producerId": randomInt(6,10),
             "quantity": randomInt(1,230),
             "price": randomFloat(1,90),
             "src": mock.cereals[i].img,

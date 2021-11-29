@@ -16,6 +16,7 @@ const routes = {
     client: require('./routes/client'),
     employee: require('./routes/employee'),
     wallet: require('./routes/wallet'),
+    farmer: require('./routes/farmer'),
 };
 
 const app = express();

@@ -28,6 +28,7 @@ import './ClientsProductAll.scss';
 export function ClientsProductAll({ user }: any) {
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
   const [items, setItems] = useState([]);
+  const [farmers, setFarmers] = useState([]);
   const [frontItems, setFrontItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
@@ -60,11 +61,11 @@ export function ClientsProductAll({ user }: any) {
    */
 
   /** Data fetching */
-  useEffect(() => {
-    const fetchProducts = async () => {
+  useEffect(async () => {
+    const fetchFarmers = async () => {
       try {
         setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/product', {
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/farmer', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -73,16 +74,48 @@ export function ClientsProductAll({ user }: any) {
         })
         const response = await data.json();
 
+        const farmers = {};
+
+        if (response) {
+          console.log(response);
+          for (const item of response) {
+            // item.name = customersMap.get(item.clientId);
+            farmers[item.id] = item.firstname + " " + item.lastname;
+          }
+
+          setIsLoading(false);
+          return farmers;
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false)
+      }
+    }
+
+    const fetchProducts = async () => {
+      try {
+        setIsLoading(true);
+        const farmers = await fetchFarmers();
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/product', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        const response = await data.json();
+        console.log(farmers);
         if (response) {
           console.log(response);
           const tmp = [];
           for (const item of response) {
-            // item.name = customersMap.get(item.clientId);
+            item["farmer"] = farmers[item.producerId]
             tmp.push(item);
           }
-
-          setItems(tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1));
-          setFrontItems(tmp.sort((a, b) => dayjs(b.createdAt).isAfter(a.createdAt) ? 1 : -1));
+          setItems(tmp);
+          setFrontItems(tmp);
           setIsLoading(false);
         } else {
           setIsLoading(false);
@@ -92,7 +125,7 @@ export function ClientsProductAll({ user }: any) {
         setIsLoading(false)
       }
     }
-    fetchProducts();
+    await fetchProducts();
   }, []);
 
   /** Add product */
