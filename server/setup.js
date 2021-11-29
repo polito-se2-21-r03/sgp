@@ -1,4 +1,8 @@
 const sequelize = require('./sequelize');
+const mock = require('./mock-products');
+
+const randomFloat = (min,max) => Math.round((Math.random() * (max - min) + min + Number.EPSILON) * 100) / 100;
+const randomInt = (min,max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 async function reset()  {
 
@@ -90,36 +94,36 @@ async function reset()  {
         ]);
     }).catch(err => console.log(err))
 
-    await sequelize.models.product.bulkCreate([
-        {
-            name: 'carota',
-            producerId: 1,
-            quantity: 300,
-            type: 'BIO',
-            price: 1.2
-        },
-        {
-            name: 'banana',
-            producerId: 1,
-            quantity: 300,
-            type: 'BIO',
-            price: 1.2
-        },
-        {
-            name: 'pomodoro',
-            producerId: 1,
-            quantity: 300,
-            type: 'BIO',
-            price: 1.2
-        },
-        {
-            name: 'uova',
-            producerId: 1,
-            quantity: 300,
-            type: 'BIO',
-            price: 1.2
-        },
-    ]);
+    await sequelize.models.product.bulkCreate(Array.from({length: 21},
+        (_, i) => ({
+            "producerId": randomInt(1,5),
+            "quantity": randomInt(1,230),
+            "price": randomFloat(1,90),
+            "src": mock.vegetables[i].img,
+            "name": mock.vegetables[i].name,
+            "type": 'VEGETABLES',
+        }))
+    )
+    await sequelize.models.product.bulkCreate(Array.from({length: 24},
+        (_, i) => ({
+            "producerId": randomInt(1,5),
+            "quantity": randomInt(1,230),
+            "price": randomFloat(1,90),
+            "src": mock.fruits[i].img,
+            "name": mock.fruits[i].name,
+            "type": 'FRUITS',
+        }))
+    )
+    await sequelize.models.product.bulkCreate(Array.from({length: 5},
+        (_, i) => ({
+            "producerId": randomInt(1,5),
+            "quantity": randomInt(1,230),
+            "price": randomFloat(1,90),
+            "src": mock.cereals[i].img,
+            "name": mock.cereals[i].name,
+            "type": 'CEREALS',
+        }))
+    )
 }
 
 module.exports = { reset };

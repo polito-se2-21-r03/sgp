@@ -8,6 +8,12 @@ async function getAll(req, res) {
         .catch(err => res.status(503).json({ error: err.message }))
 }
 
+async function getById(req, res) {
+    await models.product.findByPk(req.params.id)
+        .then(product => res.status(200).json(product))
+        .catch(err => res.status(503).json({ error: err.message }))
+}
+
 async function create(req, res) {
     const v = new Validator();
     const body = v.validate(req.body, ProductRequestSchema.productRequestSchema);
@@ -15,11 +21,12 @@ async function create(req, res) {
         return res.status(422).json({ errors: body.errors })
     }
     try {
-        const { producerId, quantity, price, type, name } = req.body
+        const { producerId, quantity, price, type, name, src } = req.body
         await models.product.create({
             producerId: producerId,
             quantity: quantity,
             price: price,
+            src: src,
             name: name,
             type: type,
         })
@@ -32,5 +39,6 @@ async function create(req, res) {
 
 module.exports = {
     getAll,
-    create
+    create,
+    getById
 };
