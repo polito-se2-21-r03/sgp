@@ -45,6 +45,35 @@ export function OrderList() {
    * Data fetching
    */
   useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/client', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        const response = await data.json();
+        const clients = {};
+
+        if (response) {
+          for (const item of response) {
+            clients[item.id] = item.firstname + " " + item.lastname;
+          }
+
+          setIsLoading(false);
+          return clients;
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false)
+      }
+    }
+
     const fetchOrders = async () => {
       try {
         setIsLoading(true);
@@ -56,10 +85,12 @@ export function OrderList() {
           },
         })
         const response = await data.json();
+        const clients = await fetchClients();
+
         if (response) {
           const tmp = [];
           for (const item of response) {
-            item.name = customersMap.get(item.clientId);
+            item["client"] = clients[item.clientId]
             tmp.push(item);
           }
 
@@ -192,7 +223,7 @@ export function OrderList() {
           {renderStatusMarkup(item.status)}
         </IndexTable.Cell>
         <IndexTable.Cell>
-          {item.name}
+          {item.client}
         </IndexTable.Cell>
       </IndexTable.Row>
     ),

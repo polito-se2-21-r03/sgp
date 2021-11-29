@@ -28,7 +28,6 @@ import './ClientsProductAll.scss';
 export function ClientsProductAll({ user }: any) {
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
   const [items, setItems] = useState([]);
-  const [farmers, setFarmers] = useState([]);
   const [frontItems, setFrontItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
@@ -77,7 +76,6 @@ export function ClientsProductAll({ user }: any) {
 
         if (response) {
           for (const item of response) {
-            // item.name = customersMap.get(item.clientId);
             farmers[item.id] = item.firstname + " " + item.lastname;
           }
 
@@ -91,7 +89,6 @@ export function ClientsProductAll({ user }: any) {
         setIsLoading(false)
       }
     }
-    const farmers = fetchFarmers();
 
     const fetchProducts = async () => {
       try {
@@ -104,10 +101,12 @@ export function ClientsProductAll({ user }: any) {
           },
         })
         const response = await data.json();
+        const farmers = await fetchFarmers();
+
         if (response) {
           const tmp = [];
           for (const item of response) {
-            item["farmer"] = farmers[item.producerId]
+            item["farmer"] = farmers[item.producerId];
             tmp.push(item);
           }
           setItems(tmp);

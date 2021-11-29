@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
@@ -60,6 +62,9 @@ export function OrderNew({ user }: any) {
     setIsDirty(true);
   }, []);
 
+  const [items, setItems] = useState([]);
+  const [frontItems, setFrontItems] = useState([]);
+
   /**
    * Save data
    */
@@ -119,41 +124,53 @@ export function OrderNew({ user }: any) {
    */
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const deselectedOptions = [
-    { value: '1', label: 'Apples' },
-    { value: '2', label: 'Tomatoes' },
-  ]
-  const [productOptions, setProductOptions] = useState(deselectedOptions);
-
-  const productsMap = new Map();
-  productsMap.set(1, {
-    productId: 1,
-    quantity: 300,
-    price: 2.3
-  })
-  productsMap.set(2, {
-    productId: 2,
-    quantity: 1000,
-    price: 4.6
-  })
+  const [deselectedOptions, setDeselectedOptions] = useState([]);
+  const [productOptions, setProductOptions] = useState([]);
 
   /**
    * Search customers
    */
   const [selectedCustomerOptions, setSelectedCustomerOptions] = useState([]);
   const [inputCustomerValue, setInputCustomerValue] = useState('');
-  const deselectedCustomerOptions = [
-    { value: '1', label: 'Francesco' },
-    { value: '2', label: 'Alessandro' },
-  ]
-  const [customerOptions, setCustomerOptions] = useState(deselectedCustomerOptions);
+  const [deselectedCustomerOptions, setDeselectedCustomerOptions] = useState([]);
+  const [customerOptions, setCustomerOptions] = useState([]);
 
   /**
    * Fetch data: 
    * - products
    * - customers
    */
+  /** Data fetching */
   useEffect(() => {
+    const fetchFarmers = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/farmer', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        const response = await data.json();
+        const farmers = {};
+
+        if (response) {
+          for (const item of response) {
+            farmers[item.id] = item.firstname + " " + item.lastname;
+          }
+
+          setIsLoading(false);
+          return farmers;
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false)
+      }
+    }
+
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
@@ -165,25 +182,31 @@ export function OrderNew({ user }: any) {
           },
         })
         const response = await data.json();
+        const farmers = await fetchFarmers();
 
-        if (response.status === 'success') {
-          let tmp = [];
-          for (const item of response.data) {
-            tmp.push({ value: item._id, label: item.label });
+        if (response) {
+          const tmp = [];
+          const tmp_opt = [];
+          for (const item of response) {
+            item["farmer"] = farmers[item.producerId];
+            tmp.push(item);
+            tmp_opt.push({ value: String(item.id), label: item.name });
           }
-          // @ts-ignore
-          setDeselectedOptions(tmp);
-          // @ts-ignore
-          setJobOptions(tmp);
+          setDeselectedOptions(tmp_opt);
+          setProductOptions(tmp_opt);
+          setItems(tmp);
           setIsLoading(false);
         } else {
           setIsLoading(false);
         }
       } catch (error) {
         console.log(error);
+        setIsLoading(false)
       }
     }
-    const fetchCustomers = async () => {
+    fetchProducts();
+
+    const fetchClients = async () => {
       try {
         setIsLoading(true);
         const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/client', {
@@ -195,25 +218,24 @@ export function OrderNew({ user }: any) {
         })
         const response = await data.json();
 
-        if (response.status === 'success') {
-          let tmp = [];
-          for (const item of response.data) {
-            tmp.push({ value: item._id, label: item.label });
+        if (response) {
+          console.log(response)
+          const tmp = [];
+          for (const item of response) {
+            tmp.push({ value: String(item.id), label: `${item.firstname} ${item.lastname}` });
           }
-          // @ts-ignore
-          setDeselectedAtecoOptions(tmp);
-          // @ts-ignore
-          setAtecoOptions(tmp);
+          setDeselectedCustomerOptions(tmp);
+          setCustomerOptions(tmp);
           setIsLoading(false);
         } else {
           setIsLoading(false);
         }
       } catch (error) {
         console.log(error);
+        setIsLoading(false)
       }
     }
-    fetchProducts();
-    fetchCustomers();
+    fetchClients();
   }, []);
 
   /**
@@ -255,9 +277,9 @@ export function OrderNew({ user }: any) {
 
       // Add product
       const tmp = addedItems;
-      const product = productsMap.get(Number(selectedValue[0].value));
+      const product = items[(Number(selectedValue[0].value)) - 1];
       const item = {
-        productId: product.productId,
+        productId: product.id,
         amount: 1,
         price: product.price,
       }
@@ -278,7 +300,7 @@ export function OrderNew({ user }: any) {
 
       setAddedItems(tmp);
     },
-    [productOptions, total]
+    [productOptions, items, total]
   );
 
   const productTextField = (
