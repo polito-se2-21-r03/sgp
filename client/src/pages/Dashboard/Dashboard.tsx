@@ -12,6 +12,7 @@ import {
   Stack,
   TextStyle,
   Tooltip,
+  EmptyState
 } from '@shopify/polaris';
 
 import { TopBarMarkup, NavigationMarkup, DashboardDatePicker } from '../../components';
@@ -20,7 +21,7 @@ import './Dashboard.scss';
 
 export function Dashboard({ user }: any) {
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
 
   const toggleMobileNavigationActive = useCallback(() => {
@@ -45,10 +46,10 @@ export function Dashboard({ user }: any) {
   const [frontItems, setFrontItems] = useState([]);
 
   // Loading
-  useEffect(() => {
-    if (provvTot !== -1 && clienti !== -1)
-      setIsLoading(false);
-  }, [clienti, provvTot]);
+  // useEffect(() => {
+  //   if (provvTot !== -1 && clienti !== -1)
+  //     setIsLoading(false);
+  // }, [clienti, provvTot]);
 
   // Pass function to DashboardDatePicker
   const handleAnalytics = (data: any) => {
@@ -72,7 +73,7 @@ export function Dashboard({ user }: any) {
   }
 
   // ---- Page markup ----
-  const pageMarkup = (
+  const pageMarkupOld = (
     <Page
       fullWidth
       title="Dashboard"
@@ -163,6 +164,25 @@ export function Dashboard({ user }: any) {
       </div>
     </Page>
   );
+
+  const pageMarkup = (
+    <Page
+      fullWidth
+      title={`Welcome, ${user.firstname}`}
+    >
+      <Card sectioned>
+        <EmptyState
+          heading="Manage system"
+          image="https://cdn.shopify.com/shopifycloud/web/assets/v1/e7b58a8b2e612fe6cf6f8c9e53830b70.svg"
+        >
+          <p>
+            Here you can manage your system
+          </p>
+        </EmptyState>
+      </Card>
+    </Page>
+
+  )
 
   return (
     <Frame
