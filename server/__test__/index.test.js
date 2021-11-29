@@ -341,7 +341,6 @@ describe("Test email that already exists", () => {
 })
 
 
-
 describe("Test association wallet to new client", () => {
   let server = null;
 
@@ -359,9 +358,80 @@ describe("Test association wallet to new client", () => {
 })
 
 
+describe("Test update order", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+    
+  
+  })
+  it("tests the base route and return an order updated", async () => {
+    body = { 
+      changedBy: "EMPLOYEE",
+      status: "DELIVERED"
+    }
+    const response = await supertest(server).put('/api/order/1').send(body);
+    expect(response.status).toBe(200);
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
 
 
+describe("Test body validation for order update", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+    
+  
+  })
+  it("tests the body of req and return with error for body not valid", async () => {
+    body = {createdAt: 200 };
+    const response = await supertest(server).put('/api/order/1').send(body);
+    expect(response.status).toBe(503);
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
 
 
+describe("Test update order for valid employee", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+    
+  
+  })
+  it("tests update of order for not valid employee and return with error", async () => {
+    const response = await models.order.findOne({where: {employeeId: 20}});
+    expect(response).toBe(null);
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
 
 
+describe("Test association order to new client", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log('Listening on port 3001'));
+  })
+  it("tests the creation of order for new registered client and return id of new order", async () => {
+    const response = await models.order.create({clientId: 1, employeeId: 1, status: "CREATED" })
+    expect(response.id).toBe(6); 
+  });
+  afterAll(async () => {
+    await server.close()
+  })
+})
