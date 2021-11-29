@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "jest --coverage --runInBand"
+    "test": "jest --runInBand --passWithNoTests",
+    "test:cov": "jest --coverage --testResultsProcessor=jest-sonar-reporter",
   },
   "author": "Team R3",
   "license": "ISC",
@@ -26,14 +27,5 @@
     "jest": "^27.3.1",
     "jest-sonar-reporter": "^2.0.0",
     "supertest": "^6.1.6"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "collectCoverage": true,
-    "testResultsProcessor": "jest-sonar-reporter",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ]
   }
 }
