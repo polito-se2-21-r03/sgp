@@ -5,6 +5,7 @@ exports.productRequestSchema = {
         "producerId": {"type": "integer"},
         "quantity": {"type": "integer"},
         "name": {"type": "string"},
+        "src": {"type": "string"},
         "price": {"type": "number"},
         "type": {"type": "string"},
     },
