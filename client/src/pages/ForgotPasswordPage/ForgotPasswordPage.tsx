@@ -3,10 +3,14 @@ import React, { useCallback, useState } from 'react';
 import { Button, Form, FormLayout, TextField, InlineError, Loading, Toast, Frame, Banner } from "@shopify/polaris";
 
 import './ForgotPasswordPage.css';
-import logo from '../../nano_b.svg';
+import logo from '../../logo_transparent.png';
+import { useHistory } from 'react-router';
 
 export function ForgotPasswordPage() {
+  const history = useHistory();
+
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
   const [active, setActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +27,7 @@ export function ForgotPasswordPage() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email: email })
+        body: JSON.stringify({ password })
       })
       const response = await data.json();
       setIsLoading(false);
@@ -31,7 +35,7 @@ export function ForgotPasswordPage() {
       if (response.status === 'success') {
         setActive(true);
         setTimeout(() => {
-          window.location.href = '/';
+          history.push('/');
         }, 3000);
       } else if (response.status === 'user_notexists') {
         setNotExist(true);
@@ -41,19 +45,20 @@ export function ForgotPasswordPage() {
     } catch (error) {
       console.log(error);
     }
-  }, [email]);
+  }, [password]);
 
   const handleEmailChange = useCallback((value) => setEmail(value), []);
+  const handlePasswordChange = useCallback((value) => setPassword(value), []);
 
   const toggleActive = useCallback(() => setActive((active) => !active), [])
   const toastMarkup = active ? (
-    <Toast content="È stata inviata l'email contenente la nuova password" onDismiss={toggleActive} />
+    <Toast content="Password has been updated" onDismiss={toggleActive} />
   ) : null;
 
   const existError = notExist && (
     <div style={{ "marginBottom": "3rem" }}>
       <Banner
-        title="Non esiste nessun utente associato a questo indirizzo email"
+        title="User with this email does not exist."
         status="critical"
         onDismiss={() => setNotExist(false)}
       >
@@ -78,8 +83,8 @@ export function ForgotPasswordPage() {
 
             <div className="login-card__content">
               <div className="main-card-section">
-                <h2 className="ui-heading">Recupera la password</h2>
-                <h3 className="ui-subheading ui-subheading--subdued">Ti verrà inviata una email con una nuova password</h3>
+                <h2 className="ui-heading">Reset your password</h2>
+                <h3 className="ui-subheading ui-subheading--subdued">Insert a new password for your account</h3>
                 {existError}
                 <Form onSubmit={handleSubmit}>
                   <FormLayout>
@@ -89,21 +94,22 @@ export function ForgotPasswordPage() {
                       label="Email"
                       type="email"
                     />
+                    <TextField
+                      value={password}
+                      onChange={handlePasswordChange}
+                      label="Password"
+                      type="password"
+                    />
                     {(error === true) ? (
-                      <InlineError message="Qualcosa è andato storto. Riprovare più tardi." fieldID="myFieldID" />
+                      <InlineError message="Something goes wrong. Please try again later." fieldID="myFieldID" />
                     ) : ''}
-                    <Button primary size="large" submit>Recupera</Button>
+                    <Button primary size="large" submit>Reset</Button>
                   </FormLayout>
                 </Form>
 
               </div>
             </div>
           </div>
-          <footer className="login-footer">
-            <a className="login-footer__link" target="_blank" href="#" title="Help Center">Assistenza</a>
-            <a className="login-footer__link" target="_blank" href="#" title="Privacy Policy">Privacy</a>
-            <a className="login-footer__link" target="_blank" href="#" title="Terms of service">Termini</a>
-          </footer>
         </div>
 
         {toastMarkup}

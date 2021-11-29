@@ -22,7 +22,16 @@ export function NavigationMarkup({ user }: any) {
     [],
   );
 
-  let location = window.location.pathname;
+  const location = window.location.pathname;
+
+  const getRoute = () => {
+    switch (user.role) {
+      case 'CLIENT':
+        return '/client';
+      default:
+        return '/';
+    }
+  }
 
   // ---- Navigation ----
   const navigationMarkup = (
@@ -31,16 +40,18 @@ export function NavigationMarkup({ user }: any) {
         items={[
           {
             label: 'Home',
+            key: 1,
             icon: HomeMajor,
             onClick: () => {
               toggleIsLoading();
               setNavItemActive('home');
             },
-            url: '/',
+            url: getRoute(),
             exactMatch: true
           },
-          {
+          user && user.role === 'EMPLOYEE' && {
             label: 'Orders',
+            key: 2,
             icon: OrdersMajor,
             onClick: () => {
               toggleIsLoading();
@@ -48,8 +59,9 @@ export function NavigationMarkup({ user }: any) {
             },
             url: '/orders',
           },
-          {
+          user && user.role === 'EMPLOYEE' && {
             label: 'Products',
+            key: 3,
             icon: ProductsMajor,
             onClick: () => {
               toggleIsLoading();
@@ -57,8 +69,9 @@ export function NavigationMarkup({ user }: any) {
             },
             url: '/products',
           },
-          {
+          user && user.role === 'EMPLOYEE' && {
             label: 'Customers',
+            key: 4,
             icon: CustomersMajor,
             onClick: () => {
               toggleIsLoading();
@@ -68,24 +81,7 @@ export function NavigationMarkup({ user }: any) {
           },
         ]}
       />
-      {user && user.role === 'admin' && (
-        <Navigation.Section
-          title='Admin'
-          items={[
-            {
-              label: 'Utenti',
-              icon: CustomersMajor,
-              onClick: () => {
-                toggleIsLoading();
-                setNavItemActive('users');
-              },
-              url: '/admin/users',
-            },
-          ]}
-        />
-      )}
-      <Navigation.Section fill items={[]} />
-      <Navigation.Section
+      {/* <Navigation.Section
         items={[
           {
             label: 'Settings',
@@ -98,7 +94,7 @@ export function NavigationMarkup({ user }: any) {
             exactMatch: true
           },
         ]}
-      />
+      /> */}
     </Navigation>
   );
   return navigationMarkup;

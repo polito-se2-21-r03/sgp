@@ -5,7 +5,7 @@ import routes from './routes';
 
 /** Pages */
 import { LoginPage } from './pages/LoginPage/LoginPage';
-import { ForgotPasswordPage } from './pages';
+import { ForgotPasswordPage, RegisterPage } from './pages';
 
 function App() {
   return (
@@ -13,7 +13,8 @@ function App() {
       <Router >
         <Switch>
           <Route exact path="/login" component={LoginPage} />
-          <Route exact path="/forgot-password" component={ForgotPasswordPage} />
+          <Route exact path="/register" component={RegisterPage} />
+          <Route exact path="/reset-password" component={ForgotPasswordPage} />
           {routes.map((route, idx) => {
             return route.component && (
               <PrivateRoute

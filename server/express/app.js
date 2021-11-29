@@ -16,6 +16,7 @@ const routes = {
     client: require('./routes/client'),
     employee: require('./routes/employee'),
     wallet: require('./routes/wallet'),
+    farmer: require('./routes/farmer'),
 };
 
 const app = express();
@@ -37,9 +38,16 @@ app.post('/api/login', async (req, res) =>
                     res.status(401).send({ errors: [{ 'param': 'Server', 'msg': 'Wrong password' }] });
                 } else {
                     //AUTHENTICATION SUCCESS
-                    const token = jsonwebtoken.sign({ user: user.id }, jwtSecret, { expiresIn: expireTime });
+                    const tmp = {
+                        id: user.id,
+                        firstname: user.firstname,
+                        lastname: user.lastname,
+                        role: user.role,
+                        is_tmp_password: user.is_tmp_password
+                    }
+                    const token = jsonwebtoken.sign({ user: tmp }, jwtSecret, { expiresIn: expireTime });
                     res.cookie('token', token, { httpOnly: true, sameSite: true, maxAge: expireTime });
-                    res.json({ id: user.id, firstname: user.firstname, lastname: user.lastname, role: user.role });
+                    res.json({ id: user.id, firstname: user.firstname, lastname: user.lastname, role: user.role, is_tmp_password: user.is_tmp_password });
                 }
             }
         }).catch(
@@ -78,6 +86,10 @@ const checkAuth = (req, res, next) => {
     })
 }
 app.post('/api/auth', checkAuth);
+
+/**
+ * TO-DO: reset password
+ */
 
 // // For the rest of the code, all APIs require authentication
 // app.use(jwt({

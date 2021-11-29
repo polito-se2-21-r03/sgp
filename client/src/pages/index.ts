@@ -1,4 +1,5 @@
 export { LoginPage } from './LoginPage';
+export { RegisterPage } from './RegisterPage';
 export { Dashboard } from './Dashboard';
 
 export { ForgotPasswordPage } from './ForgotPasswordPage';
@@ -17,3 +18,6 @@ export * from './Settings';
 
 /** Admin */
 export * from './Admin';
+
+/** Clients */
+export * from './Clients';
