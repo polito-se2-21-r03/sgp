@@ -22,7 +22,16 @@ export function NavigationMarkup({ user }: any) {
     [],
   );
 
-  let location = window.location.pathname;
+  const location = window.location.pathname;
+
+  const getRoute = () => {
+    switch (user.role) {
+      case 'CLIENT':
+        return '/client';
+      default:
+        return '/';
+    }
+  }
 
   // ---- Navigation ----
   const navigationMarkup = (
@@ -36,10 +45,10 @@ export function NavigationMarkup({ user }: any) {
               toggleIsLoading();
               setNavItemActive('home');
             },
-            url: '/',
+            url: getRoute(),
             exactMatch: true
           },
-          {
+          user && user.role === 'EMPLOYEE' && {
             label: 'Orders',
             icon: OrdersMajor,
             onClick: () => {
@@ -48,7 +57,7 @@ export function NavigationMarkup({ user }: any) {
             },
             url: '/orders',
           },
-          {
+          user && user.role === 'EMPLOYEE' && {
             label: 'Products',
             icon: ProductsMajor,
             onClick: () => {
@@ -57,7 +66,7 @@ export function NavigationMarkup({ user }: any) {
             },
             url: '/products',
           },
-          {
+          user && user.role === 'EMPLOYEE' && {
             label: 'Customers',
             icon: CustomersMajor,
             onClick: () => {
@@ -85,7 +94,7 @@ export function NavigationMarkup({ user }: any) {
         />
       )}
       <Navigation.Section fill items={[]} />
-      <Navigation.Section
+      {/* <Navigation.Section
         items={[
           {
             label: 'Settings',
@@ -98,7 +107,7 @@ export function NavigationMarkup({ user }: any) {
             exactMatch: true
           },
         ]}
-      />
+      /> */}
     </Navigation>
   );
   return navigationMarkup;
