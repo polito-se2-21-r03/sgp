@@ -61,7 +61,7 @@ export function ClientsProductAll({ user }: any) {
    */
 
   /** Data fetching */
-  useEffect(async () => {
+  useEffect(() => {
     const fetchFarmers = async () => {
       try {
         setIsLoading(true);
@@ -73,11 +73,9 @@ export function ClientsProductAll({ user }: any) {
           },
         })
         const response = await data.json();
-
         const farmers = {};
 
         if (response) {
-          console.log(response);
           for (const item of response) {
             // item.name = customersMap.get(item.clientId);
             farmers[item.id] = item.firstname + " " + item.lastname;
@@ -93,11 +91,11 @@ export function ClientsProductAll({ user }: any) {
         setIsLoading(false)
       }
     }
+    const farmers = fetchFarmers();
 
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        const farmers = await fetchFarmers();
         const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/product', {
           method: 'GET',
           credentials: 'include',
@@ -106,9 +104,7 @@ export function ClientsProductAll({ user }: any) {
           },
         })
         const response = await data.json();
-        console.log(farmers);
         if (response) {
-          console.log(response);
           const tmp = [];
           for (const item of response) {
             item["farmer"] = farmers[item.producerId]
@@ -125,7 +121,7 @@ export function ClientsProductAll({ user }: any) {
         setIsLoading(false)
       }
     }
-    await fetchProducts();
+    fetchProducts();
   }, []);
 
   /** Add product */
