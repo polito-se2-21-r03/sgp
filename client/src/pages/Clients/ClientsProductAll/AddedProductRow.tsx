@@ -24,7 +24,11 @@ export function AddedProductRow({ item, addProduct }: any) {
   return (
     <Stack vertical>
       <Stack.Item>
-        <img src="https://images.unsplash.com/photo-1630448927918-1dbcd8ba439b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80" />
+        {item.src ? (
+          <img src={item.src} />
+        ) : (
+          <img src="https://images.unsplash.com/photo-1630448927918-1dbcd8ba439b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80" />
+        )}
       </Stack.Item>
       <Stack.Item>
         <Stack distribution="equalSpacing" alignment="center">
