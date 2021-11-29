@@ -40,6 +40,7 @@ export function NavigationMarkup({ user }: any) {
         items={[
           {
             label: 'Home',
+            key: 1,
             icon: HomeMajor,
             onClick: () => {
               toggleIsLoading();
@@ -50,6 +51,7 @@ export function NavigationMarkup({ user }: any) {
           },
           user && user.role === 'EMPLOYEE' && {
             label: 'Orders',
+            key: 2,
             icon: OrdersMajor,
             onClick: () => {
               toggleIsLoading();
@@ -59,6 +61,7 @@ export function NavigationMarkup({ user }: any) {
           },
           user && user.role === 'EMPLOYEE' && {
             label: 'Products',
+            key: 3,
             icon: ProductsMajor,
             onClick: () => {
               toggleIsLoading();
@@ -68,6 +71,7 @@ export function NavigationMarkup({ user }: any) {
           },
           user && user.role === 'EMPLOYEE' && {
             label: 'Customers',
+            key: 4,
             icon: CustomersMajor,
             onClick: () => {
               toggleIsLoading();
@@ -77,23 +81,6 @@ export function NavigationMarkup({ user }: any) {
           },
         ]}
       />
-      {user && user.role === 'admin' && (
-        <Navigation.Section
-          title='Admin'
-          items={[
-            {
-              label: 'Utenti',
-              icon: CustomersMajor,
-              onClick: () => {
-                toggleIsLoading();
-                setNavItemActive('users');
-              },
-              url: '/admin/users',
-            },
-          ]}
-        />
-      )}
-      <Navigation.Section fill items={[]} />
       {/* <Navigation.Section
         items={[
           {
