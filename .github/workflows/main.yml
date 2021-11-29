@@ -1,29 +1,33 @@
+name: Build
 on:
-  # Trigger analysis when pushing in master or pull requests, and when creating
-  # a pull request.
   push:
-    branches: [master]
+    branches:
+      - master
   pull_request:
-    branches: [master]
     types: [opened, synchronize, reopened]
-name: Main Workflow
 jobs:
   sonarcloud:
+    name: SonarCloud
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
-      - name: Get master
-        run: git fetch origin master
-      - name: Install dependencies
-        run: cd ./server && npm install
-      - name: Install Jest globally
-        run: sudo npm install -g jest
-      - name: Run Tests
-        run: cd ./server && npm run test
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        
+      - name: Build Coverage Backend
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - run: npm ci
+        working-directory: server
+      - run: npm run build --if-present    
+        working-directory: server
+      - run: npm run test:cov
+        working-directory: server
+
       - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
