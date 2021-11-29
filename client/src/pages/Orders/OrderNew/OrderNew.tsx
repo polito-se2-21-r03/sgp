@@ -190,7 +190,7 @@ export function OrderNew({ user }: any) {
           for (const item of response) {
             item["farmer"] = farmers[item.producerId];
             tmp.push(item);
-            tmp_opt.push({ value: String(item.id), label: item.name });
+            tmp_opt.push({ value: String(item.id), label: `${item.name} - Farmer: ${item.farmer}` });
           }
           setDeselectedOptions(tmp_opt);
           setProductOptions(tmp_opt);
