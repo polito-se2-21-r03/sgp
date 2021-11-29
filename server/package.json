@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "jest --runInBand --passWithNoTests",
-    "test:cov": "jest --coverage --testResultsProcessor=jest-sonar-reporter",
+    "test:cov": "jest --coverage --testResultsProcessor=jest-sonar-reporter"
   },
   "author": "Team R3",
   "license": "ISC",

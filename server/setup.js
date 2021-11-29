@@ -96,8 +96,8 @@ async function reset()  {
 
     await sequelize.models.product.bulkCreate(Array.from({length: 21},
         (_, i) => ({
-            "producerId": randomInt(1,5),
-            "quantity": randomInt(1,230),
+            "producerId": 1,
+            "quantity": randomInt(450,730),
             "price": randomFloat(1,90),
             "src": mock.vegetables[i].img,
             "name": mock.vegetables[i].name,
@@ -106,7 +106,7 @@ async function reset()  {
     )
     await sequelize.models.product.bulkCreate(Array.from({length: 24},
         (_, i) => ({
-            "producerId": randomInt(1,5),
+            "producerId": randomInt(2,5),
             "quantity": randomInt(1,230),
             "price": randomFloat(1,90),
             "src": mock.fruits[i].img,
@@ -116,7 +116,7 @@ async function reset()  {
     )
     await sequelize.models.product.bulkCreate(Array.from({length: 5},
         (_, i) => ({
-            "producerId": randomInt(1,5),
+            "producerId": randomInt(2,5),
             "quantity": randomInt(1,230),
             "price": randomFloat(1,90),
             "src": mock.cereals[i].img,
