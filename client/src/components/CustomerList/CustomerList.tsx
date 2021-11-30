@@ -9,7 +9,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 
 import dayjs from 'dayjs';
 
-export function CustomerList({ handleModal }: any) {
+export function CustomerList({ handleModal, update }: any) {
   const [selectedItems, setSelectedItems] = useState([]);
   const [taggedWith, setTaggedWith] = useState('VIP');
   const [queryValue, setQueryValue] = useState(null);
@@ -39,6 +39,35 @@ export function CustomerList({ handleModal }: any) {
    * Data fetching
    */
   useEffect(() => {
+    const fetchWallets = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/wallet', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        const response = await data.json();
+        const wallets = {};
+
+        if (response) {
+          for (const item of response) {
+            wallets[item.userId] = item.credit;
+          }
+
+          setIsLoading(false);
+          return wallets;
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false)
+      }
+    }
+
     const fetchUsers = async () => {
       try {
         setIsLoading(true);
@@ -50,12 +79,12 @@ export function CustomerList({ handleModal }: any) {
           },
         })
         const response = await data.json();
+        const wallets = await fetchWallets();
 
         if (response) {
-          console.log(response)
           const tmp = [];
           for (const item of response) {
-            // item.name = customersMap.get(item.clientId);
+            item["credit"] = wallets[item.id];
             tmp.push(item);
           }
 
@@ -72,7 +101,7 @@ export function CustomerList({ handleModal }: any) {
       }
     }
     fetchUsers();
-  }, [])
+  }, [update])
 
   const filters = [];
 
@@ -129,6 +158,7 @@ export function CustomerList({ handleModal }: any) {
     const media = <Avatar customer={false} size="medium" name={'_id'} />;
     const url = `#`;
     const name = `${item.firstname} ${item.lastname}`
+    console.log(item)
 
     return (
       <ResourceItem
@@ -138,16 +168,6 @@ export function CustomerList({ handleModal }: any) {
         sortOrder={index}
         accessibilityLabel={`View details for ${name}`}
       >
-        {/* <div className={styles.dataScroll}>
-          <div>
-            <TextStyle variation="strong">{item.name}</TextStyle>
-          </div>
-          <div>
-            <p>
-              <TextStyle variation="subdued">Ruolo: </TextStyle>
-            </p>
-          </div>
-        </div> */}
         <Stack alignment="center" distribution="equalSpacing">
           <Stack.Item>
             <div>
@@ -158,6 +178,7 @@ export function CustomerList({ handleModal }: any) {
             </div>
           </Stack.Item>
           <Stack.Item>
+            <p>Credit: {Number(item.credit).toFixed(2)} €</p>
             <Button plain onClick={() => handleModal(item.id)}>
               Top up account
             </Button>

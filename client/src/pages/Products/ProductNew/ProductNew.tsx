@@ -288,7 +288,7 @@ export function ProductNew({ user, location }: any) {
                   type="text"
                   label="Price"
                   value={price}
-                  suffix="USD"
+                  suffix="EUR"
                   onChange={handlePriceChange}
                 />
                 <TextField

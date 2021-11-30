@@ -51,6 +51,8 @@ export function CustomerAll({ user }: any) {
   const [amount, setAmount] = useState('');
   const handleAmountChange = useCallback((e) => setAmount(e), []);
 
+  const [update, setUpdate] = useState(false);
+
   const loadingMarkup = isLoading ? <Loading /> : null;
 
   const handleTopUpModal = useCallback((id) => {
@@ -79,6 +81,7 @@ export function CustomerAll({ user }: any) {
 
       if (response) {
         setActive(true);
+        setUpdate(!update);
       } else {
         setSaveError(true);
       }
@@ -112,7 +115,7 @@ export function CustomerAll({ user }: any) {
           type="text"
           label="Amount"
           value={amount}
-          suffix="USD"
+          suffix="EUR"
           onChange={handleAmountChange}
         />
       </Modal.Section>
@@ -155,7 +158,7 @@ export function CustomerAll({ user }: any) {
       <Layout>
         {saveErrorMarkup}
         <Layout.Section>
-          <CustomerList handleModal={handleTopUpModal} />
+          <CustomerList handleModal={handleTopUpModal} update={update} />
         </Layout.Section>
       </Layout>
     </Page>
