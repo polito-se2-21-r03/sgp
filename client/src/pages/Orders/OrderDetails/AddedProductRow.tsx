@@ -6,14 +6,9 @@ import {
   TextStyle
 } from '@shopify/polaris';
 
-export function AddedProductRow({ item, label, total, updateTotal }: any) {
-  const { productId, amount, price } = item;
+export function AddedProductRow({ item, label }: any) {
+  const { id, amount, price } = item;
   const [value, setValue] = useState(String(amount));
-
-  const handleValueChange = useCallback((newValue) => {
-    setValue(newValue);
-    updateTotal(total + (Number(newValue) - 1) * price);
-  }, []);
 
   return (
     <Stack distribution="equalSpacing" alignment="center">
@@ -27,7 +22,6 @@ export function AddedProductRow({ item, label, total, updateTotal }: any) {
               label=""
               type="number"
               value={value}
-              onChange={handleValueChange}
               autoComplete="off"
               disabled
             />

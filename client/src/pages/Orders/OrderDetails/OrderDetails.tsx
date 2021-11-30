@@ -143,36 +143,6 @@ export function OrderDetails({ match, user }: any) {
    * - customers
    */
   useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/order/${match.params.id}`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        })
-        const response = await data.json();
-        console.log(response);
-
-        if (response) {
-          const tmp = [];
-          console.log(response);
-          // for (const item of response.data) {
-          //   tmp.push({ value: item._id, label: item.label });
-          // }
-          setCustomer(response.clientId);
-          setStatus(response.status);
-
-          setIsLoading(false);
-        } else {
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
     const fetchFarmers = async () => {
       try {
         setIsLoading(true);
@@ -199,6 +169,38 @@ export function OrderDetails({ match, user }: any) {
       } catch (error) {
         console.log(error);
         setIsLoading(false)
+      }
+    }
+    const fetchOrder = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/order/${match.params.id}`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        const response = await data.json();
+        const farmers = await fetchFarmers();
+
+        if (response) {
+          const tmp = [];
+          console.log(response);
+          for (const item of response.products) {
+            item["farmer"] = farmers[item.producerId];
+            item.name = `${item.name} - Farmer: ${item.farmer}`;
+            tmp.push(item);
+          }
+          setCustomer(response.clientId);
+          setStatus(response.status);
+
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
       }
     }
     const fetchProducts = async () => {
