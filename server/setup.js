@@ -36,6 +36,65 @@ async function reset() {
         },
     ]);
 
+    await sequelize.models.product.bulkCreate(Array.from({length: 21},
+        (_, i) => ({
+            "producerId": randomInt(6,10),
+            "quantity": randomInt(450,730),
+            "price": randomFloat(1,90),
+            "src": mock.vegetables[i].img,
+            "name": mock.vegetables[i].name,
+            "type": 'VEGETABLES',
+        }))
+    )
+    await sequelize.models.product.bulkCreate(Array.from({length: 24},
+        (_, i) => ({
+            "producerId": randomInt(6,10),
+            "quantity": randomInt(1,230),
+            "price": randomFloat(1,90),
+            "src": mock.fruits[i].img,
+            "name": mock.fruits[i].name,
+            "type": 'FRUITS',
+        }))
+    )
+    await sequelize.models.product.bulkCreate(Array.from({length: 5},
+        (_, i) => ({
+            "producerId": randomInt(6,10),
+            "quantity": randomInt(1,230),
+            "price": randomFloat(1,90),
+            "src": mock.cereals[i].img,
+            "name": mock.cereals[i].name,
+            "type": 'CEREALS',
+        }))
+    )
+
+    await sequelize.models.order_product.bulkCreate([
+        {
+            orderId: 1,
+            productId: 1,
+            amount: 2
+        },
+        {
+            orderId: 2,
+            productId: 4,
+            amount: 45
+        },
+        {
+            orderId: 1,
+            productId: 12,
+            amount: 21
+        },
+        {
+            orderId: 4,
+            productId: 19,
+            amount: 35
+        },
+        {
+            orderId: 1,
+            productId: 9,
+            amount: 33
+        }
+    ]);
+
     await sequelize.models.user.bulkCreate([
         {
             password: 'pass',
@@ -141,37 +200,6 @@ async function reset() {
             }
         ]);
     }).catch(err => console.log(err))
-
-    await sequelize.models.product.bulkCreate(Array.from({length: 21},
-        (_, i) => ({
-            "producerId": randomInt(6,10),
-            "quantity": randomInt(450,730),
-            "price": randomFloat(1,90),
-            "src": mock.vegetables[i].img,
-            "name": mock.vegetables[i].name,
-            "type": 'VEGETABLES',
-        }))
-    )
-    await sequelize.models.product.bulkCreate(Array.from({length: 24},
-        (_, i) => ({
-            "producerId": randomInt(6,10),
-            "quantity": randomInt(1,230),
-            "price": randomFloat(1,90),
-            "src": mock.fruits[i].img,
-            "name": mock.fruits[i].name,
-            "type": 'FRUITS',
-        }))
-    )
-    await sequelize.models.product.bulkCreate(Array.from({length: 5},
-        (_, i) => ({
-            "producerId": randomInt(6,10),
-            "quantity": randomInt(1,230),
-            "price": randomFloat(1,90),
-            "src": mock.cereals[i].img,
-            "name": mock.cereals[i].name,
-            "type": 'CEREALS',
-        }))
-    )
 }
 
 module.exports = { reset };

@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const {Validator} = require("jsonschema");
 const OrderRequestSchema = require("../schemas/order-request");
+const {DataTypes} = require("sequelize");
 
 async function getAll(req, res) {
     await models.order.findAll()
@@ -12,7 +13,29 @@ async function getAll(req, res) {
 
 async function getById(req, res) {
     await models.order.findByPk(req.params.id)
-        .then(order => res.status(200).json(order))
+        .then(async order => {
+            const prods = await models.order_product.findAll({where: {orderId: order.id}})
+            const result = {
+                id: order.id,
+                clientId: order.clientId,
+                employeeId: order.employeeId,
+                status: order.status,
+                createdAt: order.createdAt,
+                updatedAt: order.updatedAt,
+                products: await Promise.all(prods.map(async prod => (await models.product.findByPk(prod.productId).then(pr => ({
+                    id: pr.id,
+                    producerId: pr.producerId,
+                    quantity: pr.quantity,
+                    name: pr.name,
+                    price: pr.price,
+                    type: pr.type,
+                    src: pr.src,
+                    createdAt: pr.createdAt,
+                    updatedAt: pr.updatedAt
+                })))))
+            }
+            return res.status(200).json(result)
+        })
         .catch(err => res.status(503).json({ error: err.message }))
 }
 
