@@ -25,7 +25,7 @@ async function getById(req, res) {
                 products: await Promise.all(prods.map(async prod => (await models.product.findByPk(prod.productId).then(pr => ({
                     id: pr.id,
                     producerId: pr.producerId,
-                    quantity: pr.quantity,
+                    amount: prod.amount,
                     name: pr.name,
                     price: pr.price,
                     type: pr.type,
