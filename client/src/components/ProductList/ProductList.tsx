@@ -18,14 +18,39 @@ export function ProductList() {
     plural: 'products',
   };
 
-  const farmersMap = new Map();
-  farmersMap.set(1, "Francesco");
-  farmersMap.set(2, "Alessandro");
-
   /**
    * Data fetching
    */
   useEffect(() => {
+    const fetchFarmers = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/farmer', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        const response = await data.json();
+        const farmers = {};
+
+        if (response) {
+          for (const item of response) {
+            farmers[item.id] = item.firstname + " " + item.lastname;
+          }
+
+          setIsLoading(false);
+          return farmers;
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false)
+      }
+    }
+
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
@@ -37,12 +62,12 @@ export function ProductList() {
           },
         })
         const response = await data.json();
+        const farmers = await fetchFarmers();
 
         if (response) {
-          console.log(response);
           const tmp = [];
           for (const item of response) {
-            // item.name = customersMap.get(item.clientId);
+            item["farmer"] = farmers[item.producerId]
             tmp.push(item);
           }
 
@@ -164,7 +189,7 @@ export function ProductList() {
             {item.quantity}
           </IndexTable.Cell>
           <IndexTable.Cell>
-            {farmersMap.get(item.producerId)}
+            {item.farmer}
           </IndexTable.Cell>
         </IndexTable.Row>
       )

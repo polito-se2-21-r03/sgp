@@ -70,11 +70,8 @@ export function ProductNew({ user, location }: any) {
   const [farmer, setFarmer] = useState(-1);
   const [selectedFarmerOptions, setSelectedFarmerOptions] = useState([]);
   const [inputFarmerValue, setInputFarmerValue] = useState('');
-  const deselectedFarmerOptions = [
-    { value: '1', label: 'Francesco' },
-    { value: '2', label: 'Alessandro' },
-  ]
-  const [farmerOptions, setFarmerOptions] = useState(deselectedFarmerOptions);
+  const [deselectedFarmerOptions, setDeselectedFarmerOptions] = useState([]);
+  const [farmerOptions, setFarmerOptions] = useState([]);
 
   const handleDiscard = useCallback(() => {
     setIsDirty(false);
@@ -97,6 +94,7 @@ export function ProductNew({ user, location }: any) {
           price: Number(price),
           name: name,
           type: type,
+          src: url
         })
       })
       const response = await data.json();
@@ -104,7 +102,7 @@ export function ProductNew({ user, location }: any) {
       if (response) {
         setActive(true);
         setTimeout(() => {
-          history.push(`/products/${response.productId}`);
+          history.push(`/products`);
         }, 3000);
         setIsDirty(false);
       } else {
@@ -114,7 +112,7 @@ export function ProductNew({ user, location }: any) {
       console.log(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [farmer, quantity, price, name, type]);
+  }, [farmer, quantity, price, name, type, url]);
 
   /**
    * Product Handlers
@@ -131,11 +129,14 @@ export function ProductNew({ user, location }: any) {
   const handleTypeChange = useCallback((e) => {
     setType(e);
   }, []);
+  const handleUrlChange = useCallback((e) => {
+    setUrl(e);
+  }, []);
 
 
   const contextualSaveBarMarkup = isDirty ? (
     <ContextualSaveBar
-      message={"Modifiche non salvate"}
+      message={"Product not saved"}
       saveAction={{
         onAction: handleSave,
       }}
@@ -152,41 +153,41 @@ export function ProductNew({ user, location }: any) {
 
   /**
    * Fetch data
-   * - Fetch customers
-   * - Fetch Companies
+   * - Fetch farmers
    */
   useEffect(() => {
-    // const fetchClients = async () => {
-    //   try {
-    //     setIsLoading(true);
-    //     const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/customers', {
-    //       method: 'GET',
-    //       credentials: 'include',
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       },
-    //     })
-    //     const response = await data.json();
+    const fetchFarmers = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/farmer', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        const response = await data.json();
 
-    //     if (response.status === 'success') {
-    //       let tmp = [];
-    //       for (const item of response.data) {
-    //         tmp.push({ value: item._id, label: item.name });
-    //       }
-    //       // @ts-ignore
-    //       setDeselectedOptions(tmp);
-    //       // @ts-ignore
-    //       setOptions(tmp);
-    //       setIsLoading(false);
-    //     } else {
-    //       setIsLoading(false);
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
-    // fetchClients();
-  }, [user.id])
+        if (response) {
+          const tmp = [];
+          for (const item of response) {
+            tmp.push({ value: String(item.id), label: `${item.firstname} ${item.lastname}` });
+          }
+
+          // @ts-ignore
+          setDeselectedFarmerOptions(tmp);
+          // @ts-ignore
+          setFarmerOptions(tmp);
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchFarmers();
+  }, [])
 
   /**
    * Autocomplete Controls
@@ -274,6 +275,9 @@ export function ProductNew({ user, location }: any) {
             <FormLayout>
               <FormLayout.Group>
                 <TextField type="text" label="Title" value={name} onChange={handleNameChange} />
+              </FormLayout.Group>
+              <FormLayout.Group>
+                <TextField type="text" label="Image url" value={url} onChange={handleUrlChange} />
               </FormLayout.Group>
             </FormLayout>
           </Card>
