@@ -23,7 +23,7 @@ async function create(req, res) {
             firstname: firstname,
             lastname: lastname,
             email: email,
-            is_tmp_password: is_tmp_password,
+            is_tmp_password: 0,
             password: password,
             role: "CLIENT",
             createdAt: Date.now(),
