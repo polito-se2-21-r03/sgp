@@ -30,8 +30,8 @@ async function create(req, res) {
         })
             .then(async client => {
                 if (client) {
-                    return await models.wallet.create({ userEmail: client.email, credit: 0 })
-                        .then(() => res.status(200).json({ clientId: client }))
+                    return await models.wallet.create({ userId: client.id, credit: 0 })
+                        .then(() => res.status(200).json({ clientId: client.id }))
                         .catch(err => res.status(503).json({ error: err.message }))
                 }
                 return res.status(503).json({ error: "Cannot create the client" })
