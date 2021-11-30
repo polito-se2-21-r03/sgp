@@ -18,7 +18,8 @@ import {
   Toast,
   Stack,
   TextStyle,
-  EmptyState
+  EmptyState,
+  Badge
 } from '@shopify/polaris';
 
 import { TopBarMarkup, NavigationMarkup, contextControlMarkup } from '../../../components';
@@ -44,6 +45,7 @@ export function OrderDetails({ match, user }: any) {
   const [customer, setCustomer] = useState(-1);
   const [addedItems, setAddedItems] = useState([]);
   const [total, setTotal] = useState(0);
+  const [status, setStatus] = useState('');
 
   const toggleMobileNavigationActive = useCallback(
     () =>
@@ -122,34 +124,17 @@ export function OrderDetails({ match, user }: any) {
    */
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const deselectedOptions = [
-    { value: '1', label: 'Apples' },
-    { value: '2', label: 'Tomatoes' },
-  ]
-  const [productOptions, setProductOptions] = useState(deselectedOptions);
-
-  const productsMap = new Map();
-  productsMap.set(1, {
-    productId: 1,
-    quantity: 300,
-    price: 2.3
-  })
-  productsMap.set(2, {
-    productId: 2,
-    quantity: 1000,
-    price: 4.6
-  })
+  const [deselectedOptions, setDeselectedOptions] = useState([]);
+  const [productOptions, setProductOptions] = useState([]);
+  const [products, setProducts] = useState([]);
 
   /**
    * Search customers
    */
   const [selectedCustomerOptions, setSelectedCustomerOptions] = useState([]);
   const [inputCustomerValue, setInputCustomerValue] = useState('');
-  const deselectedCustomerOptions = [
-    { value: '1', label: 'Francesco' },
-    { value: '2', label: 'Alessandro' },
-  ]
-  const [customerOptions, setCustomerOptions] = useState(deselectedCustomerOptions);
+  const [deselectedCustomerOptions, setDeselectedCustomerOptions] = useState([]);
+  const [customerOptions, setCustomerOptions] = useState([]);
 
   /**
    * Fetch data:
@@ -161,7 +146,7 @@ export function OrderDetails({ match, user }: any) {
     const fetchOrder = async () => {
       try {
         setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/product', {
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/order/${match.params.id}`, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -169,22 +154,51 @@ export function OrderDetails({ match, user }: any) {
           },
         })
         const response = await data.json();
+        console.log(response);
 
-        if (response.status === 'success') {
-          let tmp = [];
-          for (const item of response.data) {
-            tmp.push({ value: item._id, label: item.label });
-          }
-          // @ts-ignore
-          setDeselectedOptions(tmp);
-          // @ts-ignore
-          setJobOptions(tmp);
+        if (response) {
+          const tmp = [];
+          console.log(response);
+          // for (const item of response.data) {
+          //   tmp.push({ value: item._id, label: item.label });
+          // }
+          setCustomer(response.clientId);
+          setStatus(response.status);
+
           setIsLoading(false);
         } else {
           setIsLoading(false);
         }
       } catch (error) {
         console.log(error);
+      }
+    }
+    const fetchFarmers = async () => {
+      try {
+        setIsLoading(true);
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/farmer', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        const response = await data.json();
+        const farmers = {};
+
+        if (response) {
+          for (const item of response) {
+            farmers[item.id] = item.firstname + " " + item.lastname;
+          }
+
+          setIsLoading(false);
+          return farmers;
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false)
       }
     }
     const fetchProducts = async () => {
@@ -198,16 +212,21 @@ export function OrderDetails({ match, user }: any) {
           },
         })
         const response = await data.json();
+        const farmers = await fetchFarmers();
 
-        if (response.status === 'success') {
+        if (response) {
           let tmp = [];
-          for (const item of response.data) {
-            tmp.push({ value: item._id, label: item.label });
+          for (const item of response) {
+            // tmp.push({ value: String(item.id), label: item.name });
+            item["farmer"] = farmers[item.producerId];
+            tmp.push(item);
+            // tmp.push({ value: String(item.id), label: `${item.name} - Farmer: ${item.farmer}` });
           }
           // @ts-ignore
           setDeselectedOptions(tmp);
           // @ts-ignore
-          setJobOptions(tmp);
+          setProductOptions(tmp);
+          setProducts(tmp);
           setIsLoading(false);
         } else {
           setIsLoading(false);
@@ -228,15 +247,15 @@ export function OrderDetails({ match, user }: any) {
         })
         const response = await data.json();
 
-        if (response.status === 'success') {
-          let tmp = [];
-          for (const item of response.data) {
-            tmp.push({ value: item._id, label: item.label });
+        if (response) {
+          const tmp = [];
+          for (const item of response) {
+            tmp.push({ value: String(item.id), label: `${item.firstname} ${item.lastname}` });
           }
           // @ts-ignore
-          setDeselectedAtecoOptions(tmp);
+          setDeselectedCustomerOptions(tmp);
           // @ts-ignore
-          setAtecoOptions(tmp);
+          setCustomerOptions(tmp);
           setIsLoading(false);
         } else {
           setIsLoading(false);
@@ -391,6 +410,31 @@ export function OrderDetails({ match, user }: any) {
   })
 
   /**
+   * Render status
+   * @param status 
+   * @returns 
+   */
+  const renderStatusMarkup = (status) => {
+    switch (status) {
+      case 'COMPLETED':
+        return (<Badge progress="complete" status="success">Completed</Badge>);
+        break;
+      case 'CREATED':
+        return (<Badge progress="incomplete">Created</Badge>);
+        break;
+      case 'DELIVERED':
+        return (<Badge progress="partiallyComplete" status="attention">Issued</Badge>);
+        break;
+      case 'PENDING':
+        return (<Badge progress="partiallyComplete" status="warning">Pending</Badge>);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  /**
    * Error markups & toast
    */
   const toastMarkup = active ? (
@@ -413,6 +457,7 @@ export function OrderDetails({ match, user }: any) {
   const actualPageMarkup = (
     <Page
       title='Order'
+      titleMetadata={renderStatusMarkup(status)}
       breadcrumbs={[{ content: 'Orders', url: '/orders' }]}
     >
       <Layout>
