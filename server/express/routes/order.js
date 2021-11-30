@@ -10,6 +10,12 @@ async function getAll(req, res) {
         .catch(err => res.status(503).json({ error: err.message }))
 }
 
+async function getById(req, res) {
+    await models.order.findByPk(req.params.id)
+        .then(order => res.status(200).json(order))
+        .catch(err => res.status(503).json({ error: err.message }))
+}
+
 async function create(req, res) {
     const v = new Validator();
     const body = v.validate(req.body, OrderRequestSchema.orderRequestSchema);
@@ -77,5 +83,6 @@ async function update(req, res) {
 module.exports = {
     getAll,
     create,
-    update
+    update,
+    getById
 };

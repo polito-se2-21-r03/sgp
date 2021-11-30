@@ -20,7 +20,7 @@ async function update(req, res) {
         if (!await models.wallet.findOne({where: {userId: req.params.id}})) {
             return res.status(503).json({ error: `Invalid client` })
         }
-        return await models.wallet.update({ credit: Sequelize.literal('credit + ' + credit) }, { where: { userId: req.params.id }})
+        return await models.wallet.update({ credit: Sequelize.literal('credit + ' + Math.round((credit + Number.EPSILON) * 100) / 100) }, { where: { userId: req.params.id }})
             .then(() => res.status(200).json("Wallet Updated"))
             .catch(err => res.status(503).json({ error: err.message }))
     } catch (err) {
@@ -30,5 +30,5 @@ async function update(req, res) {
 
 module.exports = {
     getAll,
-    update
+    update,
 };
