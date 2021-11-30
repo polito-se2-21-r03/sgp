@@ -2,7 +2,7 @@
   "name": "se2-r03-spg-client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3001",
+  "proxy": "http://server:3001",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@shopify/polaris": "^6.6.0",
