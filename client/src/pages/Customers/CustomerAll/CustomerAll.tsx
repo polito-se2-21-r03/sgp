@@ -101,7 +101,7 @@ export function CustomerAll({ user }: any) {
       title="Top up wallet"
       primaryAction={{
         content: 'Top up',
-        onAction: () => handleSave(),
+        onAction: handleSave,
       }}
       secondaryActions={[
         {
