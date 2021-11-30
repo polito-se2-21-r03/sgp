@@ -74,7 +74,7 @@ export function OrderDetails({ match, user }: any) {
     try {
       if (customer === -1) return;
 
-      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/order', {
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/order/${match.params.id}`, {
         method: 'PUT',
         credentials: 'include',
         headers: {
