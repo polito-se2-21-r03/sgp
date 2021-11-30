@@ -157,8 +157,7 @@ export function CustomerList({ handleModal, update }: any) {
   function renderItem(item: any, _: any, index: number | undefined) {
     const media = <Avatar customer={false} size="medium" name={'_id'} />;
     const url = `#`;
-    const name = `${item.firstname} ${item.lastname}`
-    console.log(item)
+    const name = `${item.firstname} ${item.lastname}`;
 
     return (
       <ResourceItem

@@ -176,7 +176,13 @@ export function ProductList() {
         >
           <IndexTable.Cell>
             <TextStyle variation="strong">
-              <Link url={`/products/${item.id}`} removeUnderline monochrome passHref data-primary-link>
+              <Link
+                // url={`/products/${item.id}`}
+                url="#"
+                removeUnderline
+                monochrome
+                passHref
+                data-primary-link>
                 <a
                   style={{ color: 'inherit', textDecoration: 'none' }}
                   data-primary-link>
