@@ -81,7 +81,7 @@ export function OrderDetails({ match, user }: any) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          changedBy: user.id,
+          changedBy: 'EMPLOYEE',
           // Employee ID set to 1 for testing
           status: 'PENDING',
           products: products
