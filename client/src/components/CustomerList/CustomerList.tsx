@@ -1,17 +1,15 @@
 // @ts-nocheck
 
 import {
-  Avatar, Card, EmptyState, FilterInterface, Filters, ResourceItem, ResourceList, TextStyle, Badge,
-  Pagination,
+  Avatar, Card, EmptyState, Filters, ResourceItem, ResourceList, TextStyle, Badge,
+  Button,
   Stack
 } from '@shopify/polaris';
 import React, { useCallback, useState, useEffect } from 'react';
 
-import styles from './CustomerList.module.css';
-
 import dayjs from 'dayjs';
 
-export function CustomerList() {
+export function CustomerList({ handleModal }: any) {
   const [selectedItems, setSelectedItems] = useState([]);
   const [taggedWith, setTaggedWith] = useState('VIP');
   const [queryValue, setQueryValue] = useState(null);
@@ -19,8 +17,6 @@ export function CustomerList() {
   const [items, setItems] = useState([]);
   const [frontItems, setFrontItems] = useState([]);
   const [total, setTotal] = useState(-1);
-  const [isFirstPage, setIsFirstPage] = useState(true);
-  const [isLastPage, setIsLastPage] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleTaggedWithChange = useCallback(
@@ -152,7 +148,7 @@ export function CustomerList() {
             </p>
           </div>
         </div> */}
-        <Stack>
+        <Stack alignment="center" distribution="equalSpacing">
           <Stack.Item>
             <div>
               <TextStyle variation="strong">{name}</TextStyle>
@@ -162,7 +158,9 @@ export function CustomerList() {
             </div>
           </Stack.Item>
           <Stack.Item>
-
+            <Button plain onClick={() => handleModal(item.id)}>
+              Top up account
+            </Button>
           </Stack.Item>
         </Stack>
       </ResourceItem>
