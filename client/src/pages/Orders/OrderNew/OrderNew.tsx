@@ -82,7 +82,7 @@ export function OrderNew({ user }: any) {
         body: JSON.stringify({
           clientId: customer,
           // Employee ID set to 1 for testing
-          employeeId: 1,
+          employeeId: user.id,
           products: addedItems
         })
       })
@@ -91,7 +91,7 @@ export function OrderNew({ user }: any) {
       if (response) {
         setActive(true);
         setTimeout(() => {
-          history.push(`/orders`);
+          history.push(`/orders/${response.orderId}`);
         }, 3000);
       } else {
         setSaveError(true);
@@ -101,7 +101,7 @@ export function OrderNew({ user }: any) {
       setSaveError(true);
     }
     setIsDirty(false);
-  }, [customer, addedItems, history]);
+  }, [customer, addedItems, user.id, history]);
 
   const contextualSaveBarMarkup = isDirty ? (
     <ContextualSaveBar

@@ -39,11 +39,13 @@ export function OrderDetails({ match, user }: any) {
   const [error, setError] = useState(false);
   const [active, setActive] = useState(false);
   const [saveError, setSaveError] = useState(false);
+  const [update, setUpdate] = useState(false);
 
   const toggleActive = useCallback(() => setActive((active) => !active), []);
 
   const [customer, setCustomer] = useState(-1);
   const [addedItems, setAddedItems] = useState([]);
+  const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
   const [status, setStatus] = useState('');
 
@@ -71,28 +73,25 @@ export function OrderDetails({ match, user }: any) {
   const handleSave = useCallback(async () => {
     try {
       if (customer === -1) return;
-      console.log(addedItems)
 
       const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/order', {
-        method: 'POST',
+        method: 'PUT',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          clientId: customer,
+          changedBy: user.id,
           // Employee ID set to 1 for testing
-          employeeId: 1,
-          products: addedItems
+          status: 'PENDING',
+          products: products
         })
       })
       const response = await data.json();
 
       if (response) {
         setActive(true);
-        setTimeout(() => {
-          history.push(`/orders`);
-        }, 3000);
+        setUpdate(!update);
       } else {
         setSaveError(true);
       }
@@ -101,7 +100,7 @@ export function OrderDetails({ match, user }: any) {
       setSaveError(true);
     }
     setIsDirty(false);
-  }, [customer, addedItems, history]);
+  }, [user.id, products, update]);
 
   const contextualSaveBarMarkup = isDirty ? (
     <ContextualSaveBar
@@ -126,7 +125,6 @@ export function OrderDetails({ match, user }: any) {
   const [inputValue, setInputValue] = useState('');
   const [deselectedOptions, setDeselectedOptions] = useState([]);
   const [productOptions, setProductOptions] = useState([]);
-  const [products, setProducts] = useState([]);
 
   /**
    * Search customers
@@ -183,19 +181,33 @@ export function OrderDetails({ match, user }: any) {
         })
         const response = await data.json();
         const farmers = await fetchFarmers();
+        let clientId;
 
         if (response) {
           const tmp = [];
-          console.log(response);
+          const tmp_added = [];
+          let sum = 0;
           for (const item of response.products) {
             item["farmer"] = farmers[item.producerId];
             item.name = `${item.name} - Farmer: ${item.farmer}`;
+            const tmp_item = {
+              productId: item.id,
+              amount: item.amount,
+              price: item.price,
+            }
             tmp.push(item);
+            tmp_added.push(tmp_item);
+            sum += item.amount * item.price;
           }
+          clientId = response.clientId;
           setCustomer(response.clientId);
           setStatus(response.status);
+          setAddedItems(tmp);
+          setProducts(tmp_added);
+          setTotal(sum);
 
           setIsLoading(false);
+          return clientId;
         } else {
           setIsLoading(false);
         }
@@ -248,16 +260,20 @@ export function OrderDetails({ match, user }: any) {
           },
         })
         const response = await data.json();
+        const customerId = await fetchOrder();
 
         if (response) {
           const tmp = [];
           for (const item of response) {
             tmp.push({ value: String(item.id), label: `${item.firstname} ${item.lastname}` });
+            if (customerId == item.id)
+              setInputCustomerValue(`${item.firstname} ${item.lastname}`);
           }
           // @ts-ignore
           setDeselectedCustomerOptions(tmp);
           // @ts-ignore
           setCustomerOptions(tmp);
+
           setIsLoading(false);
         } else {
           setIsLoading(false);
@@ -266,85 +282,13 @@ export function OrderDetails({ match, user }: any) {
         console.log(error);
       }
     }
-    fetchOrder();
-    fetchProducts();
     fetchCustomers();
-  }, []);
+    fetchProducts();
+  }, [update]);
 
   /**
    * Autocomplete Controls
    */
-
-  /** Product */
-  const updateText = useCallback(
-    (value) => {
-      setInputValue(value);
-
-      if (value === '') {
-        setProductOptions(deselectedOptions);
-        return;
-      }
-
-      const filterRegex = new RegExp(value, 'i');
-      const resultOptions = deselectedOptions.filter((option) => {
-        // @ts-ignore
-        return option.label.match(filterRegex)
-      });
-      setProductOptions(resultOptions);
-    },
-    [deselectedOptions]
-  );
-
-  const updateSelection = useCallback(
-    (selected) => {
-      const selectedValue = selected.map((selectedItem: any) => {
-        const matchedOption = productOptions.find((option) => {
-          // @ts-ignore
-          return option.value.match(selectedItem);
-        });
-        // @ts-ignore
-        return matchedOption;
-      });
-      setSelectedOptions(selected);
-      setInputValue(selectedValue[0].label);
-
-      // Add product
-      const tmp = addedItems;
-      const product = productsMap.get(Number(selectedValue[0].value));
-      const item = {
-        productId: product.productId,
-        amount: 1,
-        price: product.price,
-      }
-
-      // Check if product is already present
-      let found = 0;
-      tmp.forEach(obj => {
-        // @ts-ignore
-        if (obj.productId === item.productId)
-          found = 1;
-      });
-
-      if (!found) {
-        // @ts-ignore
-        tmp.push(item);
-        setTotal(total + item.amount * item.price);
-      }
-
-      setAddedItems(tmp);
-    },
-    [productOptions, total]
-  );
-
-  const productTextField = (
-    <Autocomplete.TextField
-      onChange={updateText}
-      label=""
-      value={inputValue}
-      prefix={<Icon source={SearchMinor} color="base" />}
-      placeholder="Search"
-    />
-  );
 
   /** Customer */
   const updateCustomerText = useCallback(
@@ -390,23 +334,20 @@ export function OrderDetails({ match, user }: any) {
       value={inputCustomerValue}
       prefix={<Icon source={SearchMinor} color="base" />}
       placeholder="Search"
+      disabled
     />
   );
 
   /**
    * Added products markup
-   * deselectedOptions[productId - 1].label
    */
   const addedProductsMarkup = addedItems.map(item => {
-    const { productId, amount, price } = item;
+    const { id } = item;
 
     return (
       <AddedProductRow
-        key={productId}
+        key={id}
         item={item}
-        label={deselectedOptions[productId - 1].label}
-        updateTotal={setTotal}
-        total={total}
       />
     );
   })
@@ -420,16 +361,12 @@ export function OrderDetails({ match, user }: any) {
     switch (status) {
       case 'COMPLETED':
         return (<Badge progress="complete" status="success">Completed</Badge>);
-        break;
       case 'CREATED':
         return (<Badge progress="incomplete">Created</Badge>);
-        break;
       case 'DELIVERED':
         return (<Badge progress="partiallyComplete" status="attention">Issued</Badge>);
-        break;
       case 'PENDING':
         return (<Badge progress="partiallyComplete" status="warning">Pending</Badge>);
-        break;
 
       default:
         break;
@@ -440,7 +377,7 @@ export function OrderDetails({ match, user }: any) {
    * Error markups & toast
    */
   const toastMarkup = active ? (
-    <Toast content="Order has been created." onDismiss={toggleActive} />
+    <Toast content="Order has been updated." onDismiss={toggleActive} />
   ) : null;
 
   const saveErrorMarkup = saveError && (
@@ -461,6 +398,11 @@ export function OrderDetails({ match, user }: any) {
       title='Order'
       titleMetadata={renderStatusMarkup(status)}
       breadcrumbs={[{ content: 'Orders', url: '/orders' }]}
+      primaryAction={{
+        content: 'Update order',
+        onAction: handleSave,
+        primary: true,
+      }}
     >
       <Layout>
         {/* Banner */}
@@ -469,15 +411,7 @@ export function OrderDetails({ match, user }: any) {
         <Layout.Section>
           {/* Product */}
           <Card title="Products" sectioned>
-            <Autocomplete
-              options={productOptions}
-              selected={selectedOptions}
-              onSelect={updateSelection}
-              textField={productTextField}
-            />
-            <div style={{ marginTop: '16px' }}>
-              {addedProductsMarkup}
-            </div>
+            {addedProductsMarkup}
           </Card>
           {/* Payment */}
           <Card title="Payment" sectioned>
@@ -486,7 +420,7 @@ export function OrderDetails({ match, user }: any) {
                 <TextStyle variation="strong">Total</TextStyle>
               </Stack.Item>
               <Stack.Item>
-                <TextStyle variation="strong">€ {total.toFixed(2)}</TextStyle>
+                <TextStyle variation="strong">{total.toFixed(2)} €</TextStyle>
               </Stack.Item>
             </Stack>
           </Card>

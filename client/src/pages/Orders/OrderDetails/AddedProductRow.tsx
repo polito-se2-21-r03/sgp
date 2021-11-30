@@ -6,28 +6,18 @@ import {
   TextStyle
 } from '@shopify/polaris';
 
-export function AddedProductRow({ item, label }: any) {
+export function AddedProductRow({ item }: any) {
   const { id, amount, price } = item;
-  const [value, setValue] = useState(String(amount));
 
   return (
     <Stack distribution="equalSpacing" alignment="center">
       <Stack.Item>
-        <TextStyle variation="strong">{label}</TextStyle>
+        <TextStyle variation="strong">{item.name} - x{amount}</TextStyle>
       </Stack.Item>
       <Stack.Item>
         <Stack alignment="center">
           <Stack.Item>
-            <TextField
-              label=""
-              type="number"
-              value={value}
-              autoComplete="off"
-              disabled
-            />
-          </Stack.Item>
-          <Stack.Item>
-            {price}
+            {Number(amount * price).toFixed(2)} €
           </Stack.Item>
         </Stack>
       </Stack.Item>
