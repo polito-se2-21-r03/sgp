@@ -68,14 +68,15 @@ sections:
 - What caused your errors in estimation (if any)? /
 
 - What lessons did you learn (both positive and negative) in this sprint?
-  We improve our planning and practical skills and that fact have permitted us to work the same time but with more productivity, but in the other hand we noticed that the problems can upgrade with the development of the project.
+  We've improved our planning and our practical skills and this has allowed us to work with more productivity, but in the other hand we've noticed that the problems can increase as development progresses.
+  More meetings led to a greater agreement by all team members and therefore towards greater productivity
 - Which improvement goals set in the previous retrospective were you able to achieve?
-  We were able to connect successfully the sonar cloud framework with our project, so we were able to read the metrics and COVERAGE.
+  We were able to connect successfully the sonar cloud framework with our project and subsequently to read metrics and coverage.
 - Which ones you were not able to achieve? Why?
-  We were still not able to log each hour spent on our tasks immediatly after the implementation.
+  We were still not able to log each hour spent on our tasks immediately after the implementation.
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
 
-  1. Improve the reporting ability using the Youtrack platform (e.g. better description on task, log hour spent).
+  Improve the reporting ability using the Youtrack platform (e.g. better description on tasks, logging spent hours).
 
 - One thing you are proud of as a Team!!
-  That a team work isn't made only for work.
+  Teamwork divides tasks and multiplies success
