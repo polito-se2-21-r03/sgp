@@ -13,7 +13,7 @@ sections:
 
 - Number of stories committed vs done 6 vs 6
 - Total points committed vs done 53 vs 53
-- Nr of hours planned vs spent (as a team) 70 vs 80
+- Nr of hours planned vs spent (as a team) 80 vs 80
 
 **Remember** a story is done ONLY if it fits the Definition of Done:
 
