@@ -1,12 +1,13 @@
 import React, { useCallback, useState } from 'react';
 
-import { Button, Form, FormLayout, TextField, InlineError } from "@shopify/polaris";
+import { Button, Form, FormLayout, TextField, InlineError, Stack } from "@shopify/polaris";
 
 import asyncLocalStorage from '../../utils/async-localstorage';
 
 import './Login.css';
 import logo from '../../logo_transparent.png';
 import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
 export function LoginPage() {
   const history = useHistory();
@@ -43,50 +44,69 @@ export function LoginPage() {
     }
   }, [email, password]);
 
+  function handleClick(path: string) {
+    history.push(path);
+  }
+
   const handleEmailChange = useCallback((value) => setEmail(value), []);
   const handlePwdChange = useCallback((value) => setPassword(value), []);
 
   return (
     <div className="page-main">
-      <div className="page-content">
-        <div className="login-card ">
-          <header className="login-card__header">
-            <h1 className="login-card__logo">
-              <a href="">
-                <img src={logo} />
-              </a>
-            </h1>
-          </header>
+      <Stack>
+        <div className="page-content">
+          <div className="login-card " style={{ paddingTop: '6rem' }}>
+            <header className="login-card__header">
+              <h1 className="login-card__logo">
+                <a href="">
+                  <img src={logo} />
+                </a>
+              </h1>
+            </header>
 
-          <div className="login-card__content">
-            <div className="main-card-section">
-              <h2 className="ui-heading">Access</h2>
-              <h3 className="ui-subheading ui-subheading--subdued">Continue to the dashboard</h3>
-              <Form onSubmit={handleSubmit}>
-                <FormLayout>
-                  <TextField
-                    value={email}
-                    onChange={handleEmailChange}
-                    label="Email"
-                    type="email"
-                  />
-                  <TextField
-                    value={password}
-                    onChange={handlePwdChange}
-                    label="Password"
-                    type="password"
-                  />
-                  {(loginError === true) ? (
-                    <InlineError message="Check authentication data." fieldID="myFieldID" />
-                  ) : ''}
-                  <Button primary size="large" submit>Login</Button>
-                </FormLayout>
-              </Form>
+            <div className="login-card__content">
+              <div className="main-card-section">
+                <h2 className="ui-heading">Access</h2>
+                <h3 className="ui-subheading ui-subheading--subdued">Continue to the dashboard</h3>
+                <Form onSubmit={handleSubmit}>
+                  <FormLayout>
+                    <TextField
+                      value={email}
+                      onChange={handleEmailChange}
+                      label="Email"
+                      type="email"
+                    />
+                    <TextField
+                      value={password}
+                      onChange={handlePwdChange}
+                      label="Password"
+                      type="password"
+                    />
+                    {(loginError === true) ? (
+                      <InlineError message="Check authentication data." fieldID="myFieldID" />
+                    ) : ''}
+                    <div style={{ paddingTop: '1rem' }}><Button primary size="large" submit>Sign in</Button></div>
+                  </FormLayout>
+                </Form>
 
+              </div>
             </div>
           </div>
         </div>
-      </div>
+        <div className="page-content">
+          <div className="login-card " style={{ paddingTop: '6rem' }}>
+            <div className="login-card__content">
+              <div className="main-card-section">
+                <h3 className="ui-heading" style={{ textAlign: 'center' }}>Are you a new client?</h3>
+                <br></br>
+                <br></br>
+                <div style={{ textAlign: 'center' }}><Button primary size="large" onClick={() => { handleClick("register") }} >Sign up</Button></div>
+                <br></br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Stack>
     </div>
   )
 }
