@@ -7,7 +7,6 @@ import asyncLocalStorage from '../../utils/async-localstorage';
 import './Login.css';
 import logo from '../../logo_transparent.png';
 import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
 
 export function LoginPage() {
   const history = useHistory();
