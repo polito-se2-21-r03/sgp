@@ -68,6 +68,7 @@ export function ProductList() {
           const tmp = [];
           for (const item of response) {
             item["farmer"] = farmers[item.producerId]
+            item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1);
             tmp.push(item);
           }
 
@@ -166,7 +167,6 @@ export function ProductList() {
 
   const rowMarkup = frontItems.map(
     (item, index) => {
-
       return (
         <IndexTable.Row
           id={item.id}
@@ -174,6 +174,13 @@ export function ProductList() {
           selected={selectedResources.includes(item.id)}
           position={index}
         >
+          <IndexTable.Cell>
+            <div style={{ overflow: 'hidden', padding: '5px 0' }}>{item.src ? (
+              <img src={item.src} width='50rem' height='50rem' style={{ objectFit: 'cover' }} />
+            ) : (
+              <img src="https://images.unsplash.com/photo-1630448927918-1dbcd8ba439b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80" style={{ objectFit: 'cover' }} />
+            )}</div>
+          </IndexTable.Cell>
           <IndexTable.Cell>
             <TextStyle variation="strong">
               <Link
@@ -260,6 +267,7 @@ export function ProductList() {
         hasMoreItems
         onSelectionChange={handleSelectionChange}
         headings={[
+          { title: '' },
           { title: 'Product' },
           { title: 'Inventory' },
           { title: 'Supplier' },

@@ -24,8 +24,8 @@ export function AddedProductRow({ item, addProduct }: any) {
   return (
     <Stack vertical>
       <Stack.Item>
-        <div style={{ overflow: 'hidden', width: '100%', height: '20rem' }}>{item.src ? (
-          <img src={item.src} style={{ objectFit: 'cover' }} />
+        <div style={{ overflow: 'hidden' }}>{item.src ? (
+          <img src={item.src} width='100%' height='200rem' style={{ objectFit: 'cover' }} />
         ) : (
           <img src="https://images.unsplash.com/photo-1630448927918-1dbcd8ba439b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80" style={{ objectFit: 'cover' }} />
         )}</div>

@@ -107,6 +107,7 @@ export function ClientsProductAll({ user }: any) {
         if (response) {
           const tmp = [];
           for (const item of response) {
+            item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1);
             item["farmer"] = farmers[item.producerId];
             tmp.push(item);
           }
