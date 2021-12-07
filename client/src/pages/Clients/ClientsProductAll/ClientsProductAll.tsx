@@ -47,6 +47,7 @@ export function ClientsProductAll({ user }: any) {
 
   const [active, setActive] = useState(false);
   const [saveError, setSaveError] = useState(false);
+  const [amountError, setAmountError] = useState(true);
 
   const toggleActive = useCallback(() => setActive((active) => !active), []);
 
@@ -179,8 +180,10 @@ export function ClientsProductAll({ user }: any) {
         })
       })
       const response = await data.json();
-
-      if (response) {
+      if (response.status = 'INSUFFICIENT_AMOUNT') {
+        setAmountError(true);
+      }
+      else if (response) {
         setActive(true);
       } else {
         setSaveError(true);
@@ -247,6 +250,18 @@ export function ClientsProductAll({ user }: any) {
     </Layout.Section>
   )
 
+  const errorAmountMarkup = amountError && (
+    <Layout.Section>
+      <Banner
+        title="Insufficient wallet balance"
+        status="warning"
+        onDismiss={() => setAmountError(false)}
+      >
+        <p>Please, contact the Shop Employee to charge your wallet.</p>
+      </Banner>
+    </Layout.Section>
+  )
+
   // ---- Page markup ----
   const actualPageMarkup = (
     <Page
@@ -256,6 +271,7 @@ export function ClientsProductAll({ user }: any) {
       <Layout>
         {/* Banner */}
         {saveErrorMarkup}
+        {errorAmountMarkup}
         {/* First column */}
         <Layout.Section>
           <Layout>
