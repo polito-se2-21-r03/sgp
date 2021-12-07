@@ -37,8 +37,8 @@ docker pull francescomedina/se2-r03-spg-server:release1
 Run the two containers:
 
 ```sh
-docker run -d --network="host" --name backend  francescomedina/se2-r03-spg-server:release1
-docker run --network="host" --name frontend  francescomedina/se2-r03-spg-client:release1
+docker run -d --network host --name backend  francescomedina/se2-r03-spg-server:release1
+docker run -it --network host --name frontend  francescomedina/se2-r03-spg-client:release1
 ```
 
 Now you can open the project web site at this url:
@@ -46,6 +46,8 @@ Now you can open the project web site at this url:
 ```sh
 http://localhost:3000/
 ```
+
+On Mac or Windows the host name could be different from localhost
 
 ## Credentials
 
