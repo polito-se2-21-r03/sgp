@@ -31,7 +31,7 @@ Run the two containers:
 
 ```sh
 docker run -d --network="host" --name backend  francescomedina/se2-r03-spg-server:release1
-docker run -d --network="host" --name frontend  francescomedina/se2-r03-spg-client:release1
+docker run --network="host" --name frontend  francescomedina/se2-r03-spg-client:release1
 ```
 
 Now you can open the project web site at this url:
