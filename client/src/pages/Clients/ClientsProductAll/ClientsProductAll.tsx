@@ -47,7 +47,7 @@ export function ClientsProductAll({ user }: any) {
 
   const [active, setActive] = useState(false);
   const [saveError, setSaveError] = useState(false);
-  const [amountError, setAmountError] = useState(true);
+  const [amountError, setAmountError] = useState(false);
 
   const toggleActive = useCallback(() => setActive((active) => !active), []);
 

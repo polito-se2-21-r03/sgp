@@ -21,3 +21,6 @@ export * from './Admin';
 
 /** Clients */
 export * from './Clients';
+
+/** Farmers */
+export * from './Farmers';

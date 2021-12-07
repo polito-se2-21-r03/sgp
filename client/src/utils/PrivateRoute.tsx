@@ -32,6 +32,7 @@ export function PrivateRoute({ component: Compontent, path, roles, ...rest }: an
 
   const routesMap = new Map();
   routesMap.set('CLIENT', '/client');
+  routesMap.set('FARMER', '/farmer');
 
   const getRoute = (role: string) => {
     if (routesMap.has(role))
