@@ -183,16 +183,14 @@ export function OrderList() {
     switch (status) {
       case 'COMPLETED':
         return (<Badge progress="complete" status="success">Completed</Badge>);
-        break;
       case 'CREATED':
         return (<Badge progress="incomplete">Created</Badge>);
-        break;
       case 'DELIVERED':
         return (<Badge progress="partiallyComplete" status="attention">Issued</Badge>);
-        break;
       case 'PENDING':
         return (<Badge progress="partiallyComplete" status="warning">Pending</Badge>);
-        break;
+      case 'PENDING CANCELATION':
+        return (<Badge progress="incomplete" status="critical">Pending cancelation</Badge>);
 
       default:
         break;

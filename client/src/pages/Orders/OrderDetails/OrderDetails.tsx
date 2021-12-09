@@ -12,19 +12,20 @@ import {
   SkeletonDisplayText,
   SkeletonPage,
   TextContainer,
-  Autocomplete,
-  Icon,
+  Tooltip,
+  Button,
   Banner,
   Toast,
   Stack,
   TextStyle,
   EmptyState,
-  Badge
+  Badge,
+  Modal
 } from '@shopify/polaris';
 
 import { TopBarMarkup, NavigationMarkup, contextControlMarkup } from '../../../components';
 
-import { SearchMinor } from '@shopify/polaris-icons';
+import { ClipboardMinor } from '@shopify/polaris-icons';
 import { useHistory } from 'react-router';
 
 import { AddedProductRow } from './AddedProductRow';
@@ -40,10 +41,14 @@ export function OrderDetails({ match, user }: any) {
   const [active, setActive] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [update, setUpdate] = useState(false);
+  const [buttonSpinning, setButtonSpinning] = useState(false);
 
   const toggleActive = useCallback(() => setActive((active) => !active), []);
 
-  const [customer, setCustomer] = useState(-1);
+  const [deleteModalActive, setDeleteModalActive] = useState(false)
+  const handleDeleteModalChange = useCallback(() => setDeleteModalActive(!deleteModalActive), [deleteModalActive]);
+
+  const [customer, setCustomer] = useState({});
   const [addedItems, setAddedItems] = useState([]);
   const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
@@ -73,6 +78,7 @@ export function OrderDetails({ match, user }: any) {
   const handleSave = useCallback(async () => {
     try {
       if (customer === -1) return;
+      console.log(products)
 
       const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/order/${match.params.id}`, {
         method: 'PUT',
@@ -117,22 +123,6 @@ export function OrderDetails({ match, user }: any) {
   ) : null;
 
   const loadingMarkup = isLoading ? <Loading /> : null;
-
-  /**
-   * Search products
-   */
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  const [inputValue, setInputValue] = useState('');
-  const [deselectedOptions, setDeselectedOptions] = useState([]);
-  const [productOptions, setProductOptions] = useState([]);
-
-  /**
-   * Search customers
-   */
-  const [selectedCustomerOptions, setSelectedCustomerOptions] = useState([]);
-  const [inputCustomerValue, setInputCustomerValue] = useState('');
-  const [deselectedCustomerOptions, setDeselectedCustomerOptions] = useState([]);
-  const [customerOptions, setCustomerOptions] = useState([]);
 
   /**
    * Fetch data:
@@ -200,7 +190,6 @@ export function OrderDetails({ match, user }: any) {
             sum += item.amount * item.price;
           }
           clientId = response.clientId;
-          setCustomer(response.clientId);
           setStatus(response.status);
           setAddedItems(tmp);
           setProducts(tmp_added);
@@ -215,65 +204,21 @@ export function OrderDetails({ match, user }: any) {
         console.log(error);
       }
     }
-    const fetchProducts = async () => {
+    const fetchCustomer = async () => {
       try {
         setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/product', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        })
-        const response = await data.json();
-        const farmers = await fetchFarmers();
-
-        if (response) {
-          let tmp = [];
-          for (const item of response) {
-            // tmp.push({ value: String(item.id), label: item.name });
-            item["farmer"] = farmers[item.producerId];
-            tmp.push(item);
-            // tmp.push({ value: String(item.id), label: `${item.name} - Farmer: ${item.farmer}` });
-          }
-          // @ts-ignore
-          setDeselectedOptions(tmp);
-          // @ts-ignore
-          setProductOptions(tmp);
-          setProducts(tmp);
-          setIsLoading(false);
-        } else {
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    const fetchCustomers = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/client', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        })
-        const response = await data.json();
         const customerId = await fetchOrder();
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/client/${customerId}`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        const response = await data.json();
 
         if (response) {
-          const tmp = [];
-          for (const item of response) {
-            tmp.push({ value: String(item.id), label: `${item.firstname} ${item.lastname}` });
-            if (customerId == item.id)
-              setInputCustomerValue(`${item.firstname} ${item.lastname}`);
-          }
-          // @ts-ignore
-          setDeselectedCustomerOptions(tmp);
-          // @ts-ignore
-          setCustomerOptions(tmp);
-
+          setCustomer(response);
           setIsLoading(false);
         } else {
           setIsLoading(false);
@@ -282,61 +227,8 @@ export function OrderDetails({ match, user }: any) {
         console.log(error);
       }
     }
-    fetchCustomers();
-    fetchProducts();
+    fetchCustomer();
   }, [update]);
-
-  /**
-   * Autocomplete Controls
-   */
-
-  /** Customer */
-  const updateCustomerText = useCallback(
-    (value) => {
-      setInputCustomerValue(value);
-
-      if (value === '') {
-        setCustomerOptions(deselectedCustomerOptions);
-        return;
-      }
-
-      const filterRegex = new RegExp(value, 'i');
-      const resultOptions = deselectedCustomerOptions.filter((option) => {
-        // @ts-ignore
-        return option.label.match(filterRegex)
-      });
-      setCustomerOptions(resultOptions);
-    },
-    [deselectedCustomerOptions]
-  );
-
-  const updateCustomerSelection = useCallback(
-    (selected) => {
-      const selectedValue = selected.map((selectedItem: any) => {
-        const matchedOption = customerOptions.find((option) => {
-          // @ts-ignore
-          return option.value.match(selectedItem);
-        });
-        // @ts-ignore
-        return matchedOption;
-      });
-      setSelectedCustomerOptions(selected);
-      setInputCustomerValue(selectedValue[0].label);
-      setCustomer(Number(selectedValue[0].value));
-    },
-    [customerOptions],
-  );
-
-  const customerTextField = (
-    <Autocomplete.TextField
-      onChange={updateCustomerText}
-      label=""
-      value={inputCustomerValue}
-      prefix={<Icon source={SearchMinor} color="base" />}
-      placeholder="Search"
-      disabled
-    />
-  );
 
   /**
    * Added products markup
@@ -367,11 +259,47 @@ export function OrderDetails({ match, user }: any) {
         return (<Badge progress="partiallyComplete" status="attention">Issued</Badge>);
       case 'PENDING':
         return (<Badge progress="partiallyComplete" status="warning">Pending</Badge>);
+      case 'PENDING CANCELATION':
+        return (<Badge progress="incomplete" status="critical">Pending cancelation</Badge>);
 
       default:
         break;
     }
   }
+
+  /**
+   * Delete modal markup
+   */
+  const deleteModalMarkup = (
+    <Modal
+      open={deleteModalActive}
+      onClose={handleDeleteModalChange}
+      title="Delete order"
+      primaryAction={{
+        content: 'Continue',
+        onAction: () => console.log('to be implemented'),
+        loading: buttonSpinning,
+        destructive: true
+      }}
+      secondaryActions={[
+        {
+          content: 'Cancel',
+          onAction: handleDeleteModalChange,
+        },
+      ]}
+    >
+      <Modal.Section>
+        <TextContainer>
+          <p>
+            Are you sure you want to delete this order?
+          </p>
+          <p>
+            Once you procede, you can not go back.
+          </p>
+        </TextContainer>
+      </Modal.Section>
+    </Modal>
+  )
 
   /**
    * Error markups & toast
@@ -392,17 +320,29 @@ export function OrderDetails({ match, user }: any) {
     </Layout.Section>
   )
 
+  const renderPrimaryAction = (status) => {
+    if (status === 'CREATED') {
+      return {
+        content: 'Update order',
+        onAction: handleSave,
+        primary: true,
+      }
+    } else if (status === 'PENDING CANCELATION') {
+      return {
+        content: 'Delete',
+        onAction: handleDeleteModalChange,
+        destructive: true,
+      }
+    }
+  }
+
   // ---- Page markup ----
   const actualPageMarkup = (
     <Page
       title='Order'
       titleMetadata={renderStatusMarkup(status)}
       breadcrumbs={[{ content: 'Orders', url: '/orders' }]}
-      primaryAction={{
-        content: 'Update order',
-        onAction: handleSave,
-        primary: true,
-      }}
+      primaryAction={renderPrimaryAction(status)}
     >
       <Layout>
         {/* Banner */}
@@ -428,12 +368,30 @@ export function OrderDetails({ match, user }: any) {
         {/* Second column */}
         <Layout.Section secondary>
           <Card title="Customer" sectioned>
-            <Autocomplete
-              options={customerOptions}
-              selected={selectedCustomerOptions}
-              onSelect={updateCustomerSelection}
-              textField={customerTextField}
-            />
+            <div>
+              <TextStyle variation="strong">{customer.firstname} {customer.lastname}</TextStyle>
+            </div>
+            <div>
+              <Stack distribution="equalSpacing" spacing="extraTight">
+                <Button
+                  plain
+                  url={`mailto:${customer.email}`}
+                >
+                  {customer.email}
+                </Button>
+                <div>
+                  <Tooltip content="Copy address" dismissOnMouseOut>
+                    <Button
+                      plain
+                      icon={ClipboardMinor}
+                      onClick={() => {
+                        navigator.clipboard.writeText(customer.email);
+                      }}
+                    />
+                  </Tooltip>
+                </div>
+              </Stack>
+            </div>
           </Card>
         </Layout.Section>
       </Layout>
@@ -491,6 +449,7 @@ export function OrderDetails({ match, user }: any) {
       {loadingMarkup}
       {pageMarkup}
       {toastMarkup}
+      {deleteModalMarkup}
     </Frame>
   );
 }

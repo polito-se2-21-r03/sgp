@@ -8,6 +8,19 @@ async function getAll(req, res) {
         .catch(err => res.status(503).json({ error: err.message }))
 }
 
+async function getById(req, res) {
+    await models.user.findByPk(req.params.id)
+        .then(user => {
+            const obj = {
+                firstname: user.firstname,
+                lastname: user.lastname,
+                email: user.email
+            };
+            res.status(200).json(obj);
+        })
+        .catch(err => res.status(503).json({ error: err.message }))
+}
+
 async function create(req, res) {
     const v = new Validator();
     const body = v.validate(req.body, ClientRequestSchema.clientRequestSchema);
@@ -78,6 +91,7 @@ async function update(req, res) {
 
 module.exports = {
     getAll,
+    getById,
     create,
     update
 };
