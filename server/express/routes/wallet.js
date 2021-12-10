@@ -9,6 +9,12 @@ async function getAll(req, res) {
         .catch(err => res.status(503).json({ error: err.message }))
 }
 
+async function getById(req, res) {
+    await models.wallet.findOne({where: {userId: req.params.id}})
+        .then(wallet => res.status(200).json(wallet))
+        .catch(err => res.status(503).json({ error: err.message }))
+}
+
 async function update(req, res) {
     const v = new Validator();
     const body = v.validate(req.body, UpdateWalletSchema.updateWalletSchema);
@@ -29,6 +35,7 @@ async function update(req, res) {
 }
 
 module.exports = {
+    getById,
     getAll,
     update,
 };

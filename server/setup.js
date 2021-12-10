@@ -12,7 +12,7 @@ async function reset() {
         {
             clientId: 1,
             status: 'CREATED',
-            employeeId: 1,
+            employeeId: 1
         },
         {
             clientId: 2,
@@ -40,7 +40,7 @@ async function reset() {
         (_, i) => ({
             "producerId": randomInt(6, 10),
             "quantity": randomInt(450, 730),
-            "price": randomFloat(1, 90),
+            "price": randomFloat(1, 5),
             "src": mock.vegetables[i].img,
             "name": mock.vegetables[i].name,
             "type": 'VEGETABLES',
@@ -50,7 +50,7 @@ async function reset() {
         (_, i) => ({
             "producerId": randomInt(6, 10),
             "quantity": randomInt(1, 230),
-            "price": randomFloat(1, 90),
+            "price": randomFloat(1, 12),
             "src": mock.fruits[i].img,
             "name": mock.fruits[i].name,
             "type": 'FRUITS',
@@ -60,7 +60,7 @@ async function reset() {
         (_, i) => ({
             "producerId": randomInt(6, 10),
             "quantity": randomInt(1, 230),
-            "price": randomFloat(1, 90),
+            "price": randomFloat(1, 15),
             "src": mock.cereals[i].img,
             "name": mock.cereals[i].name,
             "type": 'CEREALS',
@@ -96,6 +96,14 @@ async function reset() {
     ]);
 
     await sequelize.models.user.bulkCreate([
+        {
+            password: 'pass',
+            email: 'pacimedina@gmail.com',
+            firstname: 'Francesco',
+            lastname: 'Medina',
+            is_tmp_password: 0,
+            role: 'CLIENT',
+        },
         {
             password: 'pass',
             email: 'mark@email.com',
@@ -188,11 +196,15 @@ async function reset() {
         await sequelize.models.wallet.bulkCreate([
             {
                 userId: 1,
-                credit: 33.45,
+                credit: 0.45,
             },
             {
                 userId: 2,
                 credit: 113.45,
+            },
+            {
+                userId: 3,
+                credit: 1233.45,
             },
             {
                 userId: 3,
