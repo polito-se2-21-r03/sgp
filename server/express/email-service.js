@@ -11,13 +11,20 @@ exports.config = {
 exports.pendingCancellation = (user) => ({
     from: 'team.r03.se2@gmail.com',
     to: user.email,
-    subject: 'PENDING CANCELLATION',
-    html: '<h1>Hi ' + user.firstname + ' ' + user.lastname + '!</h1> <br>We inform you that your order has been confirmed but is in <b>PENDING CANCELLATION</b> status due to the fact that you do not have enough credit to complete the order<br/>',
+    subject: 'SPG - PENDING CANCELLATION',
+    html: '<h2>Hi ' + user.firstname + ' ' + user.lastname + '!</h2> <br>We inform you that your order has been confirmed but is in <b>PENDING CANCELLATION</b> status due to the fact that you do not have enough credit to complete the order<br/>',
 })
 
 exports.confirmed = (user) => ({
     from: 'team.r03.se2@gmail.com',
     to: user.email,
-    subject: 'ORDER CONFIRMED',
-    html: '<h1>Hi ' + user.firstname + ' ' + user.lastname + '!</h1> <br>We want to inform you that your order has been correctly paid and confirmed by the Farmer. As soon as it is shipped you will receive a notification. Thank you<br/>',
+    subject: 'SPG - ORDER CONFIRMED',
+    html: '<h2>Hi ' + user.firstname + ' ' + user.lastname + '!</h2> <br>We want to inform you that your order has been correctly paid and confirmed by the Farmer. As soon as it is shipped you will receive a notification. Thank you<br/>',
+})
+
+exports.customEmail = (user,body) => ({
+    from: 'team.r03.se2@gmail.com',
+    to: user.email,
+    subject: 'SPG',
+    html: '<h2>Hi ' + user.firstname + ' ' + user.lastname + '!</h2> <br>'+ body +'<br/>',
 })

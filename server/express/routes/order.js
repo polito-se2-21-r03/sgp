@@ -5,13 +5,28 @@ const { Validator } = require("jsonschema");
 const OrderRequestSchema = require("../schemas/order-request");
 const { DataTypes, Error} = require("sequelize");
 const nodemailer = require('nodemailer');
-const { pendingCancellation, config, confirmed} = require('../email-service');
+const { pendingCancellation, config, confirmed, customEmail} = require('../email-service');
 
 const transporter = nodemailer.createTransport(config);
 
 async function getAll(req, res) {
     await models.order.findAll()
         .then(orders => res.status(200).json(orders))
+        .catch(err => res.status(503).json({ error: err.message }))
+}
+
+async function reminder(req,res){
+    return await models.order.findByPk(req.params.id)
+        .then(async order => {
+            if(order){
+                const user = await models.user.findByPk(order.clientId)
+                if(user){
+                    await transporter.sendMail(customEmail(user,req.body.email))
+                    return res.status(200).json("Message sent")
+                }
+            }
+            return res.status(503).json({ error: "Error sending message" })
+        })
         .catch(err => res.status(503).json({ error: err.message }))
 }
 
@@ -154,5 +169,6 @@ module.exports = {
     getAll,
     create,
     update,
-    getById
+    getById,
+    reminder
 };
