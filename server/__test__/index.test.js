@@ -330,11 +330,10 @@ describe("Test update order", () => {
   });
   it("tests the base route and return an order updated", async () => {
     body = {
-      changedBy: "EMPLOYEE",
       status: "DELIVERED",
     };
     const response = await supertest(server).put("/api/order/1").send(body);
-    expect(response.status).toBe(200);
+    expect(response).toBe(200);
   });
   afterAll(async () => {
     await server.close();
@@ -424,6 +423,22 @@ describe("Test elimination of products from order", () => {
       where: { orderId: 1 },
     });
     expect(response).toBe(3);
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test sending email for pending order", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("tests the base route and return a confirmation status", async () => {
+    const response = await supertest(server).post("/api/order/1/reminder");
+    expect(response.status).toBe(200);
   });
   afterAll(async () => {
     await server.close();
