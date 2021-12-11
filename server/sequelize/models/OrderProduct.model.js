@@ -10,9 +10,18 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             foreignKey: true,
         },
+        userId: {
+            type: DataTypes.INTEGER,
+            foreignKey: true,
+        },
         amount: {
             allowNull: false,
             type: DataTypes.INTEGER,
+        },
+        confirmed: {
+            allowNull: false,
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         },
         createdAt: {
             allowNull: true,

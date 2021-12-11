@@ -5,7 +5,6 @@ const jsonwebtoken = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { models } = require('../sequelize');
 const bcrypt = require('bcrypt');
-const {reminder} = require("./routes/order");
 
 const jwtSecret = 'Zv3SNmakJYZP9JTKzCOfmoNmxgv36Vp0g0csh6LSLMf543iQSfxC161wCQxUisR';
 const expireTime = 1000 * 3000; //  50 minutes
@@ -23,6 +22,8 @@ const routes = {
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
 
 
 // const checkPassword = (user, password) => bcrypt.compareSync(password, user.hash);
@@ -147,6 +148,8 @@ for (const [routeName, routeController] of Object.entries(routes)) {
     }
 }
 
-app.post('/api/order/:id/reminder', reminder)
+app.post('/api/order/:id/reminder', routes.order.reminder)
+app.post('/api/farmer/:farmerId/order/:orderId', routes.farmer.confirmOrderProducts)
+app.get('/api/farmer/:id/order', routes.farmer.getOrdersByFarmerId)
 
 module.exports = app;

@@ -15,6 +15,21 @@ async function reset() {
             employeeId: 1
         },
         {
+            clientId: 1,
+            status: 'CREATED',
+            employeeId: 1
+        },
+        {
+            clientId: 2,
+            status: 'CREATED',
+            employeeId: 1
+        },
+        {
+            clientId: 2,
+            status: 'CREATED',
+            employeeId: 1
+        },
+        {
             clientId: 2,
             status: 'PENDING',
             employeeId: 1,
@@ -51,6 +66,7 @@ async function reset() {
             "producerId": randomInt(6, 10),
             "quantity": randomInt(1, 230),
             "price": randomFloat(1, 12),
+            "unitOfMeasure": "Kg",
             "src": mock.fruits[i].img,
             "name": mock.fruits[i].name,
             "type": 'FRUITS',
@@ -61,39 +77,12 @@ async function reset() {
             "producerId": randomInt(6, 10),
             "quantity": randomInt(1, 230),
             "price": randomFloat(1, 15),
+            "unitOfMeasure": "Kg",
             "src": mock.cereals[i].img,
             "name": mock.cereals[i].name,
             "type": 'CEREALS',
         }))
     )
-
-    await sequelize.models.order_product.bulkCreate([
-        {
-            orderId: 1,
-            productId: 1,
-            amount: 2
-        },
-        {
-            orderId: 2,
-            productId: 4,
-            amount: 45
-        },
-        {
-            orderId: 1,
-            productId: 12,
-            amount: 21
-        },
-        {
-            orderId: 4,
-            productId: 19,
-            amount: 35
-        },
-        {
-            orderId: 1,
-            productId: 9,
-            amount: 33
-        }
-    ]);
 
     await sequelize.models.user.bulkCreate([
         {
@@ -209,6 +198,39 @@ async function reset() {
             {
                 userId: 3,
                 credit: 1233.45,
+            }
+        ]);
+
+        await sequelize.models.order_product.bulkCreate([
+            {
+                orderId: 1,
+                productId: 1,
+                userId: 9,
+                amount: 2
+            },
+            {
+                orderId: 2,
+                productId: 4,
+                userId: 9,
+                amount: 45
+            },
+            {
+                orderId: 1,
+                productId: 12,
+                userId: 9,
+                amount: 21
+            },
+            {
+                orderId: 4,
+                productId: 19,
+                userId: 9,
+                amount: 35
+            },
+            {
+                orderId: 1,
+                productId: 9,
+                userId: 8,
+                amount: 33
             }
         ]);
     }).catch(err => console.log(err))
