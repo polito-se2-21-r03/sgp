@@ -148,6 +148,10 @@ async function update(req, res) {
                         .catch(err => res.status(503).json({ error: err.message }))
                 })
                 .catch(err => res.status(503).json({ error: err.message }))
+        }else{
+            return await models.order.update({ status: status }, { where: { id: req.params.id } })
+                .then(() => res.status(200).json("Order updated"))
+                .catch(err => res.status(503).json({ error: err.message }))
         }
 
         // switch (changedBy) {

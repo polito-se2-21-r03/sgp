@@ -331,9 +331,10 @@ describe("Test update order", () => {
   it("tests the base route and return an order updated", async () => {
     body = {
       status: "DELIVERED",
+      clientId: 1
     };
     const response = await supertest(server).put("/api/order/1").send(body);
-    expect(response).toBe(200);
+    expect(response.status).toBe(200);
   });
   afterAll(async () => {
     await server.close();
@@ -350,7 +351,7 @@ describe("Test body validation for order update", () => {
   it("tests the body of req and return with error for body not valid", async () => {
     body = { createdAt: 200 };
     const response = await supertest(server).put("/api/order/1").send(body);
-    expect(response.status).toBe(503);
+    expect(response.status).toBe(422);
   });
   afterAll(async () => {
     await server.close();

@@ -32,9 +32,9 @@ exports.orderUpdateSchema = {
                     "productId": { "type": "integer" },
                     "amount": { "type": "integer", "minimum": 1 },
                     "price": { "type": "number" }
-                },
-                "required": ["clientId","status"]
+                }
             }
         }
-    }
+    },
+    "required": ["clientId","status"]
 };
