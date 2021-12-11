@@ -15,11 +15,17 @@ import {
   TextContainer,
   TextStyle,
   Toast,
-  Banner
+  Banner,
+  Stack,
+  Sticky
 } from '@shopify/polaris';
 
 import { TopBarMarkup, NavigationMarkup } from '../../../components';
 import { AddedProductRow } from './AddedProductRow';
+import {
+  CancelSmallMinor,
+  CartMajor
+} from '@shopify/polaris-icons';
 
 import dayjs from 'dayjs';
 
@@ -224,10 +230,25 @@ export function ClientsProductAll({ user }: any) {
 
   const addedProductsMarkup = addedItems.map(
     (item, index) => {
-      return (
-        <p key={index}>
-          {frontItems[item.productId - 1].name} x{item.amount}
-        </p>
+      return (<div style={{ paddingTop: '5px' }}>
+        <Stack distribution="equalSpacing">
+          <Stack.Item>
+            <p key={index} style={{ width: '5rem' }}>
+              {frontItems[item.productId - 1].name}
+            </p>
+          </Stack.Item>
+          <Stack.Item>
+            x{item.amount}
+          </Stack.Item>
+          <Stack.Item>
+            <Button
+              plain
+              icon={CancelSmallMinor}
+            />
+          </Stack.Item>
+        </Stack>
+        <hr />
+      </div>
       )
     }
   )
@@ -281,26 +302,28 @@ export function ClientsProductAll({ user }: any) {
         </Layout.Section>
         {/* Second column */}
         <Layout.Section secondary>
-          <Card title="Cart" sectioned>
-            <div>
-              {addedItems.length > 0 && (
-                <TextStyle variation="strong">Products:</TextStyle>
-              )}
-              {addedProductsMarkup}
-            </div>
-            <div style={{ marginTop: '16px' }}>
-              <p><TextStyle variation="strong">Total</TextStyle>: {Number(total).toFixed(2)} €</p>
-            </div>
-            <div style={{ marginTop: '16px' }}>
-              <Button
-                primary
-                onClick={handleSave}
-                disabled={total === 0}
-              >
-                Place order
-              </Button>
-            </div>
-          </Card>
+          <Sticky offset >
+            <Card title="Cart" sectioned>
+              <div>
+                {addedItems.length > 0 && (
+                  <div style={{ paddingBottom: '5px' }}><TextStyle variation="strong">Products:</TextStyle></div>
+                )}
+                {addedProductsMarkup}
+              </div>
+              <div style={{ marginTop: '16px' }}>
+                <p><TextStyle variation="strong">Total</TextStyle>: {Number(total).toFixed(2)} €</p>
+              </div>
+              <div style={{ marginTop: '16px' }}>
+                <Button
+                  primary
+                  onClick={handleSave}
+                  disabled={total === 0}
+                >
+                  Place order
+                </Button>
+              </div>
+            </Card>
+          </Sticky>
         </Layout.Section>
       </Layout>
     </Page>
