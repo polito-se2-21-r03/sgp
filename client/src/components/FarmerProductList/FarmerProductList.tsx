@@ -5,7 +5,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 
 import dayjs from 'dayjs';
 
-export function ProductList() {
+export function FarmerProductList() {
   const [queryValue, setQueryValue] = useState(null);
   const [taggedWith, setTaggedWith] = useState(null);
   const [sortValue, setSortValue] = useState('DATE_CREATED_DESC');
@@ -22,35 +22,6 @@ export function ProductList() {
    * Data fetching
    */
   useEffect(() => {
-    const fetchFarmers = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/farmer', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        })
-        const response = await data.json();
-        const farmers = {};
-
-        if (response) {
-          for (const item of response) {
-            farmers[item.id] = item.firstname + " " + item.lastname;
-          }
-
-          setIsLoading(false);
-          return farmers;
-        } else {
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false)
-      }
-    }
-
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
@@ -62,12 +33,10 @@ export function ProductList() {
           },
         })
         const response = await data.json();
-        const farmers = await fetchFarmers();
 
         if (response) {
           const tmp = [];
           for (const item of response) {
-            item["farmer"] = farmers[item.producerId]
             item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1);
             tmp.push(item);
           }
@@ -167,6 +136,7 @@ export function ProductList() {
 
   const rowMarkup = frontItems.map(
     (item, index) => {
+
       return (
         <IndexTable.Row
           id={item.id}
@@ -202,7 +172,7 @@ export function ProductList() {
             {item.quantity}
           </IndexTable.Cell>
           <IndexTable.Cell>
-            {item.farmer}
+            -
           </IndexTable.Cell>
         </IndexTable.Row>
       )

@@ -23,6 +23,7 @@ exports.orderUpdateSchema = {
     "id": "/OrderUpdateSchema",
     "type": "object",
     "properties": {
+        "clientId": {"type": "integer"},
         "status": {"type": "string"},
         "products": {
             "type": "array",
@@ -31,9 +32,9 @@ exports.orderUpdateSchema = {
                     "productId": { "type": "integer" },
                     "amount": { "type": "integer", "minimum": 1 },
                     "price": { "type": "number" }
-                },
-                "required": ["productId", "amount", "price"]
+                }
             }
         }
-    }
+    },
+    "required": ["clientId","status"]
 };

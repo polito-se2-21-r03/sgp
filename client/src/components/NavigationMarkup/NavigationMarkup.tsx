@@ -23,12 +23,42 @@ export function NavigationMarkup({ user }: any) {
   );
 
   const location = window.location.pathname;
+  const items: any[] = [];
 
   const getRoute = () => {
     switch (user.role) {
       case 'CLIENT':
         return '/client';
+      case 'FARMER':
+        return '/farmer';
       default:
+        items.push({
+          label: 'Orders',
+          icon: OrdersMajor,
+          onClick: () => {
+            toggleIsLoading();
+            setNavItemActive('orders');
+          },
+          url: '/orders',
+        },
+          {
+            label: 'Products',
+            icon: ProductsMajor,
+            onClick: () => {
+              toggleIsLoading();
+              setNavItemActive('products');
+            },
+            url: '/products',
+          },
+          {
+            label: 'Customers',
+            icon: CustomersMajor,
+            onClick: () => {
+              toggleIsLoading();
+              setNavItemActive('customers');
+            },
+            url: '/customers',
+          })
         return '/';
     }
   }
@@ -40,7 +70,6 @@ export function NavigationMarkup({ user }: any) {
         items={[
           {
             label: 'Home',
-            key: 1,
             icon: HomeMajor,
             onClick: () => {
               toggleIsLoading();
@@ -49,36 +78,7 @@ export function NavigationMarkup({ user }: any) {
             url: getRoute(),
             exactMatch: true
           },
-          user && user.role === 'EMPLOYEE' && {
-            label: 'Orders',
-            key: 2,
-            icon: OrdersMajor,
-            onClick: () => {
-              toggleIsLoading();
-              setNavItemActive('orders');
-            },
-            url: '/orders',
-          },
-          user && user.role === 'EMPLOYEE' && {
-            label: 'Products',
-            key: 3,
-            icon: ProductsMajor,
-            onClick: () => {
-              toggleIsLoading();
-              setNavItemActive('products');
-            },
-            url: '/products',
-          },
-          user && user.role === 'EMPLOYEE' && {
-            label: 'Customers',
-            key: 4,
-            icon: CustomersMajor,
-            onClick: () => {
-              toggleIsLoading();
-              setNavItemActive('customers');
-            },
-            url: '/customers',
-          },
+          ...items
         ]}
       />
       {/* <Navigation.Section

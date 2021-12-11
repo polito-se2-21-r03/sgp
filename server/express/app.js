@@ -5,6 +5,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { models } = require('../sequelize');
 const bcrypt = require('bcrypt');
+const {reminder} = require("./routes/order");
 
 const jwtSecret = 'Zv3SNmakJYZP9JTKzCOfmoNmxgv36Vp0g0csh6LSLMf543iQSfxC161wCQxUisR';
 const expireTime = 1000 * 3000; //  50 minutes
@@ -145,5 +146,7 @@ for (const [routeName, routeController] of Object.entries(routes)) {
         );
     }
 }
+
+app.post('/api/order/:id/reminder', reminder)
 
 module.exports = app;

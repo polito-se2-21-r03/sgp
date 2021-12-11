@@ -4,6 +4,13 @@
 The project is divided into two independent containers (services). The first, called server listening on port 3001, is dedicated solely to the backend stuff or to everything related to the business logic exposed through api.
 The second one, called frontend or client, is the interface exposed to the user and accessible to the localhost:3000 page that communicates with the backend.
 
+## Order status meaning
+- Created: it has been created
+- Pending: the order has been accepted
+- Issued
+- Delivered
+- Completed
+- Pending cancelation: the client has insufficient balance
 ## Tech
 
 The application is built using the following technologies:

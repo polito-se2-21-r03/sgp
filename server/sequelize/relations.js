@@ -4,11 +4,16 @@ function applyExtraSetup(sequelize) {
         product,
         order_product,
         wallet,
-        user
+        user,
+        product_farmer
     } = sequelize.models;
 
     order.belongsToMany(product, {through: order_product});
     product.belongsToMany(order, {through: order_product});
+    order_product.belongsTo(product)
+    user.belongsToMany(product, {through: product_farmer});
+    product.belongsToMany(user, {through: product_farmer});
+    product_farmer.belongsTo(product)
     user.hasOne(wallet)
 }
 
