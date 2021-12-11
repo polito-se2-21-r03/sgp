@@ -21,12 +21,15 @@ export function AddedProductRow({ item, addProduct }: any) {
   const [total, setTotal] = useState(0);
 
   const handleValueChange = useCallback((newValue) => {
-    setValue(newValue);
-    setTotal(total + (Number(newValue)) * price);
+    if (newValue >= 0) {
+      setValue(newValue);
+      setTotal(total + (Number(newValue)) * price);
+    }
   }, []);
 
   const handleAddProduct = useCallback(() => {
-    addProduct(item, value);
+    if (Number(value) > 0)
+      addProduct(item, value);
   }, [value]);
 
   const [open, setOpen] = useState(false);
@@ -89,7 +92,7 @@ export function AddedProductRow({ item, addProduct }: any) {
               </Stack.Item>
             </Stack>
           </Stack.Item>
-          <Button onClick={handleAddProduct}>Add Product</Button>
+          <Button onClick={handleAddProduct} disabled={Number(value) <= 0 ? true : false}>Add Product</Button>
         </Stack>
       </Stack.Item>
     </Stack>
