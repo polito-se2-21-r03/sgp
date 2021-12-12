@@ -1,16 +1,17 @@
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import tz from 'dayjs/plugin/timezone'
+const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
+const tz = require('dayjs/plugin/timezone');
 
 dayjs.extend(utc)
 dayjs.extend(tz)
+dayjs.tz.setDefault('Europe/Rome');
 
-export default class VirtualClock {
+module.exports = class VirtualClock {
     static currTime;
     week_days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     constructor() {
-        VirtualClock.currTime = dayjs.utc(dayjs()).tz('Europe/Rome');
+        VirtualClock.currTime = dayjs();
     }
 
     getTime(){
@@ -22,6 +23,7 @@ export default class VirtualClock {
     }
 
     setTime(time){
-        VirtualClock.currTime = time;
+        VirtualClock.currTime = dayjs(time);
+        return VirtualClock.currTime;
     }
 }

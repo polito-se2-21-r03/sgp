@@ -1,26 +1,31 @@
-const { models } = require('../../sequelize');
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
-const { Validator } = require("jsonschema");
-const OrderRequestSchema = require("../schemas/order-request");
-const { DataTypes, Error} = require("sequelize");
+const VirtualClock = require("../utils/virtual-clock");
+const Routine = require("../utils/routine");
+const { validationResult } = require('express-validator');
+
+const virtualClock = new VirtualClock();
+const routine = new Routine();
 
 async function getAll(req, res) {
-    return res.status(200).json({currentTime: vtc.time(), day: vtc.day()})
+    return res.status(200).json({
+        time: virtualClock.getTime(),
+        day: virtualClock.getDay()
+    })
 }
 
 async function update(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({errors: errors.array()});
+        return res.status(422).json({ errors: errors.array() });
     }
-
-    const time = req.body.time;
-
+    const time = req.params.time;
     try {
-        let newTime = vtc.set(time);
-        sys.checkTimedEvents(newTime);
-        res.status(200).json({currentTime: vtc.time(), day: vtc.day()});
+        const virtualTime = virtualClock.setTime(time);
+        await routine.routine(virtualTime)
+            .then(() => res.status(200).json({
+                time: virtualClock.getTime(),
+                day: virtualClock.getDay()
+            }))
+            .catch(err => res.status(503).json({ error: err.message }))
     } catch (error) {
         res.status(500).json({error});
     }

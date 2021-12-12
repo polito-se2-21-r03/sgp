@@ -53,7 +53,7 @@ async function reset() {
 
     await sequelize.models.product.bulkCreate(Array.from({ length: 21 },
         (_, i) => ({
-            "producerId": randomInt(6, 10),
+            "producerId": randomInt(7, 10),
             "quantity": randomInt(450, 730),
             "price": randomFloat(1, 5),
             "src": mock.vegetables[i].img,
@@ -63,7 +63,7 @@ async function reset() {
     )
     await sequelize.models.product.bulkCreate(Array.from({ length: 24 },
         (_, i) => ({
-            "producerId": randomInt(6, 10),
+            "producerId": randomInt(7, 10),
             "quantity": randomInt(1, 230),
             "price": randomFloat(1, 12),
             "unitOfMeasure": "Kg",
@@ -185,7 +185,7 @@ async function reset() {
         await sequelize.models.wallet.bulkCreate([
             {
                 userId: 1,
-                credit: 0.45,
+                credit: 333333333,
             },
             {
                 userId: 2,
