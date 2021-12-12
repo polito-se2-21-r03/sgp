@@ -15,6 +15,7 @@ import {
   TextContainer,
   TextStyle,
   Toast,
+  TextField,
   Banner,
   Stack,
   Sticky
@@ -24,12 +25,15 @@ import { TopBarMarkup, NavigationMarkup } from '../../../components';
 import { AddedProductRow } from './AddedProductRow';
 import {
   CancelSmallMinor,
-  CartMajor
+  CartMajor,
+  MinusMinor,
+  PlusMinor
 } from '@shopify/polaris-icons';
 
 import dayjs from 'dayjs';
 
 import './ClientsProductAll.scss';
+import { transform } from 'typescript';
 
 export function ClientsProductAll({ user }: any) {
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
@@ -233,18 +237,40 @@ export function ClientsProductAll({ user }: any) {
       return (<div style={{ paddingTop: '5px' }}>
         <Stack distribution="equalSpacing">
           <Stack.Item>
-            <p key={index} style={{ width: '5rem' }}>
-              {frontItems[item.productId - 1].name}
-            </p>
+            <div style={{ transform: 'translateY(50%)' }}>
+              <p key={index} style={{ width: '5rem' }}>
+                {frontItems[item.productId - 1].name}
+              </p>
+            </div>
           </Stack.Item>
           <Stack.Item>
-            x{item.amount}
-          </Stack.Item>
-          <Stack.Item>
-            <Button
-              plain
-              icon={CancelSmallMinor}
+            { /* x{item.amount} */}
+            <TextField
+              label=""
+              value={item.amount}
+              connectedLeft={
+                <Button
+                  icon={MinusMinor}
+                  onClick={() => { }}
+                  disabled={item.amount <= 1 ? true : false}
+                />
+              }
+              connectedRight={
+                <Button
+                  icon={PlusMinor}
+                  onClick={() => { }}
+                />
+              }
+              autoComplete="off"
             />
+          </Stack.Item>
+          <Stack.Item>
+            <div style={{ transform: 'translateY(30%)' }}>
+              <Button
+                plain
+                icon={CancelSmallMinor}
+              />
+            </div>
           </Stack.Item>
         </Stack>
         <hr />
@@ -302,7 +328,7 @@ export function ClientsProductAll({ user }: any) {
         </Layout.Section>
         {/* Second column */}
         <Layout.Section secondary>
-          <Sticky offset >
+          <Sticky offset>
             <Card title="Cart" sectioned>
               <div>
                 {addedItems.length > 0 && (
