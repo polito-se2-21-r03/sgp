@@ -10,29 +10,29 @@ on:
     branches: [master]
 
 jobs:
-  test-frontend:
-    name: Test Frontend
-    runs-on: ubuntu-latest
+  # test-frontend:
+  #   name: Test Frontend
+  #   runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: client
+  #   defaults:
+  #     run:
+  #       working-directory: client
 
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x]
+  #   strategy:
+  #     matrix:
+  #       node-version: [14.x, 16.x]
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: CI backend ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
+  #     - name: CI backend ${{ matrix.node-version }}
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
 
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
+  #     - run: npm ci
+  #     - run: npm run build --if-present
+  #     - run: npm test
 
   test-backend:
     name: Test Backend
