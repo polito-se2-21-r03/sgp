@@ -48,7 +48,7 @@ async function confirmOrderProducts(req, res) {
         if (!await models.order.findByPk(req.params.orderId)) {
             return res.status(503).json({ error: `Order not found` })
         }
-        if(products){
+        if(products.length > 0){
             return await Promise.all(products.map(async product => {
                 await models.order_product.update({confirmed: product.confirmed}, { where: { userId: req.params.farmerId, orderId: req.params.orderId, productId: product.productId }})
             }))
