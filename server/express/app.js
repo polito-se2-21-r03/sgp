@@ -5,7 +5,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { models } = require('../sequelize');
 const bcrypt = require('bcrypt');
-const {reminder} = require("./routes/order");
+const { check } = require('express-validator');
 
 const jwtSecret = 'Zv3SNmakJYZP9JTKzCOfmoNmxgv36Vp0g0csh6LSLMf543iQSfxC161wCQxUisR';
 const expireTime = 1000 * 3000; //  50 minutes
@@ -18,11 +18,14 @@ const routes = {
     employee: require('./routes/employee'),
     wallet: require('./routes/wallet'),
     farmer: require('./routes/farmer'),
+    time: require('./routes/virtual-time'),
 };
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
 
 
 // const checkPassword = (user, password) => bcrypt.compareSync(password, user.hash);
@@ -134,8 +137,15 @@ for (const [routeName, routeController] of Object.entries(routes)) {
         );
     }
     if (routeController.update) {
+        let validators = [];
+        let fieldName = 'id';
+        if(routeName === 'time'){
+            fieldName = 'time'
+            validators.push([check(fieldName).isISO8601()])
+        }
         app.put(
-            `/api/${routeName}/:id`,
+            `/api/${routeName}/:${fieldName}`,
+            ...validators,
             makeHandlerAwareOfAsyncErrors(routeController.update)
         );
     }
@@ -147,6 +157,8 @@ for (const [routeName, routeController] of Object.entries(routes)) {
     }
 }
 
-app.post('/api/order/:id/reminder', reminder)
+app.post('/api/order/:id/reminder', routes.order.reminder)
+app.post('/api/farmer/:farmerId/order/:orderId', routes.farmer.confirmOrderProducts)
+app.get('/api/farmer/:id/order', routes.farmer.getOrdersByFarmerId)
 
 module.exports = app;

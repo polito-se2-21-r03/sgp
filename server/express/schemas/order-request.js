@@ -38,3 +38,21 @@ exports.orderUpdateSchema = {
     },
     "required": ["clientId","status"]
 };
+
+exports.confirmOrderProductSchema = {
+    "id": "/ConfirmOrderProductSchema",
+    "type": "object",
+    "properties": {
+        "products": {
+            "type": "array",
+            "items": {
+                "properties": {
+                    "productId": { "type": "integer" },
+                    "confirmed": { "type": "integer" },
+                },
+                "required": ["productId","confirmed"]
+            }
+        }
+    },
+    "required": ["products"]
+};

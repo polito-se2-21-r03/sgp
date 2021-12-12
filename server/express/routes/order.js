@@ -117,53 +117,19 @@ async function update(req, res) {
         return res.status(422).json({ errors: body.errors })
     }
     try {
-        const { clientId, changedBy, status } = req.body
+        const { clientId, changedBy, status, products } = req.body
         if (!await models.order.findByPk(req.params.id)) {
             return res.status(503).json({ error: `Order not found` })
         }
-        if(status === "CONFIRMED"){
-            let products = req.body.products;
-            if(!products){
-                products = await models.order_product.findAll({where: {orderId: req.params.id},include: [{
-                        model: models.product,
-                        required: true
-                    }]}
-                );
-            }
-            const total = products.reduce((prev, curr) => prev + curr.amount*curr.product.price, 0.0);
-            const wallet = await models.wallet.findOne({where: {userId: clientId}})
-            const user = await models.user.findByPk(clientId)
-            if(wallet.credit < total){
-                res.status(503).json({ error: `Credit Unavailable. Order in pending cancellation` })
-                await transporter.sendMail(pendingCancellation(user));
-                return await models.order.update({ status: "PENDING CANCELLATION" }, { where: { id: req.params.id } })
-                    .then(() => res.status(200).json("Order in pending cancellation"))
-                    .catch(err => res.status(503).json({ error: err.message }))
-            }
-            return await models.wallet.update({ credit: Sequelize.literal('credit - ' + total) }, { where: { userId: clientId }})
-                .then(async () => {
-                    await transporter.sendMail(confirmed(user));
-                    return await models.order.update({ status: "CONFIRMED" }, { where: { id: req.params.id } })
-                        .then(() => res.status(200).json("Order confirmed and successfully payed"))
-                        .catch(err => res.status(503).json({ error: err.message }))
-                })
-                .catch(err => res.status(503).json({ error: err.message }))
+        if(status === "CONFIRMED" && products){
+            await Promise.all(products.map(async product => {
+                await models.order_product.update({confirmed: product.status}, { where: { orderId: req.params.id, productId: product.productId }})
+            }))
         }else{
             return await models.order.update({ status: status }, { where: { id: req.params.id } })
                 .then(() => res.status(200).json("Order updated"))
                 .catch(err => res.status(503).json({ error: err.message }))
         }
-
-        // switch (changedBy) {
-        //     case "EMPLOYEE":
-        //         return await models.order.update({ status: status }, { where: { id: req.params.id } })
-        //             .then(() => res.status(200).json("Order updated"))
-        //             .catch(err => res.status(503).json({ error: err.message }))
-        //     case "CLIENT":
-        //         return false
-        //     default:
-        //         return res.status(503).json("Wrong user")
-        // }
     } catch (err) {
         res.status(503).json({ error: err.message });
     }
@@ -174,5 +140,5 @@ module.exports = {
     create,
     update,
     getById,
-    reminder
+    reminder,
 };

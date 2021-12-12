@@ -30,6 +30,15 @@ module.exports = (sequelize) => {
             allowNull: true,
             type: DataTypes.STRING
         },
+        unitOfMeasure: {
+            allowNull: false,
+            defaultValue: "Kg",
+            type: DataTypes.STRING
+        },
+        description: {
+            allowNull: true,
+            type: DataTypes.STRING
+        },
         createdAt: {
             allowNull: true,
             type: DataTypes.DATE
