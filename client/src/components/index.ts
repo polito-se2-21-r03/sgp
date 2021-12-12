@@ -6,4 +6,5 @@ export { UserList } from './UserList';
 export { ProductList } from './ProductList';
 export { FarmerProductList } from './FarmerProductList';
 export { DashboardDatePicker } from './DashboardDatePicker';
+export { TopBarDatePicker } from './TopBarDatePicker';
 export { contextControlMarkup } from './ContextControlMarkup';

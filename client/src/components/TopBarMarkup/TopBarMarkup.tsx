@@ -1,11 +1,13 @@
 import React, { useCallback, useState } from 'react';
-import { ActionList, TopBar } from '@shopify/polaris';
+import { ActionList, Icon, TopBar, VisuallyHidden } from '@shopify/polaris';
 
 import { contextControlMarkup } from '../ContextControlMarkup';
-import { CircleRightMajor } from '@shopify/polaris-icons';
+import { CircleRightMajor, QuestionMarkMajor } from '@shopify/polaris-icons';
 
 import asyncLocalStorage from '../../utils/async-localstorage';
 import { useHistory } from 'react-router';
+
+import { TopBarDatePicker } from '../TopBarDatePicker';
 
 export function TopBarMarkup({ handleMobileNavigation }: any) {
   const history = useHistory();
@@ -14,6 +16,10 @@ export function TopBarMarkup({ handleMobileNavigation }: any) {
   const [searchValue, setSearchValue] = useState('');
   const [userMenuActive, setUserMenuActive] = useState(false);
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
+
+  const [isSecondaryMenuOpen, setIsSecondaryMenuOpen] = useState(false);
+  const toggleIsSecondaryMenuOpen = useCallback(() =>
+    setIsSecondaryMenuOpen((isSecondaryMenuOpen) => !isSecondaryMenuOpen), []);
 
   const user = JSON.parse(String(localStorage.getItem('user')));
 
@@ -81,7 +87,7 @@ export function TopBarMarkup({ handleMobileNavigation }: any) {
 
   const searchResultsMarkup = (
     <ActionList
-      items={[{ content: 'NANO Platform help center' }]}
+      items={[{ content: 'SPG Platform help center' }]}
     />
   );
 
@@ -93,10 +99,27 @@ export function TopBarMarkup({ handleMobileNavigation }: any) {
     />
   );
 
+  const secondaryMenuMarkup = (
+    <TopBar.Menu
+      // activatorContent={
+      //   <span>
+      //     <Icon source={QuestionMarkMajor} />
+      //     <VisuallyHidden>Secondary menu</VisuallyHidden>
+      //   </span>
+      // }
+      activatorContent={<TopBarDatePicker />}
+      open={isSecondaryMenuOpen}
+      onOpen={toggleIsSecondaryMenuOpen}
+      onClose={toggleIsSecondaryMenuOpen}
+      actions={[]}
+    />
+  );
+
   const topBarMarkup = (
     <TopBar
       showNavigationToggle
       userMenu={userMenuMarkup}
+      secondaryMenu={secondaryMenuMarkup}
       // searchResultsVisible={searchActive}
       // searchField={searchFieldMarkup}
       // searchResults={searchResultsMarkup}
