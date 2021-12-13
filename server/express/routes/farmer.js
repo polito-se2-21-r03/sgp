@@ -38,8 +38,12 @@ async function getOrdersByFarmerId(req, res) {
     .then((orders) => {
       if (orders) {
         const result = orders.reduce((r, order) => {
-          r[order.orderId] = r[order.orderId] || [];
-          r[order.orderId].push({
+          r[order.orderId] = r[order.orderId] || {info: {
+              createdAt: order.order.createdAt,
+              status: order.order.status,
+              clientId: order.order.clientId
+            }, product: []};
+          r[order.orderId]['product'].push({
             productId: order.productId,
             amount: order.amount,
           });
@@ -48,7 +52,10 @@ async function getOrdersByFarmerId(req, res) {
         res.status(200).json(
           Object.keys(result).map((key, index) => ({
             orderId: key,
-            products: result[key],
+            createdAt: result[key]['info'].createdAt,
+            status: result[key]['info'].status,
+            clientId: result[key]['info'].clientId,
+            products: result[key]['product'],
           }))
         );
       }

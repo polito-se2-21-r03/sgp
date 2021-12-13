@@ -25,3 +25,6 @@ yarn-error.log*
 result.pdf
 
 .idea
+
+server/server/se2.db
+server/se2.db
