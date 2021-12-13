@@ -9,7 +9,7 @@ export function TopBarDatePicker({ handleAnalytics }: any) {
    * Popover
    */
   const parseDateLabel = (date: Date) => {
-    return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + (date.getDate())).slice(-2)}`;
+    return `${date.getFullYear()}/${("0" + (date.getMonth() + 1)).slice(-2)}/${("0" + (date.getDate())).slice(-2)}`;
   }
 
   const [popoverActive, setPopoverActive] = useState(false);
@@ -52,7 +52,6 @@ export function TopBarDatePicker({ handleAnalytics }: any) {
       start: e.start,
       end: e.end,
     });
-    setDefaultInput(parseDateLabel(e.start))
   }, []);
 
 
@@ -246,7 +245,7 @@ export function TopBarDatePicker({ handleAnalytics }: any) {
                   disabled={time === ''}
                   onClick={handleSubmit}
                 >
-                  Applica
+                  Save
                 </Button>
               </div>
             </Stack>

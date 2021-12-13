@@ -36,7 +36,6 @@ export function FarmersProductAll({ user }: any) {
   }
 
   const loadingMarkup = isLoading ? <Loading /> : null;
-
   // ---- Page markup ----
   const actualPageMarkup = (
     <Page
@@ -53,7 +52,7 @@ export function FarmersProductAll({ user }: any) {
     >
       <Layout>
         <Layout.Section>
-          <FarmerProductList />
+          <FarmerProductList user={user} />
         </Layout.Section>
       </Layout>
     </Page>

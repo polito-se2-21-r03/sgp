@@ -5,7 +5,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 
 import dayjs from 'dayjs';
 
-export function FarmerProductList() {
+export function FarmerProductList({ user }: any) {
   const [queryValue, setQueryValue] = useState(null);
   const [taggedWith, setTaggedWith] = useState(null);
   const [sortValue, setSortValue] = useState('DATE_CREATED_DESC');
@@ -25,7 +25,7 @@ export function FarmerProductList() {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/product', {
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/farmer/${user.id}/product`, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -33,7 +33,7 @@ export function FarmerProductList() {
           },
         })
         const response = await data.json();
-
+        console.log(response);
         if (response) {
           const tmp = [];
           for (const item of response) {
