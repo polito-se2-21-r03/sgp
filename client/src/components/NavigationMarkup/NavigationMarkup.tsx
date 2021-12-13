@@ -30,6 +30,16 @@ export function NavigationMarkup({ user }: any) {
       case 'CLIENT':
         return '/client';
       case 'FARMER':
+        items.push(
+          {
+            label: 'Orders',
+            icon: OrdersMajor,
+            onClick: () => {
+              toggleIsLoading();
+              setNavItemActive('orders');
+            },
+            url: '/farmer/orders',
+          })
         return '/farmer';
       default:
         items.push({

@@ -51,7 +51,7 @@ export function OrderAll({ user }: any) {
     >
       <Layout>
         <Layout.Section>
-          <OrderList />
+          <OrderList user={user} />
         </Layout.Section>
       </Layout>
     </Page>

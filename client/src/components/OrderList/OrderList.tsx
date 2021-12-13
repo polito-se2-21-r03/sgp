@@ -8,7 +8,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import dayjs from 'dayjs';
 
-export function OrderList() {
+export function OrderList({ user }: any) {
   const history = useHistory();
 
   const [selectedItems, setSelectedItems] = useState([]);
@@ -77,7 +77,8 @@ export function OrderList() {
     const fetchOrders = async () => {
       try {
         setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/order', {
+        const endpoint = (user.role === 'FARMER') ? `/farmer/${user.id}/order` : `/order`;
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + endpoint, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -86,7 +87,7 @@ export function OrderList() {
         })
         const response = await data.json();
         const clients = await fetchClients();
-
+        console.log(response);
         if (response) {
           const tmp = [];
           for (const item of response) {

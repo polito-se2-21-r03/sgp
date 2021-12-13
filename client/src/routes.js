@@ -147,6 +147,13 @@ const routes = [
     component: FarmersProductAll,
     exact: true,
   },
+  {
+    path: "/farmer/orders",
+    name: "Farmer",
+    roles: ["FARMER"],
+    component: OrderAll,
+    exact: true,
+  },
 ];
 
 export default routes;
