@@ -16,7 +16,7 @@ module.exports = class Routine {
         if (day === 1 && hours === 9) {
             const orders = await models.order.findAll({where: {status: "CREATED"}})
             await Promise.all(orders.map(async order => {
-                const products = await models.order_product.findAll({where: {orderId: order.id, confirmed: true},include: [{
+                const products = await models.order_product.findAll({where: {orderId: order.id, confirmed: 1},include: [{
                         model: models.product,
                         required: true
                 }]});
