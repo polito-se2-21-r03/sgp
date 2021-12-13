@@ -199,34 +199,37 @@ export function OrderList({ user }: any) {
   }
 
   const rowMarkup = frontItems.map(
-    (item, index) => (
-      <IndexTable.Row
-        id={item.id}
-        key={item.id}
-        selected={selectedResources.includes(item.id)}
-        position={index}
-      >
-        <IndexTable.Cell>
-          <TextStyle variation="strong">
-            <Link url={`/orders/${item.id}`} removeUnderline monochrome passHref>
-              <a
-                style={{ color: 'inherit', textDecoration: 'none' }}
-                data-primary-link>#{item.id}</a>
-            </Link>
-          </TextStyle>
-        </IndexTable.Cell>
-        <IndexTable.Cell>
-          {dayjs(item.createdAt).format('DD MMM HH:mm')}
-        </IndexTable.Cell>
-        <IndexTable.Cell>
-          {renderStatusMarkup(item.status)}
-        </IndexTable.Cell>
-        <IndexTable.Cell>
-          {item.client}
-        </IndexTable.Cell>
-      </IndexTable.Row>
-    ),
-  );
+    (item, index) => {
+      const key = user.role === "FARMER" ? item.orderId : item.id;
+
+      return (
+        <IndexTable.Row
+          id={key}
+          key={key}
+          selected={selectedResources.includes(key)}
+          position={index}
+        >
+          <IndexTable.Cell>
+            <TextStyle variation="strong">
+              <Link url={(user.role === "FARMER" ? '/farmer' : '') + `/orders/${key}`} removeUnderline monochrome passHref>
+                <a
+                  style={{ color: 'inherit', textDecoration: 'none' }}
+                  data-primary-link>#{key}</a>
+              </Link>
+            </TextStyle>
+          </IndexTable.Cell>
+          <IndexTable.Cell>
+            {dayjs(item.createdAt).format('DD MMM HH:mm')}
+          </IndexTable.Cell>
+          <IndexTable.Cell>
+            {renderStatusMarkup(item.status)}
+          </IndexTable.Cell>
+          <IndexTable.Cell>
+            {item.client}
+          </IndexTable.Cell>
+        </IndexTable.Row>
+      );
+    });
 
   /**
    * Empty state markup

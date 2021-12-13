@@ -40,14 +40,14 @@ export function OrderAll({ user }: any) {
     <Page
       fullWidth
       title="Orders"
-      primaryAction={
+      primaryAction={user.role === 'FARMER' ? null : (
         <Button
           primary
           url='/orders/new'
         >
           Add order
         </Button>
-      }
+      )}
     >
       <Layout>
         <Layout.Section>

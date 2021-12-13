@@ -25,7 +25,7 @@ export function AddedProductRow({ item }: any) {
         <div style={{ overflow: 'hidden' }}>{item.src ? (
           <img src={item.src} width='100%' height='200rem' style={{ objectFit: 'cover' }} />
         ) : (
-          <img src="https://images.unsplash.com/photo-1630448927918-1dbcd8ba439b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80" style={{ objectFit: 'cover' }} />
+          <img src="https://images.unsplash.com/photo-1630448927918-1dbcd8ba439b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80" width='100%' height='200rem' style={{ objectFit: 'cover' }} />
         )}</div>
       </Stack.Item>
       <Stack.Item>
@@ -33,13 +33,15 @@ export function AddedProductRow({ item }: any) {
         <p>
           <Stack distribution="equalSpacing">
             <TextStyle variation="subdued">Farmer: {item.farmer}</TextStyle>
-            <Button
-              plain
-              onClick={handleToggle}
-              ariaExpanded={open}
-              ariaControls="basic-collapsible"
-              icon={open ? ChevronUpMinor : ChevronDownMinor}
-            />
+            {item.description && (
+              <Button
+                plain
+                onClick={handleToggle}
+                ariaExpanded={open}
+                ariaControls="basic-collapsible"
+                icon={open ? ChevronUpMinor : ChevronDownMinor}
+              />
+            )}
           </Stack>
         </p>
         <Collapsible
@@ -50,10 +52,7 @@ export function AddedProductRow({ item }: any) {
         >
           <TextContainer>
             <p>
-              Your mailing list lets you contact customers or visitors who
-              have shown an interest in your store. Reach out to them with
-              exclusive offers or updates about your products.
-              {/* {item.description} */}
+              {item.description}
             </p>
           </TextContainer>
         </Collapsible>
@@ -61,7 +60,7 @@ export function AddedProductRow({ item }: any) {
       <Stack.Item>
         <Stack distribution="trailing" alignment="center">
           <Stack.Item>
-            {Number(price).toFixed(2)} €
+            {Number(price).toFixed(2)} €/{item.unitOfMeasure}
           </Stack.Item>
         </Stack>
       </Stack.Item>

@@ -178,7 +178,7 @@ export function ProductList() {
             <div style={{ overflow: 'hidden', padding: '5px 0' }}>{item.src ? (
               <img src={item.src} width='50rem' height='50rem' style={{ objectFit: 'cover' }} />
             ) : (
-              <img src="https://images.unsplash.com/photo-1630448927918-1dbcd8ba439b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80" style={{ objectFit: 'cover' }} />
+              <img src="https://images.unsplash.com/photo-1630448927918-1dbcd8ba439b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80" width='50rem' height='50rem' style={{ objectFit: 'cover' }} />
             )}</div>
           </IndexTable.Cell>
           <IndexTable.Cell>
@@ -199,7 +199,7 @@ export function ProductList() {
             </TextStyle>
           </IndexTable.Cell>
           <IndexTable.Cell>
-            {item.quantity}
+            {item.quantity} {item.unitOfMeasure}
           </IndexTable.Cell>
           <IndexTable.Cell>
             {item.farmer}

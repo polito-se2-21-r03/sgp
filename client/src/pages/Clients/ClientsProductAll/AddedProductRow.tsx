@@ -30,6 +30,7 @@ export function AddedProductRow({ item, addProduct }: any) {
   const handleAddProduct = useCallback(() => {
     if (Number(value) > 0)
       addProduct(item, value);
+    setValue('0');
   }, [value]);
 
   const [open, setOpen] = useState(false);
@@ -41,7 +42,7 @@ export function AddedProductRow({ item, addProduct }: any) {
         <div style={{ overflow: 'hidden' }}>{item.src ? (
           <img src={item.src} width='100%' height='200rem' style={{ objectFit: 'cover' }} />
         ) : (
-          <img src="https://images.unsplash.com/photo-1630448927918-1dbcd8ba439b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80" style={{ objectFit: 'cover' }} />
+          <img src="https://images.unsplash.com/photo-1630448927918-1dbcd8ba439b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80" width='100%' height='200rem' style={{ objectFit: 'cover' }} />
         )}</div>
       </Stack.Item>
       <Stack.Item>
@@ -49,13 +50,15 @@ export function AddedProductRow({ item, addProduct }: any) {
         <p>
           <Stack distribution="equalSpacing">
             <TextStyle variation="subdued">Farmer: {item.farmer}</TextStyle>
-            <Button
-              plain
-              onClick={handleToggle}
-              ariaExpanded={open}
-              ariaControls="basic-collapsible"
-              icon={open ? ChevronUpMinor : ChevronDownMinor}
-            />
+            {item.description && (
+              <Button
+                plain
+                onClick={handleToggle}
+                ariaExpanded={open}
+                ariaControls="basic-collapsible"
+                icon={open ? ChevronUpMinor : ChevronDownMinor}
+              />
+            )}
           </Stack>
         </p>
         <Collapsible
@@ -66,10 +69,7 @@ export function AddedProductRow({ item, addProduct }: any) {
         >
           <TextContainer>
             <p>
-              Your mailing list lets you contact customers or visitors who
-              have shown an interest in your store. Reach out to them with
-              exclusive offers or updates about your products.
-              {/* {item.description} */}
+              {item.description}
             </p>
           </TextContainer>
         </Collapsible>
@@ -85,6 +85,7 @@ export function AddedProductRow({ item, addProduct }: any) {
                   value={value}
                   onChange={handleValueChange}
                   autoComplete="off"
+                  suffix={item.unitOfMeasure}
                 />
               </Stack.Item>
               <Stack.Item>

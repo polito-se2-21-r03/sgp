@@ -41,14 +41,14 @@ export function FarmersProductAll({ user }: any) {
     <Page
       fullWidth
       title="Products"
-      primaryAction={
-        <Button
-          primary
-          url='/products/new'
-        >
-          Add product
-        </Button>
-      }
+    // primaryAction={
+    //   <Button
+    //     primary
+    //     url='/products/new'
+    //   >
+    //     Add product
+    //   </Button>
+    // }
     >
       <Layout>
         <Layout.Section>

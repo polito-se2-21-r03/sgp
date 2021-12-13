@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
@@ -24,17 +25,18 @@ import {
 
 import { TopBarMarkup, NavigationMarkup, contextControlMarkup } from '../../../components';
 
-import './ProductNew.scss';
+import './FarmersProductDetails.scss';
 import { SearchMinor } from '@shopify/polaris-icons';
 import { useHistory } from 'react-router';
+import { Item } from '@shopify/polaris/dist/types/latest/src/components/Stack/components';
 
-export function ProductNew({ user, location }: any) {
+export function FarmersProductDetails({ user, match }: any) {
   const history = useHistory();
 
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
-  const [isDirty, setIsDirty] = useState(true);
+  const [isDirty, setIsDirty] = useState(false);
   const [active, setActive] = useState(false);
 
   const toggleActive = useCallback(() => setActive((active) => !active), []);
@@ -72,15 +74,6 @@ export function ProductNew({ user, location }: any) {
     { label: 'Unit', value: 'Units' },
   ];
 
-  /**
-   * Search farmers
-   */
-  const [farmer, setFarmer] = useState(-1);
-  const [selectedFarmerOptions, setSelectedFarmerOptions] = useState([]);
-  const [inputFarmerValue, setInputFarmerValue] = useState('');
-  const [deselectedFarmerOptions, setDeselectedFarmerOptions] = useState([]);
-  const [farmerOptions, setFarmerOptions] = useState([]);
-
   const handleDiscard = useCallback(() => {
     setIsDirty(false);
   }, []);
@@ -91,38 +84,30 @@ export function ProductNew({ user, location }: any) {
   const handleSave = useCallback(async () => {
     try {
       const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/product', {
-        method: 'POST',
+        method: 'PUT',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          producerId: farmer,
-          quantity: Number(quantity),
-          price: Number(price),
-          name: name,
-          description: description,
-          type: type,
-          src: url,
-          unitOfMeasure: ufm
-        })
+        body: JSON.stringify({})
       })
       const response = await data.json();
 
       if (response) {
         setActive(true);
         setTimeout(() => {
-          history.push(`/products`);
+          history.push(`/`);
         }, 3000);
         setIsDirty(false);
       } else {
         setSaveError(true);
+        setIsDirty(false);
       }
     } catch (error) {
       console.log(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [farmer, quantity, price, name, type, url, description, ufm]);
+  }, [quantity]);
 
   /**
    * Product Handlers
@@ -138,6 +123,7 @@ export function ProductNew({ user, location }: any) {
   }, []);
   const handleQuantityChange = useCallback((e) => {
     setQuantity(e);
+    setIsDirty(true);
   }, []);
   const handleTypeChange = useCallback((e) => {
     setType(e);
@@ -146,8 +132,6 @@ export function ProductNew({ user, location }: any) {
     setUrl(e);
   }, []);
   const handleUfmChange = useCallback((value) => setUfm(value), []);
-
-
 
   const contextualSaveBarMarkup = isDirty ? (
     <ContextualSaveBar
@@ -165,16 +149,15 @@ export function ProductNew({ user, location }: any) {
 
   const loadingMarkup = isLoading ? <Loading /> : null;
 
-
   /**
    * Fetch data
-   * - Fetch farmers
+   * - Fetch product
    */
   useEffect(() => {
-    const fetchFarmers = async () => {
+    const fetchProduct = async () => {
       try {
         setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/farmer', {
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/product/${match.params.id}`, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -184,16 +167,17 @@ export function ProductNew({ user, location }: any) {
         const response = await data.json();
 
         if (response) {
-          const tmp = [];
-          for (const item of response) {
-            tmp.push({ value: String(item.id), label: `${item.firstname} ${item.lastname}` });
-          }
 
-          // @ts-ignore
-          setDeselectedFarmerOptions(tmp);
-          // @ts-ignore
-          setFarmerOptions(tmp);
+          setName(response.name);
+          setDescription(response.description);
+          setUrl(response.src);
+          setQuantity(String(response.quantity));
+          setUfm(response.unitOfMeasure);
+          setPrice(String(response.price));
+          setType(response.type);
+
           setIsLoading(false);
+          return clientId;
         } else {
           setIsLoading(false);
         }
@@ -201,65 +185,14 @@ export function ProductNew({ user, location }: any) {
         console.log(error);
       }
     }
-    fetchFarmers();
+    fetchProduct();
   }, [])
-
-  /**
-   * Autocomplete Controls
-   */
-
-  /** Farmer */
-  const updateFarmerText = useCallback(
-    (value) => {
-      setInputFarmerValue(value);
-
-      if (value === '') {
-        setFarmerOptions(deselectedFarmerOptions);
-        return;
-      }
-
-      const filterRegex = new RegExp(value, 'i');
-      const resultOptions = deselectedFarmerOptions.filter((option) => {
-        // @ts-ignore
-        return option.label.match(filterRegex)
-      });
-      setFarmerOptions(resultOptions);
-    },
-    [deselectedFarmerOptions]
-  );
-
-  const updateFarmerSelection = useCallback(
-    (selected) => {
-      const selectedValue = selected.map((selectedItem: any) => {
-        const matchedOption = farmerOptions.find((option) => {
-          // @ts-ignore
-          return option.value.match(selectedItem);
-        });
-        // @ts-ignore
-        return matchedOption;
-      });
-      setSelectedFarmerOptions(selected);
-      setInputFarmerValue(selectedValue[0].label);
-      setFarmer(Number(selectedValue[0].value));
-    },
-    [farmerOptions],
-  );
-
-  const farmerTextField = (
-    <Autocomplete.TextField
-      onChange={updateFarmerText}
-      label="Farmer"
-      value={inputFarmerValue}
-      prefix={<Icon source={SearchMinor} color="base" />}
-      placeholder="Search"
-    />
-  );
 
   /**
    * Error markups & toast
    */
   const toastMarkup = active ? (
-    <Toast content="Product has been createrd." onDismiss={toggleActive} />
+    <Toast content="Product has been updated." onDismiss={toggleActive} />
   ) : null;
 
   const saveErrorMarkup = saveError && (
@@ -277,7 +210,7 @@ export function ProductNew({ user, location }: any) {
   // ---- Page markup ----
   const actualPageMarkup = (
     <Page
-      title='Products'
+      title={name}
       breadcrumbs={[{ content: 'Products', url: '/products' }]}
     >
       <Layout>
@@ -289,7 +222,7 @@ export function ProductNew({ user, location }: any) {
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField type="text" label="Title" value={name} onChange={handleNameChange} />
+                <TextField type="text" label="Title" value={name} onChange={handleNameChange} disabled />
               </FormLayout.Group>
               <FormLayout.Group>
                 <TextField
@@ -299,14 +232,15 @@ export function ProductNew({ user, location }: any) {
                   maxLength={200}
                   autoComplete="off"
                   showCharacterCount
+                  disabled
                 />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField type="text" label="Image url" value={url} onChange={handleUrlChange} />
+                <TextField type="text" label="Image url" value={url} onChange={handleUrlChange} disabled />
               </FormLayout.Group>
             </FormLayout>
           </Card>
-          <Card title="Inventory" sectioned>
+          <Card title="Inventory (next week availability)" sectioned>
             <FormLayout>
               <FormLayout.Group>
                 <TextField
@@ -320,6 +254,7 @@ export function ProductNew({ user, location }: any) {
                   options={ufmOptions}
                   onChange={handleUfmChange}
                   value={ufm}
+                  disabled
                 />
               </FormLayout.Group>
               <FormLayout.Group>
@@ -329,6 +264,7 @@ export function ProductNew({ user, location }: any) {
                   value={price}
                   suffix="EUR"
                   onChange={handlePriceChange}
+                  disabled
                 />
               </FormLayout.Group>
             </FormLayout>
@@ -345,12 +281,7 @@ export function ProductNew({ user, location }: any) {
                   label="Category"
                   value={type}
                   onChange={handleTypeChange}
-                />
-                <Autocomplete
-                  options={farmerOptions}
-                  selected={selectedFarmerOptions}
-                  onSelect={updateFarmerSelection}
-                  textField={farmerTextField}
+                  disabled
                 />
               </FormLayout.Group>
             </FormLayout>

@@ -159,7 +159,7 @@ export function ClientsProductAll({ user }: any) {
     } else {
       tmp.forEach(obj => {
         if (obj.productId === item.productId) {
-          obj.amount = Number(quantity);
+          obj.amount += Number(quantity);
         }
       });
     }
@@ -172,7 +172,7 @@ export function ClientsProductAll({ user }: any) {
     setTotal(sum);
 
     setAddedItems(tmp);
-  }, [total]);
+  }, [total, addedItems]);
 
   /** Handle update cart product */
   const handleUpdateCartProduct = useCallback((product, quantity) => {
@@ -247,6 +247,8 @@ export function ClientsProductAll({ user }: any) {
         setSaveError(true);
       } else {
         setActive(true);
+        setAddedItems([]);
+        setTotal(0);
       }
     } catch (error) {
       console.log(error);
