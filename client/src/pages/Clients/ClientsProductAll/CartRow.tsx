@@ -19,11 +19,7 @@ import {
 } from '@shopify/polaris-icons';
 
 export function CartRow({ item, name, updateProduct }: any) {
-  const { price } = item;
   const [value, setValue] = useState(String(item.amount));
-  const [total, setTotal] = useState(0);
-
-  console.log(item);
 
   const handleValueChange = useCallback((newValue) => {
     if (Number(newValue) >= 0) {
@@ -31,9 +27,6 @@ export function CartRow({ item, name, updateProduct }: any) {
       updateProduct(item, newValue);
     }
   }, []);
-
-  const [open, setOpen] = useState(false);
-  const handleToggle = useCallback(() => setOpen((open) => !open), []);
 
   return (
     <div style={{ paddingTop: '5px' }}>

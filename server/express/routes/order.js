@@ -3,9 +3,9 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const { Validator } = require("jsonschema");
 const OrderRequestSchema = require("../schemas/order-request");
-const { DataTypes, Error} = require("sequelize");
+const { DataTypes, Error } = require("sequelize");
 const nodemailer = require('nodemailer');
-const { pendingCancellation, config, confirmed, customEmail} = require('../email-service');
+const { pendingCancellation, config, confirmed, customEmail } = require('../email-service');
 
 const transporter = nodemailer.createTransport(config);
 
@@ -15,13 +15,13 @@ async function getAll(req, res) {
         .catch(err => res.status(503).json({ error: err.message }))
 }
 
-async function reminder(req,res){
+async function reminder(req, res) {
     return await models.order.findByPk(req.params.id)
         .then(async order => {
-            if(order){
+            if (order) {
                 const user = await models.user.findByPk(order.clientId)
-                if(user){
-                    await transporter.sendMail(customEmail(user,req.body.email))
+                if (user) {
+                    await transporter.sendMail(customEmail(user, req.body.email))
                     return res.status(200).json("Message sent")
                 }
             }
@@ -58,11 +58,11 @@ async function getById(req, res) {
         .catch(err => res.status(503).json({ error: err.message }))
 }
 
-const rollbackTransaction = async (walletId, total) => await models.wallet.update({ credit: Sequelize.literal('credit + ' + total) }, { where: { userId: req.params.id }})
+const rollbackTransaction = async (walletId, total) => await models.wallet.update({ credit: Sequelize.literal('credit + ' + total) }, { where: { userId: req.params.id } })
 
 const rollbackOrder = async (orderId) => await Promise.all([
-    await models.order.destroy({where: {id: orderId}}),
-    await models.order_product.destroy({where: {orderId: orderId}})
+    await models.order.destroy({ where: { id: orderId } }),
+    await models.order_product.destroy({ where: { orderId: orderId } })
 ])
 
 async function create(req, res) {
@@ -88,11 +88,11 @@ async function create(req, res) {
                         const count = await models.product.count({
                             where: {
                                 id: product.productId,
-                                quantity: {[Op.gt]: product.amount}
+                                quantity: { [Op.gt]: product.amount }
                             }
                         })
                         if (!count) {
-                            throw Error(`Product ${product.productId} not found or unavailable`)
+                            throw new Error(`Product ${product.productId} not found or unavailable`)
                         }
                         return await models.order_product.create({
                             orderId: order.id,
@@ -101,12 +101,12 @@ async function create(req, res) {
                         })
                     }))
                         .then(() => res.status(200).json({ orderId: order.id }))
-                        .catch(err => res.status(503).json({ error: err.message }))
+                        .catch(err => res.status(404).json({ status: 'not_available', error: err.message }))
                 }
             })
-            .catch(err => res.status(503).json({ error: err.message }))
+            .catch(err => res.status(503).json({ status: 'failed', error: err.message }))
     } catch (err) {
-        res.status(503).json({ error: err.message });
+        res.status(503).json({ status: 'failed', error: err.message });
     }
 }
 
@@ -121,11 +121,11 @@ async function update(req, res) {
         if (!await models.order.findByPk(req.params.id)) {
             return res.status(503).json({ error: `Order not found` })
         }
-        if(status === "CONFIRMED" && products){
+        if (status === "CONFIRMED" && products) {
             await Promise.all(products.map(async product => {
-                await models.order_product.update({confirmed: product.status}, { where: { orderId: req.params.id, productId: product.productId }})
+                await models.order_product.update({ confirmed: product.status }, { where: { orderId: req.params.id, productId: product.productId } })
             }))
-        }else{
+        } else {
             return await models.order.update({ status: status }, { where: { id: req.params.id } })
                 .then(() => res.status(200).json("Order updated"))
                 .catch(err => res.status(503).json({ error: err.message }))

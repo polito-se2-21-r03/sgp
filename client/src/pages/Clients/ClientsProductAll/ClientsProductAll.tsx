@@ -241,13 +241,12 @@ export function ClientsProductAll({ user }: any) {
         })
       })
       const response = await data.json();
-      // if (response.status = 'INSUFFICIENT_AMOUNT') {
-      //   setAmountError(true);
-      // }
-      if (response) {
-        setActive(true);
-      } else {
+      if (response.status === 'not_available') {
+        setAmountError(true);
+      } else if (response.status === 'failed') {
         setSaveError(true);
+      } else {
+        setActive(true);
       }
     } catch (error) {
       console.log(error);
@@ -325,11 +324,11 @@ export function ClientsProductAll({ user }: any) {
   const errorAmountMarkup = amountError && (
     <Layout.Section>
       <Banner
-        title="Insufficient wallet balance"
+        title="The desired quantity is not available"
         status="warning"
         onDismiss={() => setAmountError(false)}
       >
-        <p>Please, contact the Shop Employee to charge your wallet.</p>
+        <p>Please, adjust your desired quantity.</p>
       </Banner>
     </Layout.Section>
   )
