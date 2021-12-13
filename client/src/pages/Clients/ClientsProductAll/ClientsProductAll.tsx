@@ -23,6 +23,7 @@ import {
 
 import { TopBarMarkup, NavigationMarkup } from '../../../components';
 import { AddedProductRow } from './AddedProductRow';
+import { CartRow } from './CartRow';
 import {
   CancelSmallMinor,
   CartMajor,
@@ -173,6 +174,55 @@ export function ClientsProductAll({ user }: any) {
     setAddedItems(tmp);
   }, [total]);
 
+  /** Handle update cart product */
+  const handleUpdateCartProduct = useCallback((product, quantity) => {
+    const tmp = addedItems;
+
+    let counter = 0;
+    for (const item of tmp) {
+      if (item.productId === product.productId) {
+        // If quantity is zero remove product
+        if (Number(quantity) === 0) {
+          tmp.splice(counter, 1);
+        } else {
+          item.amount = Number(quantity);
+        }
+        break;
+      }
+      counter++;
+    }
+
+    console.log(tmp);
+
+    // Check if product is already present
+    // let found = 0;
+    // tmp.forEach(obj => {
+    //   // @ts-ignore
+    //   if (obj.productId === item.productId)
+    //     found = 1;
+    // });
+
+    // if (!found) {
+    //   // @ts-ignore
+    //   tmp.push(item);
+    // } else {
+    //   tmp.forEach(obj => {
+    //     if (obj.productId === item.productId) {
+    //       obj.amount = Number(quantity);
+    //     }
+    //   });
+    // }
+
+    let sum = 0;
+    tmp.forEach(obj => {
+      sum += obj.amount * obj.price;
+    });
+
+    setTotal(sum);
+
+    setAddedItems(tmp);
+  }, [total]);
+
   /**
    * Save data
    */
@@ -191,10 +241,10 @@ export function ClientsProductAll({ user }: any) {
         })
       })
       const response = await data.json();
-      if (response.status = 'INSUFFICIENT_AMOUNT') {
-        setAmountError(true);
-      }
-      else if (response) {
+      // if (response.status = 'INSUFFICIENT_AMOUNT') {
+      //   setAmountError(true);
+      // }
+      if (response) {
         setActive(true);
       } else {
         setSaveError(true);
@@ -234,48 +284,22 @@ export function ClientsProductAll({ user }: any) {
 
   const addedProductsMarkup = addedItems.map(
     (item, index) => {
-      return (<div style={{ paddingTop: '5px' }}>
-        <Stack distribution="equalSpacing">
-          <Stack.Item>
-            <div style={{ transform: 'translateY(50%)' }}>
-              <p key={index} style={{ width: '5rem' }}>
-                {frontItems[item.productId - 1].name}
-              </p>
-            </div>
-          </Stack.Item>
-          <Stack.Item>
-            { /* x{item.amount} */}
-            <TextField
-              label=""
-              value={item.amount}
-              connectedLeft={
-                <Button
-                  icon={MinusMinor}
-                  onClick={() => { }}
-                  disabled={item.amount <= 1 ? true : false}
-                />
-              }
-              connectedRight={
-                <Button
-                  icon={PlusMinor}
-                  onClick={() => { }}
-                />
-              }
-              autoComplete="off"
-            />
-          </Stack.Item>
-          <Stack.Item>
-            <div style={{ transform: 'translateY(30%)' }}>
-              <Button
-                plain
-                icon={CancelSmallMinor}
-              />
-            </div>
-          </Stack.Item>
-        </Stack>
-        <hr />
-      </div>
-      )
+      const { id, name, price } = item;
+
+      return (
+        <Layout.Section
+          oneThird
+          key={index}
+        >
+          <CartRow
+            key={id}
+            item={item}
+            name={frontItems[item.productId - 1].name}
+            updateProduct={handleUpdateCartProduct}
+            total={total}
+          />
+        </Layout.Section>
+      );
     }
   )
 
