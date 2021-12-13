@@ -41,12 +41,12 @@ app.post(
         if (!user) {
           res
             .status(404)
-            .send({ errors: [{ param: "Server", msg: "Invalid e-mail" }] });
+            .json({ status: "wrong_data", errors: [{ param: "Server", msg: "Invalid e-mail" }] });
         } else {
           if (!checkPassword(user.password, req.body.password)) {
             res
               .status(401)
-              .send({ errors: [{ param: "Server", msg: "Wrong password" }] });
+              .json({ status: "wrong_data", errors: [{ param: "Server", msg: "Wrong password" }] });
           } else {
             //AUTHENTICATION SUCCESS
             const tmp = {

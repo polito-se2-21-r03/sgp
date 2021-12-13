@@ -27,7 +27,9 @@ export function LoginPage() {
       })
       const response = await data.json();
 
-      if (response) {
+      if (response.status === "wrong_data") {
+        setLoginError(true);
+      } else if (response) {
         await asyncLocalStorage.setItem('user', JSON.stringify(response));
 
         // Redirect
