@@ -261,7 +261,7 @@ describe("Test body validation of client creation", () => {
       role: "CLIENT",
     };
     const response = await supertest(server).post("/api/client").send(body);
-    expect(response.status).toBe(422); //come si fa?
+    expect(response.status).toBe(422);
   });
   afterAll(async () => {
     await server.close();
@@ -331,7 +331,7 @@ describe("Test update order", () => {
   it("tests the base route and return an order updated", async () => {
     body = {
       status: "DELIVERED",
-      clientId: 1
+      clientId: 1,
     };
     const response = await supertest(server).put("/api/order/1").send(body);
     expect(response.status).toBe(200);
@@ -441,6 +441,93 @@ describe("Test sending email for pending order", () => {
     const response = await supertest(server).post("/api/order/1/reminder");
     expect(response.status).toBe(200);
   });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test the products in the orders", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("tests the search in order_product table and return the objectj", async () => {
+    const response = await models.order_product.findAll({
+      where: { userId: 9, orderId: 1 },
+    });
+    expect(response.status).toBe(200);
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test getOrderById for unexisting order", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("Should get error status for orderId that not exists", async () => {
+    const response = await models.order.findByPk(50);
+    expect(response.status).toBe(503);
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test getOrderById", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("Should get value from order table", async () => {
+    const response = await models.order.findByPk(1);
+    expect(response.id).toBe(1);
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test update order_product status", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("tests update of status of order_product", async () => {
+    const response = await models.order_product.update(
+      { confirmed: true },
+      { where: { userId: 9, orderId: 1, productId: 1 } }
+    );
+    expect(response.status).toBe(200);
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test get order by farmerId", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+
+  it("tests the base route and returns an array of orders", async () => {
+    const response = await supertest(server).get("/api/farmer/1/order");
+    expect(response.status).toBe(200);
+  });
+
   afterAll(async () => {
     await server.close();
   });
