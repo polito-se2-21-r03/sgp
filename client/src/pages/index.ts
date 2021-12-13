@@ -24,3 +24,6 @@ export * from './Clients';
 
 /** Farmers */
 export * from './Farmers';
+
+/** UnregisteredUser */
+export * from './UnregisteredUser';

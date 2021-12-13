@@ -1,5 +1,6 @@
 export { NavigationMarkup } from './NavigationMarkup';
 export { TopBarMarkup } from './TopBarMarkup';
+export { UnregisteredTopBarMarkup } from './UnregisteredTopBarMarkup';
 export { OrderList } from './OrderList';
 export { CustomerList } from './CustomerList';
 export { UserList } from './UserList';

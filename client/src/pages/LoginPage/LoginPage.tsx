@@ -101,11 +101,15 @@ export function LoginPage() {
                 <br></br>
                 <div style={{ textAlign: 'center' }}><Button primary size="large" onClick={() => { handleClick("register") }} >Sign up</Button></div>
                 <br></br>
+                <br></br>
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ paddingBottom: '10px' }}>or</p>
+                  <Button plain onClick={() => { handleClick("browse") }} >Browse the products without login</Button></div>
               </div>
             </div>
           </div>
         </div>
-      </Stack>
-    </div>
+      </Stack >
+    </div >
   )
 }

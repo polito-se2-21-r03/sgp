@@ -5,7 +5,7 @@ import routes from './routes';
 
 /** Pages */
 import { LoginPage } from './pages/LoginPage/LoginPage';
-import { ForgotPasswordPage, RegisterPage } from './pages';
+import { ForgotPasswordPage, RegisterPage, UnregisteredUserProductAll } from './pages';
 
 function App() {
   return (
@@ -15,6 +15,7 @@ function App() {
           <Route exact path="/login" component={LoginPage} />
           <Route exact path="/register" component={RegisterPage} />
           <Route exact path="/reset-password" component={ForgotPasswordPage} />
+          <Route exact path="/browse" component={UnregisteredUserProductAll} />
           {routes.map((route, idx) => {
             return route.component && (
               <PrivateRoute

@@ -8,9 +8,13 @@ export function TopBarDatePicker({ handleAnalytics }: any) {
   /**
    * Popover
    */
+  const parseDateLabel = (date: Date) => {
+    return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + (date.getDate())).slice(-2)}`;
+  }
+
   const [popoverActive, setPopoverActive] = useState(false);
-  const [defaultInput, setDefaultInput] = useState('Questo mese');
-  const [input, setInput] = useState('Questo mese');
+  const [defaultInput, setDefaultInput] = useState(parseDateLabel(new Date()));
+  const [input, setInput] = useState('This month');
 
   // Used on first load 
   const [inputIsChanged, setInputIsChanged] = useState(false);
@@ -30,38 +34,6 @@ export function TopBarDatePicker({ handleAnalytics }: any) {
   const [time, setTime] = useState('');
   const handleTimeChange = useCallback((e) => setTime(e), []);
 
-  const dateOptions = new Map([
-    ['Questo mese', {
-      start: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-      end: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
-    }],
-    ['Mese scorso', {
-      start: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
-      end: new Date(new Date().getFullYear(), new Date().getMonth(), 0),
-    }],
-    ['Personalizzato', {
-      start: new Date(),
-      end: new Date(),
-    }],
-  ])
-
-  /** Select handler */
-  const handleSelectChange = useCallback(e => {
-    setInput(e);
-    setSelectedDates({
-      // @ts-ignore
-      start: dateOptions.get(e).start,
-      // @ts-ignore
-      end: dateOptions.get(e).end
-    });
-    setDate({
-      // @ts-ignore
-      month: dateOptions.get(e)?.start.getMonth(),
-      // @ts-ignore
-      year: dateOptions.get(e)?.start.getFullYear()
-    })
-  }, [dateOptions]);
-
   const activator = (
     <Button icon={CalendarMinor} onClick={togglePopoverActive}>{defaultInput}</Button>
   )
@@ -80,35 +52,9 @@ export function TopBarDatePicker({ handleAnalytics }: any) {
       start: e.start,
       end: e.end,
     });
+    setDefaultInput(parseDateLabel(e.start))
+  }, []);
 
-    // Check if map contains this set of date
-    // @ts-ignore
-    for (const [key, value] of dateOptions) {
-      if (key === 'Personalizzato')
-        continue;
-
-      if (new Date(value.start).toDateString() !== e.start.toDateString() || new Date(value.end).toDateString() !== e.end.toDateString()) {
-        // Add Personalizzato to dateOptions
-        dateOptions.set('Personalizzato', {
-          start: e.start,
-          end: e.end
-        })
-        setInput('Personalizzato');
-      } else if (new Date(value.start).toDateString() === e.start.toDateString() && new Date(value.end).toDateString() === e.end.toDateString()) {
-        // Remove Personalizzato
-        if (dateOptions.has('Personalizzato')) {
-          dateOptions.delete('Personalizzato');
-        }
-
-        setInput(key);
-        break;
-      }
-    }
-  }, [dateOptions]);
-
-  const parseDateLabel = (date: Date) => {
-    return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + (date.getDate())).slice(-2)}`;
-  }
 
   /**
    * Data fetching:
@@ -225,7 +171,7 @@ export function TopBarDatePicker({ handleAnalytics }: any) {
    */
   const handleSubmit = useCallback(async () => {
     try {
-      setDefaultInput(input);
+      setDefaultInput(parseDateLabel(selectedDates.start));
       setInputIsChanged(true);
 
       const milliseconds = selectedDates.start.getTime() + (Number(time.split(':')[0]) * 60 + Number(time.split(':')[1])) * 60 * 1000;
@@ -292,12 +238,12 @@ export function TopBarDatePicker({ handleAnalytics }: any) {
           <Popover.Section>
             <Stack distribution="equalSpacing">
               <div>
-                <Button onClick={() => { setPopoverActive(false) }}>Annulla</Button>
+                <Button onClick={() => { setPopoverActive(false) }}>Cancel</Button>
               </div>
               <div>
                 <Button
                   primary
-                  disabled={(input === defaultInput) ? (input === 'Personalizzato' ? false : true) : false}
+                  disabled={time === ''}
                   onClick={handleSubmit}
                 >
                   Applica
