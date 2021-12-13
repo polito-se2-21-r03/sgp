@@ -12,7 +12,7 @@ async function getAll(req, res) {
     })
 }
 
-async function update(req, res) {
+async function updateTime(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
@@ -33,5 +33,5 @@ async function update(req, res) {
 
 module.exports = {
     getAll,
-    update,
+    updateTime,
 };

@@ -159,15 +159,8 @@ for (const [routeName, routeController] of Object.entries(routes)) {
     );
   }
   if (routeController.update) {
-    let validators = [];
-    let fieldName = "id";
-    if (routeName === "time") {
-      fieldName = "time";
-      validators.push([check(fieldName).isISO8601()]);
-    }
     app.put(
-      `/api/${routeName}/:${fieldName}`,
-      ...validators,
+      `/api/${routeName}/:id`,
       makeHandlerAwareOfAsyncErrors(routeController.update)
     );
   }
@@ -186,5 +179,6 @@ app.post(
 );
 app.get("/api/farmer/:id/order", routes.farmer.getOrdersByFarmerId);
 app.get("/api/farmer/:id/product", routes.farmer.getProductsByFarmerId);
+app.put("/api/virtual-time/:time", [check('time').isISO8601()], routes.time.updateTime)
 
 module.exports = app;
