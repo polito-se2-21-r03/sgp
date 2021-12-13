@@ -57,7 +57,7 @@ The table below shows the access credentials according to the roles
 | ------ | ------ |------|
 | CLIENT | mark@email.com | pass
 | EMPLOYEE | robert@email.com | pass
-| FARMER | nicole@email.com | pass
+| FARMER | albertengo@email.com | pass
 
 ## Team
 
