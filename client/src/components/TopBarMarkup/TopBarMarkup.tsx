@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { ActionList, Icon, TopBar, VisuallyHidden } from '@shopify/polaris';
+import { ActionList, Button, TopBar, Stack } from '@shopify/polaris';
 
 import { contextControlMarkup } from '../ContextControlMarkup';
 import { CircleRightMajor, QuestionMarkMajor } from '@shopify/polaris-icons';

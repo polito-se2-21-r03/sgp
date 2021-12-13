@@ -192,8 +192,6 @@ export function ClientsProductAll({ user }: any) {
       counter++;
     }
 
-    console.log(tmp);
-
     // Check if product is already present
     // let found = 0;
     // tmp.forEach(obj => {
@@ -304,6 +302,17 @@ export function ClientsProductAll({ user }: any) {
     }
   )
 
+  const cartMarkup = (
+    <div style={{ position: 'fixed', bottom: '40px', right: '40px', width: '40px', height: '40px', backgroundColor: 'red' }}>
+      <Button
+        plain
+        icon={CartMajor}
+        onClick={() => window.location.href = '#cart'}
+        size="large"
+      />
+    </div>
+  )
+
   /**
    * Error markups & toast
    */
@@ -340,6 +349,13 @@ export function ClientsProductAll({ user }: any) {
     <Page
       fullWidth
       title={`Welcome, ${user.firstname}`}
+      primaryAction={
+        <Button
+          plain
+          icon={CartMajor}
+          onClick={() => window.location.href = '#cart'}
+        />
+      }
     >
       <Layout>
         {/* Banner */}
@@ -354,26 +370,28 @@ export function ClientsProductAll({ user }: any) {
         {/* Second column */}
         <Layout.Section secondary>
           <Sticky offset>
-            <Card title="Cart" sectioned>
-              <div>
-                {addedItems.length > 0 && (
-                  <div style={{ paddingBottom: '5px' }}><TextStyle variation="strong">Products:</TextStyle></div>
-                )}
-                {addedProductsMarkup}
-              </div>
-              <div style={{ marginTop: '16px' }}>
-                <p><TextStyle variation="strong">Total</TextStyle>: {Number(total).toFixed(2)} €</p>
-              </div>
-              <div style={{ marginTop: '16px' }}>
-                <Button
-                  primary
-                  onClick={handleSave}
-                  disabled={total === 0}
-                >
-                  Place order
-                </Button>
-              </div>
-            </Card>
+            <div id='cart'>
+              <Card title="Cart" sectioned>
+                <div>
+                  {addedItems.length > 0 && (
+                    <div style={{ paddingBottom: '5px' }}><TextStyle variation="strong">Products:</TextStyle></div>
+                  )}
+                  {addedProductsMarkup}
+                </div>
+                <div style={{ marginTop: '16px' }}>
+                  <p><TextStyle variation="strong">Total</TextStyle>: {Number(total).toFixed(2)} €</p>
+                </div>
+                <div style={{ marginTop: '16px' }}>
+                  <Button
+                    primary
+                    onClick={handleSave}
+                    disabled={total === 0}
+                  >
+                    Place order
+                  </Button>
+                </div>
+              </Card>
+            </div>
           </Sticky>
         </Layout.Section>
       </Layout>
@@ -411,6 +429,7 @@ export function ClientsProductAll({ user }: any) {
       {loadingMarkup}
       {pageMarkup}
       {toastMarkup}
+      {cartMarkup}
     </Frame >
   );
 }
