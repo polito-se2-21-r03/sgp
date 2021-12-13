@@ -21,11 +21,13 @@ async function create(req, res) {
         return res.status(422).json({ errors: body.errors })
     }
     try {
-        const { producerId, quantity, price, type, name, src } = req.body
+        const { producerId, quantity, price, type, name, src, unitOfMeasure, description } = req.body
         await models.product.create({
             producerId: producerId,
             quantity: quantity,
             price: price,
+            unitOfMeasure: unitOfMeasure,
+            description: description,
             src: src,
             name: name,
             type: type,

@@ -6,6 +6,7 @@ exports.productRequestSchema = {
         "quantity": {"type": "integer"},
         "name": {"type": "string"},
         "unitOfMeasure": {"type": "string"},
+        "description": {"type": "string"},
         "src": {"type": "string"},
         "price": {"type": "number"},
         "type": {"type": "string"},
