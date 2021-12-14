@@ -184,6 +184,8 @@ export function OrderList({ user }: any) {
     switch (status) {
       case 'COMPLETED':
         return (<Badge progress="complete" status="success">Completed</Badge>);
+      case 'CONFIRMED':
+        return (<Badge progress="incomplete" status="attention">Completed</Badge>);
       case 'CREATED':
         return (<Badge progress="incomplete">Created</Badge>);
       case 'DELIVERED':
