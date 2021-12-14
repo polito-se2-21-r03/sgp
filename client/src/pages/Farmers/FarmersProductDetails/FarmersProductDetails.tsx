@@ -94,7 +94,9 @@ export function FarmersProductDetails({ user, match }: any) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({})
+        body: JSON.stringify({
+          quantity: Number(quantity)
+        })
       })
       const response = await data.json();
 
