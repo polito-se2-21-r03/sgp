@@ -74,33 +74,40 @@ export function FarmersProductDetails({ user, match }: any) {
     { label: 'Unit', value: 'Units' },
   ];
 
+  const [defaultState, setDefaultState] = useState({
+    quantity: ''
+  });
+
   const handleDiscard = useCallback(() => {
+    setQuantity(defaultState.quantity);
     setIsDirty(false);
-  }, []);
+  }, [defaultState]);
 
   /**
    * Save data
    */
   const handleSave = useCallback(async () => {
     try {
-      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/product', {
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/farmer/${user.id}/product/${match.params.id}`, {
         method: 'PUT',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({})
+        body: JSON.stringify({
+          quantity: Number(quantity)
+        })
       })
       const response = await data.json();
 
-      if (response) {
+      if (response.status === 'failed') {
+        setSaveError(true);
+        setIsDirty(false);
+      } else if (response) {
         setActive(true);
         setTimeout(() => {
           history.push(`/`);
         }, 3000);
-        setIsDirty(false);
-      } else {
-        setSaveError(true);
         setIsDirty(false);
       }
     } catch (error) {
@@ -175,6 +182,8 @@ export function FarmersProductDetails({ user, match }: any) {
           setUfm(response.unitOfMeasure);
           setPrice(String(response.price));
           setType(response.type);
+
+          setDefaultState({ quantity: String(response.quantity) });
 
           setIsLoading(false);
           return clientId;

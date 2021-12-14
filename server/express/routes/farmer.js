@@ -24,37 +24,37 @@ async function getProductsByFarmerId(req, res) {
 }
 
 async function getOrderByFarmerId(req, res) {
-    await models.order_product
-        .findAll({
-            where: { userId: req.params.farmerId, orderId: req.params.orderId },
-            include: [
-                {
-                    model: models.product,
-                    required: true
-                },
-                {
-                    model: models.order,
-                    required: true
-                },
-            ]
-        })
-        .then((order_products) => {
-            if (order_products) {
-                const products = order_products.map(order_product => ({
-                    productId: order_product.product.id,
-                    name: order_product.product.name,
-                    amount: order_product.amount,
-                }))
-                return res.status(200).json({
-                    order: {
-                        products: products,
-                        clientId: order_products[0].order.clientId,
-                        status: order_products[0].order.status,
-                    }
-                });
-            }
-        })
-        .catch((err) => res.status(503).json({ error: err.message }));
+  await models.order_product
+    .findAll({
+      where: { userId: req.params.farmerId, orderId: req.params.orderId },
+      include: [
+        {
+          model: models.product,
+          required: true
+        },
+        {
+          model: models.order,
+          required: true
+        },
+      ]
+    })
+    .then((order_products) => {
+      if (order_products) {
+        const products = order_products.map(order_product => ({
+          productId: order_product.product.id,
+          name: order_product.product.name,
+          amount: order_product.amount,
+        }))
+        return res.status(200).json({
+          order: {
+            products: products,
+            clientId: order_products[0].order.clientId,
+            status: order_products[0].order.status,
+          }
+        });
+      }
+    })
+    .catch((err) => res.status(503).json({ error: err.message }));
 }
 
 async function getOrdersByFarmerId(req, res) {
@@ -73,11 +73,13 @@ async function getOrdersByFarmerId(req, res) {
     .then((orders) => {
       if (orders) {
         const result = orders.reduce((r, order) => {
-          r[order.orderId] = r[order.orderId] || {info: {
+          r[order.orderId] = r[order.orderId] || {
+            info: {
               createdAt: order.order.createdAt,
               status: order.order.status,
               clientId: order.order.clientId
-            }, product: []};
+            }, product: []
+          };
           r[order.orderId]['product'].push({
             productId: order.productId,
             amount: order.amount,
@@ -140,64 +142,64 @@ async function confirmOrderProducts(req, res) {
 }
 
 async function createProduct(req, res) {
-    const v = new Validator();
-    const body = v.validate(req.body, {
-        "id": "/FarmerProductRequestSchema",
-        "type": "object",
-        "properties": {
-            "productId": {"type": "integer"},
-            "quantity": {"type": "integer"},
-        },
-        "required": ["quantity", "productId"]
-    });
-    if(!body.valid){
-        return res.status(422).json({ errors: body.errors })
-    }
-    try {
-        const { productId, quantity } = req.body
-        await models.product_farmer.create({
-            productId: productId,
-            quantity: quantity,
-            userId: req.params.farmerId,
-        })
-            .then(product => res.status(200).json({ productId: product.productId }))
-            .catch(err => res.status(503).json({ error: err.message }))
-    } catch (err) {
-        res.status(503).json({ error: err.message });
-    }
+  const v = new Validator();
+  const body = v.validate(req.body, {
+    "id": "/FarmerProductRequestSchema",
+    "type": "object",
+    "properties": {
+      "productId": { "type": "integer" },
+      "quantity": { "type": "integer" },
+    },
+    "required": ["quantity", "productId"]
+  });
+  if (!body.valid) {
+    return res.status(422).json({ errors: body.errors })
+  }
+  try {
+    const { productId, quantity } = req.body
+    await models.product_farmer.create({
+      productId: productId,
+      quantity: quantity,
+      userId: req.params.farmerId,
+    })
+      .then(product => res.status(200).json({ productId: product.productId }))
+      .catch(err => res.status(503).json({ error: err.message }))
+  } catch (err) {
+    res.status(503).json({ error: err.message });
+  }
 }
 
 async function updateProduct(req, res) {
-    const v = new Validator();
-    const body = v.validate(req.body, {
-        "id": "/FarmerProductRequestSchema",
-        "type": "object",
-        "properties": {
-            "quantity": {"type": "integer"}
-        },
-        "required": ["quantity"]
-    });
-    if(!body.valid){
-        return res.status(422).json({ errors: body.errors })
-    }
-    try {
-        const { quantity } = req.body
-        await models.product_farmer.update({
-            quantity: quantity,
-        }, {where: {productId: req.params.productId, userId: req.params.farmerId}})
-            .then(() => res.status(200).json("Product updated"))
-            .catch(err => res.status(503).json({ error: err.message }))
-    } catch (err) {
-        res.status(503).json({ error: err.message });
-    }
+  const v = new Validator();
+  const body = v.validate(req.body, {
+    "id": "/FarmerProductRequestSchema",
+    "type": "object",
+    "properties": {
+      "quantity": { "type": "integer" }
+    },
+    "required": ["quantity"]
+  });
+  if (!body.valid) {
+    return res.status(422).json({ status: 'failed', errors: body.errors })
+  }
+  try {
+    const { quantity } = req.body
+    await models.product_farmer.update({
+      quantity: quantity,
+    }, { where: { productId: req.params.productId, userId: req.params.farmerId } })
+      .then(() => res.status(200).json("Product updated"))
+      .catch(err => res.status(503).json({ status: 'failed', error: err.message }))
+  } catch (err) {
+    res.status(503).json({ status: 'failed', error: err.message });
+  }
 }
 
 module.exports = {
-    getAll,
-    getProductsByFarmerId,
-    getOrdersByFarmerId,
-    confirmOrderProducts,
-    createProduct,
-    updateProduct,
-    getOrderByFarmerId
+  getAll,
+  getProductsByFarmerId,
+  getOrdersByFarmerId,
+  confirmOrderProducts,
+  createProduct,
+  updateProduct,
+  getOrderByFarmerId
 };
