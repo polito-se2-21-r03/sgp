@@ -371,6 +371,9 @@ export function ClientsProductAll({ user }: any) {
         <Layout.Section secondary>
           <Sticky offset>
             <div id='cart'>
+            <br/>
+          <br/>
+          <br/>
               <Card title="Cart" sectioned>
                 <div>
                   {addedItems.length > 0 && (
