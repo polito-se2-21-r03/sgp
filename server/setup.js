@@ -188,7 +188,7 @@ async function reset() {
       await sequelize.models.wallet.bulkCreate([
         {
           userId: 1,
-          credit: 333333333,
+          credit: 33,
         },
         {
           userId: 2,

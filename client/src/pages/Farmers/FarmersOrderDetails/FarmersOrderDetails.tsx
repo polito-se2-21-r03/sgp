@@ -79,16 +79,19 @@ export function FarmersOrderDetails({ match, user }: any) {
     try {
       if (customer === -1) return;
 
-      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/order/${match.params.id}`, {
-        method: 'PUT',
+      products.forEach(product => {
+        product['confirmed'] = 1
+      })
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/farmer/${user.id}/order/${match.params.id}`, {
+        method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          changedBy: 'EMPLOYEE',
+          changedBy: 'FARMER',
           // Employee ID set to 1 for testing
-          status: 'PENDING',
+          status: 'PRODUCT CONFIRMED',
           products: products
         })
       })
@@ -322,7 +325,7 @@ export function FarmersOrderDetails({ match, user }: any) {
   const renderPrimaryAction = (status) => {
     if (status === 'CREATED') {
       return {
-        content: 'Update order',
+        content: 'Confirm Products',
         onAction: handleSave,
         primary: true,
       }

@@ -26,9 +26,9 @@ module.exports = class Routine {
                     const user = await models.user.findByPk(order.clientId)
                     if(wallet.credit < total){
                         await transporter.sendMail(pendingCancellation(user));
-                        await models.order.update({ status: "PENDING CANCELLATION" }, { where: { id: order.orderId } })
+                        return await models.order.update({ status: "PENDING CANCELATION" }, { where: { id: order.id } })
                     }
-                    await models.wallet.update({ credit: Sequelize.literal('credit - ' + total) }, { where: { userId: order.clientId }})
+                    return await models.wallet.update({ credit: Sequelize.literal('credit - ' + total) }, { where: { userId: order.clientId }})
                         .then(async () => {
                             await transporter.sendMail(confirmed(user));
                             await models.order.update({ status: "CONFIRMED" }, { where: { id: order.id } })
