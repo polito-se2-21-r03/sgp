@@ -143,6 +143,7 @@ export function ClientsProductAll({ user }: any) {
       productId: product.id,
       amount: Number(quantity),
       price: product.price,
+      producerId: product.producerId
     }
 
     // Check if product is already present

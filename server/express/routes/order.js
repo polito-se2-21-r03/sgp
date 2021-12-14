@@ -97,7 +97,8 @@ async function create(req, res) {
                         return await models.order_product.create({
                             orderId: order.id,
                             productId: product.productId,
-                            amount: product.amount
+                            amount: product.amount,
+                            userId: product.producerId
                         })
                     }))
                         .then(() => res.status(200).json({ orderId: order.id }))
