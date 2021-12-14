@@ -173,10 +173,10 @@ for (const [routeName, routeController] of Object.entries(routes)) {
 }
 
 app.post("/api/order/:id/reminder", routes.order.reminder);
-app.post(
-  "/api/farmer/:farmerId/order/:orderId",
-  routes.farmer.confirmOrderProducts
-);
+app.post("/api/farmer/:farmerId/order/:orderId", routes.farmer.confirmOrderProducts);
+app.get("/api/farmer/:farmerId/order/:orderId", routes.farmer.getOrderByFarmerId);
+app.post("/api/farmer/:farmerId/product", routes.farmer.createProduct);
+app.put("/api/farmer/:farmerId/product/:productId", routes.farmer.updateProduct);
 app.get("/api/farmer/:id/order", routes.farmer.getOrdersByFarmerId);
 app.get("/api/farmer/:id/product", routes.farmer.getProductsByFarmerId);
 app.put("/api/virtual-time/:time", [check('time').isISO8601()], routes.time.updateTime)

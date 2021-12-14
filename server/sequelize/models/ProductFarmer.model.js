@@ -6,10 +6,6 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             foreignKey: true,
         },
-        farmerId: {
-            type: DataTypes.INTEGER,
-            foreignKey: true,
-        },
         quantity: {
             allowNull: false,
             type: DataTypes.INTEGER,
