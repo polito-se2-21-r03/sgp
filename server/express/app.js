@@ -29,6 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // const checkPassword = (user, password) => bcrypt.compareSync(password, user.hash);
+
 const checkPassword = (user, password) => user === password;
 
 // Authentication endpoint
@@ -39,14 +40,16 @@ app.post(
       .findOne({ where: { email: req.body.email } })
       .then(async (user) => {
         if (!user) {
-          res
-            .status(404)
-            .json({ status: "wrong_data", errors: [{ param: "Server", msg: "Invalid e-mail" }] });
+          res.status(404).json({
+            status: "wrong_data",
+            errors: [{ param: "Server", msg: "Invalid e-mail" }],
+          });
         } else {
           if (!checkPassword(user.password, req.body.password)) {
-            res
-              .status(401)
-              .json({ status: "wrong_data", errors: [{ param: "Server", msg: "Wrong password" }] });
+            res.status(401).json({
+              status: "wrong_data",
+              errors: [{ param: "Server", msg: "Wrong password" }],
+            });
           } else {
             //AUTHENTICATION SUCCESS
             const tmp = {
@@ -173,12 +176,25 @@ for (const [routeName, routeController] of Object.entries(routes)) {
 }
 
 app.post("/api/order/:id/reminder", routes.order.reminder);
-app.post("/api/farmer/:farmerId/order/:orderId", routes.farmer.confirmOrderProducts);
-app.get("/api/farmer/:farmerId/order/:orderId", routes.farmer.getOrderByFarmerId);
+app.post(
+  "/api/farmer/:farmerId/order/:orderId",
+  routes.farmer.confirmOrderProducts
+);
+app.get(
+  "/api/farmer/:farmerId/order/:orderId",
+  routes.farmer.getOrderByFarmerId
+);
 app.post("/api/farmer/:farmerId/product", routes.farmer.createProduct);
-app.put("/api/farmer/:farmerId/product/:productId", routes.farmer.updateProduct);
+app.put(
+  "/api/farmer/:farmerId/product/:productId",
+  routes.farmer.updateProduct
+);
 app.get("/api/farmer/:id/order", routes.farmer.getOrdersByFarmerId);
 app.get("/api/farmer/:id/product", routes.farmer.getProductsByFarmerId);
-app.put("/api/virtual-time/:time", [check('time').isISO8601()], routes.time.updateTime)
+app.put(
+  "/api/virtual-time/:time",
+  [check("time").isISO8601()],
+  routes.time.updateTime
+);
 
 module.exports = app;
