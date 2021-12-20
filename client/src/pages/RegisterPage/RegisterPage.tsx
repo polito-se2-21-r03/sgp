@@ -124,32 +124,32 @@ export function RegisterPage() {
               <Form onSubmit={handleSubmit}>
                 <FormLayout>
                   <FormLayout.Group>
-                    <TextField
+                    <TextField autoComplete="off"
                       value={firstname}
                       onChange={(e) => setFirstname(e)}
                       label="Name"
                       type="text"
                     />
-                    <TextField
+                    <TextField autoComplete="off"
                       value={lastname}
                       onChange={(e) => setLastname(e)}
                       label="Surname"
                       type="text"
                     />
                   </FormLayout.Group>
-                  <TextField
+                  <TextField autoComplete="off"
                     value={phone}
                     onChange={(e) => setPhone(e)}
                     label="Phone"
                     type="text"
                   />
-                  <TextField
+                  <TextField autoComplete="off"
                     value={email}
                     onChange={handleEmailChange}
                     label="Email"
                     type="email"
                   />
-                  <TextField
+                  <TextField autoComplete="off"
                     value={password}
                     onChange={handlePwdChange}
                     label="Password"

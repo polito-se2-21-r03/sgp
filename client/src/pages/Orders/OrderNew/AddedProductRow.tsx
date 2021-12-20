@@ -23,12 +23,11 @@ export function AddedProductRow({ item, label, total, updateTotal }: any) {
       <Stack.Item>
         <Stack alignment="center">
           <Stack.Item>
-            <TextField
+            <TextField autoComplete="off"
               label=""
               type="number"
               value={value}
               onChange={handleValueChange}
-              autoComplete="off"
             />
           </Stack.Item>
           <Stack.Item>

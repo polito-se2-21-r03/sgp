@@ -850,7 +850,7 @@ export function ProductDetails({ match, user }: any) {
   );
 
   const companyTextField = (
-    <Autocomplete.TextField
+    <Autocomplete.TextField autoComplete="off"
       onChange={updateTextCompany}
       label="Compagnia"
       value={inputValueCompany}
@@ -1001,7 +1001,7 @@ export function ProductDetails({ match, user }: any) {
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField type="text" disabled={true} label="Cliente" value={inputValue} />
+                <TextField autoComplete="off" type="text" disabled={true} label="Cliente" value={inputValue} />
               </FormLayout.Group>
             </FormLayout>
           </Card>
@@ -1013,7 +1013,7 @@ export function ProductDetails({ match, user }: any) {
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField type="text" label="Numero Polizza" value={numeroPolizza} onChange={handleNumeroPolizzaChange} />
+                <TextField autoComplete="off" type="text" label="Numero Polizza" value={numeroPolizza} onChange={handleNumeroPolizzaChange} />
               </FormLayout.Group>
 
               <FormLayout.Group>
@@ -1021,7 +1021,7 @@ export function ProductDetails({ match, user }: any) {
               </FormLayout.Group>
 
               <FormLayout.Group>
-                <TextField type="text" disabled={true} labelHidden={true} label="Data di Inizio" value={selectedDatesCreated.start.toLocaleDateString()} />
+                <TextField autoComplete="off" type="text" disabled={true} labelHidden={true} label="Data di Inizio" value={selectedDatesCreated.start.toLocaleDateString()} />
                 <Button onClick={handleDateCreatedSelection}>Seleziona Data di Decorrenza Polizza</Button>
               </FormLayout.Group>
               <FormLayout.Group>
@@ -1030,7 +1030,7 @@ export function ProductDetails({ match, user }: any) {
               </FormLayout.Group>
 
               <FormLayout.Group>
-                <TextField type="text" disabled={true} labelHidden={true} label="Data di Scadenza" value={selectedDatesExpired.start.toLocaleDateString()} />
+                <TextField autoComplete="off" type="text" disabled={true} labelHidden={true} label="Data di Scadenza" value={selectedDatesExpired.start.toLocaleDateString()} />
                 <Button onClick={handleDateExpiredSelection}>Seleziona Data di Scadenza Polizza</Button>
               </FormLayout.Group>
               <FormLayout.Group>
@@ -1048,7 +1048,7 @@ export function ProductDetails({ match, user }: any) {
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="text"
                   label="Premio Netto (in €)"
                   value={premioNetto.toString()}
@@ -1057,7 +1057,7 @@ export function ProductDetails({ match, user }: any) {
               </FormLayout.Group>
               <FormLayout.Group>
                 {premioNetto !== 0 &&
-                  <TextField
+                  <TextField autoComplete="off"
                     type="text"
                     label="Premio Lordo (in €)"
                     value={premioLordo.toString()}
@@ -1069,8 +1069,8 @@ export function ProductDetails({ match, user }: any) {
               </FormLayout.Group>
               {premioNetto !== 0 &&
                 <FormLayout.Group>
-                  <TextField type="text" label="Provvigioni (in %)" value={provvTot.toString()} onChange={handleProvvTotChange} />
-                  <TextField type="number" label="Valore Provvigioni (in €)" disabled={true} value={(+premioNetto * (+provvTot / 100)).toFixed(2)} />
+                  <TextField autoComplete="off" type="text" label="Provvigioni (in %)" value={provvTot.toString()} onChange={handleProvvTotChange} />
+                  <TextField autoComplete="off" type="number" label="Valore Provvigioni (in €)" disabled={true} value={(+premioNetto * (+provvTot / 100)).toFixed(2)} />
                 </FormLayout.Group>
               }
             </FormLayout>

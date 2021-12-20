@@ -222,8 +222,8 @@ export function CustomerList({ handleModal, update }: any) {
           filterControl={filterControl}
           sortValue={sortValue}
           sortOptions={[
-            { label: 'Customer added date (from the most recent)', value: 'DATE_CREATED_DESC' },
-            { label: 'Customer added date (from the least recent)', value: 'DATE_CREATED_ASC' },
+            { label: 'Most recent', value: 'DATE_CREATED_DESC' },
+            { label: 'Least recent', value: 'DATE_CREATED_ASC' },
           ]}
           onSortChange={(selected) => {
             setSortValue(selected);

@@ -210,21 +210,21 @@ export function CustomerNew({ user }: any) {
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField type="text" label="Name" value={firstname} onChange={handleFirstnameChange} error={validationNameError && "Firstname is compulsory"} />
-                <TextField type="text" label="Surname" value={lastname} onChange={handleLastnameChange} error={validationLastnameError && "Surname is compulsory"} />
+                <TextField autoComplete="off" type="text" label="Name" value={firstname} onChange={handleFirstnameChange} error={validationNameError && "Firstname is compulsory"} />
+                <TextField autoComplete="off" type="text" label="Surname" value={lastname} onChange={handleLastnameChange} error={validationLastnameError && "Surname is compulsory"} />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField type="email" label="Email" value={email} onChange={handleEmailChange} />
+                <TextField autoComplete="off" type="email" label="Email" value={email} onChange={handleEmailChange} />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField type="tel" label="Phone number" value={phone} onChange={handlePhoneChange} />
+                <TextField autoComplete="off" type="tel" label="Phone number" value={phone} onChange={handlePhoneChange} />
               </FormLayout.Group>
             </FormLayout>
           </Card>
           <Card title="Password" sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField type="text" label="Temporary password" value={password} onChange={handlePasswordChange} />
+                <TextField autoComplete="off" type="text" label="Temporary password" value={password} onChange={handlePasswordChange} />
               </FormLayout.Group>
             </FormLayout>
           </Card>

@@ -247,8 +247,8 @@ export function ProductList() {
             labelInline
             label="Sort by"
             options={[
-              { label: 'Product added date (from the most recent)', value: 'DATE_CREATED_DESC' },
-              { label: 'Product added date (from the least recent)', value: 'DATE_CREATED_ASC' },
+              { label: 'Most recent', value: 'DATE_CREATED_DESC' },
+              { label: 'Least recent', value: 'DATE_CREATED_ASC' },
             ]}
             value={sortValue}
             onChange={(selected) => {

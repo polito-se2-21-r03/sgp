@@ -226,7 +226,7 @@ export function TopBarDatePicker({ handleAnalytics }: any) {
                 selected={selectedDates}
               />
             </div>
-            <TextField label="Time" type="time" value={time} onChange={handleTimeChange} />
+            <TextField autoComplete="off" label="Time" type="time" value={time} onChange={handleTimeChange} />
           </Stack>
         </Popover.Pane>
         <Popover.Pane fixed>

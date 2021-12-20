@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   Frame,
+  Icon,
   Layout,
   Loading,
   Page,
@@ -372,10 +373,10 @@ export function ClientsProductAll({ user }: any) {
         <Layout.Section secondary>
           <Sticky offset>
             <div id='cart'>
-            <br/>
-          <br/>
-          <br/>
-              <Card title="Cart" sectioned>
+              <br />
+              <br />
+              <br />
+              <Card title={(<Icon source={CartMajor} />)} sectioned>
                 <div>
                   {addedItems.length > 0 && (
                     <div style={{ paddingBottom: '5px' }}><TextStyle variation="strong">Products:</TextStyle></div>

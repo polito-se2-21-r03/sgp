@@ -370,10 +370,10 @@ export function Account({ user }) {
             </FormLayout.Group>
           )}
           <FormLayout.Group>
-            <TextField type="password" label="Password attuale" value={password} onChange={handlePasswordChange} />
+            <TextField autoComplete="off" type="password" label="Password attuale" value={password} onChange={handlePasswordChange} />
           </FormLayout.Group>
           <FormLayout.Group>
-            <TextField
+            <TextField autoComplete="off"
               type="password"
               label="Nuova password"
               value={newPassword}
@@ -381,7 +381,7 @@ export function Account({ user }) {
             />
           </FormLayout.Group>
           <FormLayout.Group>
-            <TextField
+            <TextField autoComplete="off"
               type="password"
               label="Conferma nuova password"
               value={repeatNewPassword}
@@ -438,11 +438,11 @@ export function Account({ user }) {
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField type="text" label="Nome" value={firstname} onChange={handleFirstnameChange} />
-                <TextField type="text" label="Cognome" value={lastname} onChange={handleLastnameChange} />
+                <TextField autoComplete="off" type="text" label="Nome" value={firstname} onChange={handleFirstnameChange} />
+                <TextField autoComplete="off" type="text" label="Cognome" value={lastname} onChange={handleLastnameChange} />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="email"
                   label="Email"
                   value={email}

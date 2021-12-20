@@ -111,7 +111,7 @@ export function CustomerAll({ user }: any) {
       ]}
     >
       <Modal.Section>
-        <TextField
+        <TextField autoComplete="off"
           type="text"
           label="Amount"
           value={amount}

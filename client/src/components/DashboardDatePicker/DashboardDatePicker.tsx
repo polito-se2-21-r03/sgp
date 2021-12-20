@@ -278,8 +278,8 @@ export function DashboardDatePicker({ handleAnalytics }: any) {
               onChange={handleSelectChange}
             />
             <Stack distribution="fillEvenly">
-              <TextField label="Inizio" value={parseDateLabel(selectedDates.start)} onChange={() => { }} />
-              <TextField label="Fine" value={parseDateLabel(selectedDates.end)} onChange={() => { }} />
+              <TextField autoComplete="off" label="Inizio" value={parseDateLabel(selectedDates.start)} onChange={() => { }} />
+              <TextField autoComplete="off" label="Fine" value={parseDateLabel(selectedDates.end)} onChange={() => { }} />
             </Stack>
             <div className="popoverDatePicker">
               <DatePicker

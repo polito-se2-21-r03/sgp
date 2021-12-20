@@ -88,13 +88,13 @@ export function ForgotPasswordPage() {
                 {existError}
                 <Form onSubmit={handleSubmit}>
                   <FormLayout>
-                    <TextField
+                    <TextField autoComplete="off"
                       value={email}
                       onChange={handleEmailChange}
                       label="Email"
                       type="email"
                     />
-                    <TextField
+                    <TextField autoComplete="off"
                       value={password}
                       onChange={handlePasswordChange}
                       label="Password"

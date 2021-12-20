@@ -244,7 +244,7 @@ export function UnregisteredUserProductAll({ user }: any) {
           </Stack.Item>
           <Stack.Item>
             { /* x{item.amount} */}
-            <TextField
+            <TextField autoComplete="off"
               label=""
               value={item.amount}
               connectedLeft={

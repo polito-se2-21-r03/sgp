@@ -208,11 +208,11 @@ export function UserNew({ match, user }: any) {
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField type="text" label="Nome" value={firstname} onChange={handleFirstnameChange} />
-                <TextField type="text" label="Cognome" value={lastname} onChange={handleLastnameChange} />
+                <TextField autoComplete="off" type="text" label="Nome" value={firstname} onChange={handleFirstnameChange} />
+                <TextField autoComplete="off" type="text" label="Cognome" value={lastname} onChange={handleLastnameChange} />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="email"
                   label="Email"
                   value={email}

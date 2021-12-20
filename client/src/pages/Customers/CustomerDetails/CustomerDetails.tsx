@@ -865,10 +865,10 @@ export function CustomerDetails({ match, user }: any) {
       <Modal.Section>
         <FormLayout>
           <FormLayout.Group>
-            <TextField type="text" label="Nome" value={name} onChange={handleNameChange} />
+            <TextField autoComplete="off" type="text" label="Nome" value={name} onChange={handleNameChange} />
           </FormLayout.Group>
           <FormLayout.Group>
-            <TextField type="text" label="Codice Fiscale" value={cf} onChange={handleCFChange} />
+            <TextField autoComplete="off" type="text" label="Codice Fiscale" value={cf} onChange={handleCFChange} />
           </FormLayout.Group>
         </FormLayout>
       </Modal.Section>
@@ -895,7 +895,7 @@ export function CustomerDetails({ match, user }: any) {
       <Modal.Section>
         <FormLayout>
           <FormLayout.Group>
-            <TextField type="email" label="Indirizzo email" value={txtEmailValue} onChange={(e) => setTxtEmailValue(e)} />
+            <TextField autoComplete="off" type="email" label="Indirizzo email" value={txtEmailValue} onChange={(e) => setTxtEmailValue(e)} />
           </FormLayout.Group>
           <FormLayout.Group>
             <Select
@@ -930,7 +930,7 @@ export function CustomerDetails({ match, user }: any) {
       <Modal.Section>
         <FormLayout>
           <FormLayout.Group>
-            <TextField type="tel" label="Numero di telefono" value={txtPhoneValue} onChange={(e) => setTxtPhoneValue(e)} />
+            <TextField autoComplete="off" type="tel" label="Numero di telefono" value={txtPhoneValue} onChange={(e) => setTxtPhoneValue(e)} />
           </FormLayout.Group>
           <FormLayout.Group>
             <Select
@@ -965,11 +965,11 @@ export function CustomerDetails({ match, user }: any) {
       <Modal.Section>
         <FormLayout>
           <FormLayout.Group>
-            <TextField type="text" label="Indirizzo" value={txtAddressValue} onChange={(e) => setTxtAddressValue(e)} />
+            <TextField autoComplete="off" type="text" label="Indirizzo" value={txtAddressValue} onChange={(e) => setTxtAddressValue(e)} />
           </FormLayout.Group>
           <FormLayout.Group>
-            <TextField type="text" label="Città" value={txtCityValue} onChange={(e) => setTxtCityValue(e)} />
-            <TextField type="text" label="Codice Postale" value={txtPostalCodeValue} onChange={(e) => setTxtPostalCodeValue(e)} />
+            <TextField autoComplete="off" type="text" label="Città" value={txtCityValue} onChange={(e) => setTxtCityValue(e)} />
+            <TextField autoComplete="off" type="text" label="Codice Postale" value={txtPostalCodeValue} onChange={(e) => setTxtPostalCodeValue(e)} />
           </FormLayout.Group>
           <FormLayout.Group>
             <Select

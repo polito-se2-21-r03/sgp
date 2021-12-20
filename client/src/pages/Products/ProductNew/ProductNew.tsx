@@ -246,7 +246,7 @@ export function ProductNew({ user, location }: any) {
   );
 
   const farmerTextField = (
-    <Autocomplete.TextField
+    <Autocomplete.TextField autoComplete="off"
       onChange={updateFarmerText}
       label="Farmer"
       value={inputFarmerValue}
@@ -289,27 +289,26 @@ export function ProductNew({ user, location }: any) {
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField type="text" label="Title" value={name} onChange={handleNameChange} />
+                <TextField autoComplete="off" type="text" label="Title" value={name} onChange={handleNameChange} />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   label="Description"
                   value={description}
                   onChange={handleDescriptionChange}
                   maxLength={200}
-                  autoComplete="off"
                   showCharacterCount
                 />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField type="text" label="Image url" value={url} onChange={handleUrlChange} />
+                <TextField autoComplete="off" type="text" label="Image url" value={url} onChange={handleUrlChange} />
               </FormLayout.Group>
             </FormLayout>
           </Card>
           <Card title="Inventory" sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="number"
                   label="Available"
                   value={quantity}
@@ -323,7 +322,7 @@ export function ProductNew({ user, location }: any) {
                 />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="text"
                   label="Price"
                   value={price}
@@ -340,7 +339,7 @@ export function ProductNew({ user, location }: any) {
           <Card title="Organization" sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="text"
                   label="Category"
                   value={type}

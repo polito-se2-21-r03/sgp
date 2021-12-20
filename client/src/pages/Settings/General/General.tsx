@@ -245,10 +245,10 @@ export function General({ match, user }: any) {
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField type="text" label="Nome" value={name} onChange={handleNameChange} />
+                <TextField autoComplete="off" type="text" label="Nome" value={name} onChange={handleNameChange} />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="email"
                   label="Email"
                   value={email}
@@ -256,7 +256,7 @@ export function General({ match, user }: any) {
                 />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="email"
                   label="Email per le notifiche ai clienti"
                   value={customerEmail}
@@ -264,7 +264,7 @@ export function General({ match, user }: any) {
                 />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="text"
                   label="Telefono"
                   value={phone}
@@ -281,7 +281,7 @@ export function General({ match, user }: any) {
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="text"
                   label="Indirizzo"
                   value={address}
@@ -289,7 +289,7 @@ export function General({ match, user }: any) {
                 />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="text"
                   label="Provincia"
                   value={province}
@@ -297,13 +297,13 @@ export function General({ match, user }: any) {
                 />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="text"
                   label="Città"
                   value={city}
                   onChange={handleCityChange}
                 />
-                <TextField
+                <TextField autoComplete="off"
                   type="email"
                   label="Codice postale"
                   value={postalCode}

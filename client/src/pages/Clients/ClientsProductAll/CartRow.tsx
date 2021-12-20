@@ -40,7 +40,7 @@ export function CartRow({ item, name, updateProduct }: any) {
         </Stack.Item>
         <Stack.Item>
           { /* x{item.amount} */}
-          <TextField
+          <TextField autoComplete="off"
             label=""
             type="number"
             value={value}
@@ -58,7 +58,6 @@ export function CartRow({ item, name, updateProduct }: any) {
                 onClick={() => handleValueChange(String(Number(value) + 1))}
               />
             }
-            autoComplete="off"
           />
         </Stack.Item>
         <Stack.Item>

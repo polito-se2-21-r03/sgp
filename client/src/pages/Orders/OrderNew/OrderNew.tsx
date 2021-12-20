@@ -304,7 +304,7 @@ export function OrderNew({ user }: any) {
   );
 
   const productTextField = (
-    <Autocomplete.TextField
+    <Autocomplete.TextField autoComplete="off"
       onChange={updateText}
       label=""
       value={inputValue}
@@ -351,7 +351,7 @@ export function OrderNew({ user }: any) {
   );
 
   const customerTextField = (
-    <Autocomplete.TextField
+    <Autocomplete.TextField autoComplete="off"
       onChange={updateCustomerText}
       label=""
       value={inputCustomerValue}

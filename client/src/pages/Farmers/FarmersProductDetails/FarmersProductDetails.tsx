@@ -231,10 +231,10 @@ export function FarmersProductDetails({ user, match }: any) {
           <Card sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField type="text" label="Title" value={name} onChange={handleNameChange} disabled />
+                <TextField autoComplete="off" type="text" label="Title" value={name} onChange={handleNameChange} disabled />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   label="Description"
                   value={description}
                   onChange={handleDescriptionChange}
@@ -245,14 +245,14 @@ export function FarmersProductDetails({ user, match }: any) {
                 />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField type="text" label="Image url" value={url} onChange={handleUrlChange} disabled />
+                <TextField autoComplete="off" type="text" label="Image url" value={url} onChange={handleUrlChange} disabled />
               </FormLayout.Group>
             </FormLayout>
           </Card>
           <Card title="Inventory (next week availability)" sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="number"
                   label="Available"
                   value={quantity}
@@ -267,7 +267,7 @@ export function FarmersProductDetails({ user, match }: any) {
                 />
               </FormLayout.Group>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="text"
                   label="Price"
                   value={price}
@@ -285,7 +285,7 @@ export function FarmersProductDetails({ user, match }: any) {
           <Card title="Organization" sectioned>
             <FormLayout>
               <FormLayout.Group>
-                <TextField
+                <TextField autoComplete="off"
                   type="text"
                   label="Category"
                   value={type}

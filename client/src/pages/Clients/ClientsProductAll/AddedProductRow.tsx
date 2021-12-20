@@ -79,12 +79,11 @@ export function AddedProductRow({ item, addProduct }: any) {
           <Stack.Item>
             <Stack alignment="center">
               <Stack.Item>
-                <TextField
+                <TextField autoComplete="off"
                   label=""
                   type="number"
                   value={value}
                   onChange={handleValueChange}
-                  autoComplete="off"
                   suffix={item.unitOfMeasure}
                 />
               </Stack.Item>

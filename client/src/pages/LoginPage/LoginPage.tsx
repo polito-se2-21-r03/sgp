@@ -71,13 +71,13 @@ export function LoginPage() {
                 <h3 className="ui-subheading ui-subheading--subdued">Continue to the dashboard</h3>
                 <Form onSubmit={handleSubmit}>
                   <FormLayout>
-                    <TextField
+                    <TextField autoComplete="off"
                       value={email}
                       onChange={handleEmailChange}
                       label="Email"
                       type="email"
                     />
-                    <TextField
+                    <TextField autoComplete="off"
                       value={password}
                       onChange={handlePwdChange}
                       label="Password"
