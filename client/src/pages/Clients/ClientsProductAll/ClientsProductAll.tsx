@@ -19,7 +19,8 @@ import {
   TextField,
   Banner,
   Stack,
-  Sticky
+  Sticky,
+  Heading
 } from '@shopify/polaris';
 
 import { TopBarMarkup, NavigationMarkup } from '../../../components';
@@ -315,6 +316,13 @@ export function ClientsProductAll({ user }: any) {
     </div>
   )
 
+  const cartTitle = (
+    <Stack>
+      <Icon source={CartMajor} />
+      <Heading>Cart</Heading>
+    </Stack>
+  )
+
   /**
    * Error markups & toast
    */
@@ -376,7 +384,7 @@ export function ClientsProductAll({ user }: any) {
               <br />
               <br />
               <br />
-              <Card title={(<Icon source={CartMajor} />)} sectioned>
+              <Card title={cartTitle} sectioned>
                 <div>
                   {addedItems.length > 0 && (
                     <div style={{ paddingBottom: '5px' }}><TextStyle variation="strong">Products:</TextStyle></div>
