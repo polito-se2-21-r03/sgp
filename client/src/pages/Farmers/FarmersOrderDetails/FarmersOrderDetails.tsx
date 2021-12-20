@@ -172,7 +172,6 @@ export function FarmersOrderDetails({ match, user }: any) {
           },
         })
         const response = await data.json();
-        console.log(response);
         const farmers = await fetchFarmers();
         let clientId;
 
