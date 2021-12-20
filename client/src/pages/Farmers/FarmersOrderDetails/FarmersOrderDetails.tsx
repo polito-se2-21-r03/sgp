@@ -175,12 +175,12 @@ export function FarmersOrderDetails({ match, user }: any) {
         const farmers = await fetchFarmers();
         let clientId;
 
-        if (response) {
+        if (response.order) {
           const tmp = [];
           const tmp_added = [];
           let sum = 0;
-          for (const item of response.products) {
-            item["farmer"] = farmers[item.producerId];
+          for (const item of response.order.products) {
+            item["farmer"] = farmers[user.id];
             item.name = `${item.name} - Farmer: ${item.farmer}`;
             const tmp_item = {
               productId: item.id,
@@ -191,8 +191,8 @@ export function FarmersOrderDetails({ match, user }: any) {
             tmp_added.push(tmp_item);
             sum += item.amount * item.price;
           }
-          clientId = response.clientId;
-          setStatus(response.status);
+          clientId = response.order.clientId;
+          setStatus(response.order.status);
           setAddedItems(tmp);
           setProducts(tmp_added);
           setTotal(sum);
