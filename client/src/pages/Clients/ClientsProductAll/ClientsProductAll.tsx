@@ -306,9 +306,8 @@ export function ClientsProductAll({ user }: any) {
   )
 
   const cartMarkup = (
-    <div style={{ position: 'fixed', bottom: '40px', right: '40px', width: '40px', height: '40px', backgroundColor: 'red' }}>
+    <div className="custom-button">
       <Button
-        plain
         icon={CartMajor}
         onClick={() => window.location.href = '#cart'}
         size="large"
@@ -359,13 +358,6 @@ export function ClientsProductAll({ user }: any) {
     <Page
       fullWidth
       title={`Welcome, ${user.firstname}`}
-      primaryAction={
-        <Button
-          plain
-          icon={CartMajor}
-          onClick={() => window.location.href = '#cart'}
-        />
-      }
     >
       <Layout>
         {/* Banner */}
@@ -380,10 +372,10 @@ export function ClientsProductAll({ user }: any) {
         {/* Second column */}
         <Layout.Section secondary>
           <Sticky offset>
+            <br />
+            <br />
+            <br />
             <div id='cart'>
-              <br />
-              <br />
-              <br />
               <Card title={cartTitle} sectioned>
                 <div>
                   {addedItems.length > 0 && (

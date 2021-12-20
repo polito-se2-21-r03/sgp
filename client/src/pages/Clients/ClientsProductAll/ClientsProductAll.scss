@@ -18,3 +18,19 @@ $top-bar-height: 56px;
     color: var(--p-text, white);
   }
 }
+
+.custom-button {
+  --p-surface: #ffe100;
+  --p-border-subdued: #ffa200;
+  --p-border-shadow-subdued: #ffa200;
+  --p-border-neutral-subdued: #ffa200;
+  --p-action-secondary-hovered: #ffef7a;
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 40px;
+  height: 40px;
+  @media only screen and (min-width: 1059px) {
+    display: none;
+  }
+}

@@ -164,7 +164,7 @@ export function FarmersOrderDetails({ match, user }: any) {
     const fetchOrder = async () => {
       try {
         setIsLoading(true);
-        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/order/${match.params.id}`, {
+        const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/farmer/${user.id}/order/${match.params.id}`, {
           method: 'GET',
           credentials: 'include',
           headers: {
