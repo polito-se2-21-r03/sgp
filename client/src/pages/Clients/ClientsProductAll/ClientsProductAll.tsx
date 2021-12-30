@@ -396,40 +396,43 @@ export function ClientsProductAll({ user }: any) {
       ]}
     >
       <Modal.Section>
-        <FormLayout>
-          <FormLayout.Group>
-            <Select
-              label="Delivery type"
-              options={options}
-              onChange={handleSelectChange}
-              value={selected}
-            />
-          </FormLayout.Group>
-          {selected === 'pickup' && (
-            <FormLayout.Group>
-              <Stack vertical wrap>
-                <DatePicker
-                  month={month}
-                  year={year}
-                  onChange={handleSelectedDate}
-                  onMonthChange={handleMonthChange}
-                  selected={selectedDates}
-                  disableDatesBefore={dayjs().toDate()}
-                />
-                <TextField
-                  autoComplete="off"
-                  label="Time"
-                  type="time"
-                  value={time}
-                  onChange={handleTimeChange}
-                  error={timeError && "You can only pick up your order from 08:30 to 17:30"}
-                />
-              </Stack>
-            </FormLayout.Group>
-          )}
-          {selected === 'bagdelivery' && (
-            <FormLayout.Group>
-              <Stack vertical wrap>
+        <Select
+          label="Delivery type"
+          options={options}
+          onChange={handleSelectChange}
+          value={selected}
+        />
+
+        {selected === 'pickup' && (
+          <div style={{ marginTop: '1.6rem' }}>
+            <FormLayout>
+              <FormLayout.Group>
+                <Stack vertical wrap>
+                  <DatePicker
+                    month={month}
+                    year={year}
+                    onChange={handleSelectedDate}
+                    onMonthChange={handleMonthChange}
+                    selected={selectedDates}
+                    disableDatesBefore={dayjs().toDate()}
+                  />
+                  <TextField
+                    autoComplete="off"
+                    label="Time"
+                    type="time"
+                    value={time}
+                    onChange={handleTimeChange}
+                    error={timeError && "You can only pick up your order from 08:30 to 17:30"}
+                  />
+                </Stack>
+              </FormLayout.Group>
+            </FormLayout>
+          </div>
+        )}
+        {selected === 'bagdelivery' && (
+          <div style={{ marginTop: '1.6rem' }} >
+            <FormLayout>
+              <FormLayout.Group>
                 <TextField
                   autoComplete="off"
                   label="Address"
@@ -437,22 +440,24 @@ export function ClientsProductAll({ user }: any) {
                   value={address}
                   onChange={(e) => setAddress(e)}
                 />
-                <Stack>
-                  <TextField
-                    autoComplete="off"
-                    label="City"
-                    type="text"
-                    value={city}
-                    onChange={(e) => setCity(e)}
-                  />
-                  <TextField
-                    autoComplete="off"
-                    label="Postal code"
-                    type="text"
-                    value={zip}
-                    onChange={(e) => setZip(e)}
-                  />
-                </Stack>
+              </FormLayout.Group>
+              <FormLayout.Group>
+                <TextField
+                  autoComplete="off"
+                  label="City"
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e)}
+                />
+                <TextField
+                  autoComplete="off"
+                  label="Postal code"
+                  type="text"
+                  value={zip}
+                  onChange={(e) => setZip(e)}
+                />
+              </FormLayout.Group>
+              <FormLayout.Group>
                 <DatePicker
                   month={month}
                   year={year}
@@ -461,6 +466,8 @@ export function ClientsProductAll({ user }: any) {
                   selected={selectedDates}
                   disableDatesBefore={dayjs().toDate()}
                 />
+              </FormLayout.Group>
+              <FormLayout.Group>
                 <TextField
                   autoComplete="off"
                   label="Time"
@@ -469,12 +476,12 @@ export function ClientsProductAll({ user }: any) {
                   onChange={handleTimeChange}
                   error={timeError && "You can only pick up your order from 08:30 to 17:30"}
                 />
-              </Stack>
-            </FormLayout.Group>
-          )}
-        </FormLayout>
+              </FormLayout.Group>
+            </FormLayout>
+          </div>
+        )}
       </Modal.Section>
-    </Modal >
+    </Modal>
   )
 
   /**
