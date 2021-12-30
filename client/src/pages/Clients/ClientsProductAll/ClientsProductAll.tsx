@@ -5,11 +5,14 @@ import React, { useCallback, useRef, useState, useEffect } from 'react';
 import {
   Button,
   Card,
+  DatePicker,
   Frame,
   Icon,
   Layout,
   Loading,
+  Modal,
   Page,
+  Select,
   SkeletonBodyText,
   SkeletonDisplayText,
   SkeletonPage,
@@ -20,7 +23,8 @@ import {
   Banner,
   Stack,
   Sticky,
-  Heading
+  Heading,
+  FormLayout
 } from '@shopify/polaris';
 
 import { TopBarMarkup, NavigationMarkup } from '../../../components';
@@ -64,10 +68,60 @@ export function ClientsProductAll({ user }: any) {
 
   const toggleActive = useCallback(() => setActive((active) => !active), []);
 
+  const [modalActive, setModalActive] = useState(true);
+  const handleModalChange = useCallback(() => setModalActive(!modalActive), [modalActive]);
+  const [selected, setSelected] = useState('pickup');
+  const handleSelectChange = useCallback((value) => setSelected(value), []);
+  const options = [
+    { label: 'In store pick up', value: 'pickup' },
+    { label: 'Home bag delivery', value: 'bagdelivery' },
+  ];
+  const date = dayjs().add(1, "day").toDate();
+  const [{ month, year }, setDate] = useState({ month: date.getMonth(), year: date.getFullYear() });
+  const [selectedDates, setSelectedDates] = useState({
+    start: date,
+    end: date,
+  });
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [zip, setZip] = useState('');
+
+  const [time, setTime] = useState('08:30');
+  const [timeError, setTimeError] = useState(false);
+  const handleTimeChange = useCallback((e) => {
+    const getMs = (t) => {
+      return (Number(t.split(':')[0]) * 60 + Number(t.split(':')[1])) * 60 * 1000;
+    }
+    if (getMs(e) < getMs('08:30') || getMs(e) > getMs('17:30')) {
+      setTimeError(true);
+    }
+    else {
+      setTimeError(false);
+      setTime(e);
+    }
+  }, []);
+
   const [addedItems, setAddedItems] = useState([]);
   const [total, setTotal] = useState(0);
 
   const loadingMarkup = isLoading ? <Loading /> : null;
+
+  /** 
+   * Date picker 
+   */
+  const handleMonthChange = useCallback(
+    (month, year) => setDate({ month, year }),
+    [],
+  );
+
+  /** Date picker selected date handler */
+  const handleSelectedDate = useCallback((e) => {
+    setSelectedDates({
+      start: e.start,
+      end: e.end,
+    });
+  }, []);
+
 
   /**
    * Product list
@@ -323,6 +377,107 @@ export function ClientsProductAll({ user }: any) {
   )
 
   /**
+ * Modal top up
+ */
+  const modalMarkup = (
+    <Modal
+      open={modalActive}
+      onClose={handleModalChange}
+      title="Plan your order"
+      primaryAction={{
+        content: 'Place order',
+        onAction: handleSave,
+      }}
+      secondaryActions={[
+        {
+          content: 'Cancel',
+          onAction: handleModalChange,
+        },
+      ]}
+    >
+      <Modal.Section>
+        <FormLayout>
+          <FormLayout.Group>
+            <Select
+              label="Delivery type"
+              options={options}
+              onChange={handleSelectChange}
+              value={selected}
+            />
+          </FormLayout.Group>
+          {selected === 'pickup' && (
+            <FormLayout.Group>
+              <Stack vertical wrap>
+                <DatePicker
+                  month={month}
+                  year={year}
+                  onChange={handleSelectedDate}
+                  onMonthChange={handleMonthChange}
+                  selected={selectedDates}
+                  disableDatesBefore={dayjs().toDate()}
+                />
+                <TextField
+                  autoComplete="off"
+                  label="Time"
+                  type="time"
+                  value={time}
+                  onChange={handleTimeChange}
+                  error={timeError && "You can only pick up your order from 08:30 to 17:30"}
+                />
+              </Stack>
+            </FormLayout.Group>
+          )}
+          {selected === 'bagdelivery' && (
+            <FormLayout.Group>
+              <Stack vertical wrap>
+                <TextField
+                  autoComplete="off"
+                  label="Address"
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e)}
+                />
+                <Stack>
+                  <TextField
+                    autoComplete="off"
+                    label="City"
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e)}
+                  />
+                  <TextField
+                    autoComplete="off"
+                    label="Postal code"
+                    type="text"
+                    value={zip}
+                    onChange={(e) => setZip(e)}
+                  />
+                </Stack>
+                <DatePicker
+                  month={month}
+                  year={year}
+                  onChange={handleSelectedDate}
+                  onMonthChange={handleMonthChange}
+                  selected={selectedDates}
+                  disableDatesBefore={dayjs().toDate()}
+                />
+                <TextField
+                  autoComplete="off"
+                  label="Time"
+                  type="time"
+                  value={time}
+                  onChange={handleTimeChange}
+                  error={timeError && "You can only pick up your order from 08:30 to 17:30"}
+                />
+              </Stack>
+            </FormLayout.Group>
+          )}
+        </FormLayout>
+      </Modal.Section>
+    </Modal >
+  )
+
+  /**
    * Error markups & toast
    */
   const toastMarkup = active ? (
@@ -435,6 +590,7 @@ export function ClientsProductAll({ user }: any) {
       {pageMarkup}
       {toastMarkup}
       {cartMarkup}
+      {modalMarkup}
     </Frame >
   );
 }
