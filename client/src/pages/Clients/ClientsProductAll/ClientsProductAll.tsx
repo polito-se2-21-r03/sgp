@@ -239,10 +239,9 @@ export function ClientsProductAll({ user }: any) {
   const handleUpdateCartProduct = useCallback((product, quantity) => {
     const tmp = addedItems;
     const disable = onCart;
+
     let counter = 0;
-    console.log(product, quantity);
     for (const item of tmp) {
-      console.log(item);
       if (item.productId === product.productId) {
         // If quantity is zero remove product
         if (Number(quantity) === 0) {
@@ -250,10 +249,6 @@ export function ClientsProductAll({ user }: any) {
           counter = 0;
           disable[product.productId - 1] = false;
           setOnCart(disable);
-          for (let i = 0; i < tmp.length; i++) {
-            console.log('prova');
-            console.log(tmp[i]);
-          }
         } else {
           item.amount = Number(quantity);
         }
@@ -261,16 +256,16 @@ export function ClientsProductAll({ user }: any) {
       }
       counter++;
     }
+
     // Calcoli del carrello
     let sum = 0;
     tmp.forEach(obj => {
       sum += obj.amount * obj.price;
     });
-    console.log('sum' + sum);
     setTotal(sum);
 
     setAddedItems(tmp);
-  }, [total]);
+  }, [total, addedItems]);
 
   /**
    * Save data
@@ -336,7 +331,6 @@ export function ClientsProductAll({ user }: any) {
 
   const addedProductsMarkup = addedItems.map(
     (item, index) => {
-      const { id, name, price } = item;
 
       return (
         <Layout.Section
@@ -344,7 +338,7 @@ export function ClientsProductAll({ user }: any) {
           key={index}
         >
           <CartRow
-            key={id}
+            key={item.productId}
             item={item}
             name={frontItems[item.productId - 1].name}
             updateProduct={handleUpdateCartProduct}
