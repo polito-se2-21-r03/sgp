@@ -15,7 +15,7 @@ import {
   ChevronUpMinor
 } from '@shopify/polaris-icons';
 
-export function AddedProductRow({ item, addProduct }: any) {
+export function AddedProductRow({ item, addProduct, onCart, setOnCart }: any) {
   const { price } = item;
   const [value, setValue] = useState('0');
   const [total, setTotal] = useState(0);
@@ -31,11 +31,13 @@ export function AddedProductRow({ item, addProduct }: any) {
     if (Number(value) > 0)
       addProduct(item, value);
     setValue('0');
+    const tmp = onCart;
+    tmp[item.id - 1] = true;
+    setOnCart(tmp);
   }, [value]);
 
   const [open, setOpen] = useState(false);
   const handleToggle = useCallback(() => setOpen((open) => !open), []);
-
   return (
     <Stack vertical>
       <Stack.Item>
@@ -85,6 +87,7 @@ export function AddedProductRow({ item, addProduct }: any) {
                   value={value}
                   onChange={handleValueChange}
                   suffix={item.unitOfMeasure}
+                  disabled={onCart[item.id - 1]}
                 />
               </Stack.Item>
               <Stack.Item>

@@ -48,6 +48,7 @@ export function ClientsProductAll({ user }: any) {
   const [frontItems, setFrontItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
+  const [onCart, setOnCart] = useState([]);
   const toggleMobileNavigationActive = useCallback(
     () =>
       setMobileNavigationActive(
@@ -173,12 +174,15 @@ export function ClientsProductAll({ user }: any) {
 
         if (response) {
           const tmp = [];
+          const disable = [];
           for (const item of response) {
             item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1);
             item["farmer"] = farmers[item.producerId];
             tmp.push(item);
+            disable.push(false);
           }
           setItems(tmp);
+          setOnCart(disable);
           setFrontItems(tmp);
           setIsLoading(false);
         } else {
@@ -234,13 +238,22 @@ export function ClientsProductAll({ user }: any) {
   /** Handle update cart product */
   const handleUpdateCartProduct = useCallback((product, quantity) => {
     const tmp = addedItems;
-
+    const disable = onCart;
     let counter = 0;
+    console.log(product, quantity);
     for (const item of tmp) {
+      console.log(item);
       if (item.productId === product.productId) {
         // If quantity is zero remove product
         if (Number(quantity) === 0) {
           tmp.splice(counter, 1);
+          counter = 0;
+          disable[product.productId - 1] = false;
+          setOnCart(disable);
+          for (let i = 0; i < tmp.length; i++) {
+            console.log('prova');
+            console.log(tmp[i]);
+          }
         } else {
           item.amount = Number(quantity);
         }
@@ -248,31 +261,12 @@ export function ClientsProductAll({ user }: any) {
       }
       counter++;
     }
-
-    // Check if product is already present
-    // let found = 0;
-    // tmp.forEach(obj => {
-    //   // @ts-ignore
-    //   if (obj.productId === item.productId)
-    //     found = 1;
-    // });
-
-    // if (!found) {
-    //   // @ts-ignore
-    //   tmp.push(item);
-    // } else {
-    //   tmp.forEach(obj => {
-    //     if (obj.productId === item.productId) {
-    //       obj.amount = Number(quantity);
-    //     }
-    //   });
-    // }
-
+    // Calcoli del carrello
     let sum = 0;
     tmp.forEach(obj => {
       sum += obj.amount * obj.price;
     });
-
+    console.log('sum' + sum);
     setTotal(sum);
 
     setAddedItems(tmp);
@@ -332,6 +326,8 @@ export function ClientsProductAll({ user }: any) {
               item={item}
               addProduct={handleAddProduct}
               total={total}
+              onCart={onCart}
+              setOnCart={setOnCart}
             />
           </Card>
         </Layout.Section>
