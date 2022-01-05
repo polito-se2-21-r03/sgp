@@ -8,6 +8,11 @@ import {
   useIndexResourceState
 } from '@shopify/polaris';
 
+/**
+ * TO-DO
+ * - aggiungere colore diverso per prodotti già confermati e disattivare pulsante
+ */
+
 export function AddedProductRow({ products, handleConfirm }: any) {
   const resourceName = {
     singular: 'product',
