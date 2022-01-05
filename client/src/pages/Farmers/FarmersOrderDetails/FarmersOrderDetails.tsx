@@ -75,34 +75,36 @@ export function FarmersOrderDetails({ match, user }: any) {
   /**
    * Save data
    */
-  const handleSave = useCallback(async () => {
+  const handleSave = useCallback(async (selectedResources) => {
     try {
       if (customer === -1) return;
 
-      products.forEach(product => {
-        product['confirmed'] = 1
-      })
-      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/farmer/${user.id}/order/${match.params.id}`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          changedBy: 'FARMER',
-          // Employee ID set to 1 for testing
-          status: 'PRODUCT CONFIRMED',
-          products: products
-        })
-      })
-      const response = await data.json();
+      console.log(products, selectedResources);
 
-      if (response) {
-        setActive(true);
-        setUpdate(!update);
-      } else {
-        setSaveError(true);
-      }
+      // products.forEach(product => {
+      //   product['confirmed'] = 1
+      // })
+      // const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/farmer/${user.id}/order/${match.params.id}`, {
+      //   method: 'POST',
+      //   credentials: 'include',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     changedBy: 'FARMER',
+      //     // Employee ID set to 1 for testing
+      //     status: 'PRODUCT CONFIRMED',
+      //     products: products
+      //   })
+      // })
+      // const response = await data.json();
+
+      // if (response) {
+      //   setActive(true);
+      //   setUpdate(!update);
+      // } else {
+      //   setSaveError(true);
+      // }
     } catch (error) {
       console.log(error);
       setSaveError(true);
@@ -219,9 +221,8 @@ export function FarmersOrderDetails({ match, user }: any) {
           let sum = 0;
           for (const item of response.order.products) {
             item["farmer"] = farmers[user.id];
-            item.name = `${item.name} - Farmer: ${item.farmer}`;
             const tmp_item = {
-              productId: item.id,
+              productId: item.productId,
               amount: item.amount,
               price: item.price,
             }
@@ -275,7 +276,6 @@ export function FarmersOrderDetails({ match, user }: any) {
    */
   const addedProductsMarkup = addedItems.map(item => {
     const { productId } = item;
-    console.log(item);
     return (
       <AddedProductRow
         key={productId}
@@ -400,7 +400,7 @@ export function FarmersOrderDetails({ match, user }: any) {
         <Layout.Section>
           {/* Product */}
           <Card title="Products" sectioned>
-            {addedProductsMarkup}
+            <AddedProductRow products={addedItems} handleConfirm={handleSave} />
           </Card>
           {/* Payment */}
           <Card title="Payment" sectioned>

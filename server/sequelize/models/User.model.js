@@ -26,7 +26,7 @@ module.exports = (sequelize) => {
             allowNull: false,
             type: DataTypes.STRING,
             validate: {
-                isIn: [['ADMIN', 'EMPLOYEE', 'CLIENT', 'FARMER', 'MANAGER']]
+                isIn: [['ADMIN', 'EMPLOYEE', 'CLIENT', 'FARMER', 'MANAGER', 'WMANAGER']]
             }
         },
         createdAt: {
