@@ -110,6 +110,44 @@ export function FarmersOrderDetails({ match, user }: any) {
     setIsDirty(false);
   }, [user.id, products, update]);
 
+  /**
+  * Prepare order
+  */
+  const handlePreparation = useCallback(async () => {
+    try {
+      if (customer === -1) return;
+
+      products.forEach(product => {
+        product['confirmed'] = 1
+      })
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/farmer/${user.id}/order/${match.params.id}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          changedBy: 'FARMER',
+          // Employee ID set to 1 for testing
+          status: 'PRODUCT CONFIRMED',
+          products: products
+        })
+      })
+      const response = await data.json();
+
+      if (response) {
+        setActive(true);
+        setUpdate(!update);
+      } else {
+        setSaveError(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setSaveError(true);
+    }
+    setIsDirty(false);
+  }, [user.id, products, update]);
+
   const contextualSaveBarMarkup = isDirty ? (
     <ContextualSaveBar
       message="Order not saved"
@@ -236,11 +274,11 @@ export function FarmersOrderDetails({ match, user }: any) {
    * Added products markup
    */
   const addedProductsMarkup = addedItems.map(item => {
-    const { id } = item;
-
+    const { productId } = item;
+    console.log(item);
     return (
       <AddedProductRow
-        key={id}
+        key={productId}
         item={item}
       />
     );
@@ -256,7 +294,7 @@ export function FarmersOrderDetails({ match, user }: any) {
       case 'COMPLETED':
         return (<Badge progress="complete" status="success">Completed</Badge>);
       case 'CONFIRMED':
-        return (<Badge progress="incomplete" status="attention">Completed</Badge>);
+        return (<Badge progress="incomplete" status="attention">Confirmed</Badge>);
       case 'CREATED':
         return (<Badge progress="incomplete">Created</Badge>);
       case 'DELIVERED':
@@ -338,6 +376,13 @@ export function FarmersOrderDetails({ match, user }: any) {
         destructive: true,
       }
     }
+    else if (status === 'CONFIRMED') {
+      return {
+        content: 'Prepare order',
+        onAction: handlePreparation,
+        primary: true,
+      }
+    }
   }
 
   // ---- Page markup ----
@@ -345,7 +390,7 @@ export function FarmersOrderDetails({ match, user }: any) {
     <Page
       title='Order'
       titleMetadata={renderStatusMarkup(status)}
-      breadcrumbs={[{ content: 'Orders', url: '/orders' }]}
+      breadcrumbs={[{ content: 'Orders', url: '/farmer/orders' }]}
       primaryAction={renderPrimaryAction(status)}
     >
       <Layout>

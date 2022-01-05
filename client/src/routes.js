@@ -25,7 +25,7 @@ const routes = [
   {
     path: "/",
     name: "Dashboard",
-    roles: ["ADMIN", "EMPLOYEE"],
+    roles: ["ADMIN", "EMPLOYEE", "WMANAGER"],
     component: Dashboard,
     exact: true,
   },
@@ -33,7 +33,7 @@ const routes = [
   {
     path: "/orders",
     name: "Orders",
-    roles: ["ADMIN", "EMPLOYEE"],
+    roles: ["ADMIN", "EMPLOYEE", "WMANAGER"],
     component: OrderAll,
     exact: true,
   },
@@ -47,7 +47,7 @@ const routes = [
   {
     path: "/orders/:id",
     name: "Order Details",
-    roles: ["ADMIN", "EMPLOYEE"],
+    roles: ["ADMIN", "EMPLOYEE", "WMANAGER"],
     component: OrderDetails,
     exact: true,
   },
@@ -77,7 +77,7 @@ const routes = [
   {
     path: "/products",
     name: "Products",
-    roles: ["ADMIN", "EMPLOYEE"],
+    roles: ["ADMIN", "EMPLOYEE", "WMANAGER"],
     component: ProductAll,
     exact: true,
   },
@@ -91,7 +91,7 @@ const routes = [
   {
     path: "/products/:id",
     name: "Product Details",
-    roles: ["ADMIN", "EMPLOYEE"],
+    roles: ["ADMIN", "EMPLOYEE", "WMANAGER"],
     component: ProductDetails,
     exact: true,
   },

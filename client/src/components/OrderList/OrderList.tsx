@@ -76,6 +76,7 @@ export function OrderList({ user }: any) {
 
     const fetchOrders = async () => {
       try {
+        console.log(user);
         setIsLoading(true);
         const endpoint = (user.role === 'FARMER') ? `/farmer/${user.id}/order` : `/order`;
         const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + endpoint, {
@@ -185,7 +186,7 @@ export function OrderList({ user }: any) {
       case 'COMPLETED':
         return (<Badge progress="complete" status="success">Completed</Badge>);
       case 'CONFIRMED':
-        return (<Badge progress="incomplete" status="attention">Completed</Badge>);
+        return (<Badge progress="incomplete" status="attention">Confirmed</Badge>);
       case 'CREATED':
         return (<Badge progress="incomplete">Created</Badge>);
       case 'DELIVERED':

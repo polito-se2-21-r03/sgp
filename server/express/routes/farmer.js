@@ -30,27 +30,28 @@ async function getOrderByFarmerId(req, res) {
       include: [
         {
           model: models.product,
-          required: true
+          required: true,
         },
         {
           model: models.order,
-          required: true
+          required: true,
         },
-      ]
+      ],
     })
     .then((order_products) => {
       if (order_products) {
-        const products = order_products.map(order_product => ({
+        const products = order_products.map((order_product) => ({
           productId: order_product.product.id,
           name: order_product.product.name,
           amount: order_product.amount,
-        }))
+          price: order_product.product.price,
+        }));
         return res.status(200).json({
           order: {
             products: products,
             clientId: order_products[0].order.clientId,
             status: order_products[0].order.status,
-          }
+          },
         });
       }
     })
@@ -77,10 +78,11 @@ async function getOrdersByFarmerId(req, res) {
             info: {
               createdAt: order.order.createdAt,
               status: order.order.status,
-              clientId: order.order.clientId
-            }, product: []
+              clientId: order.order.clientId,
+            },
+            product: [],
           };
-          r[order.orderId]['product'].push({
+          r[order.orderId]["product"].push({
             productId: order.productId,
             amount: order.amount,
           });
@@ -89,10 +91,10 @@ async function getOrdersByFarmerId(req, res) {
         res.status(200).json(
           Object.keys(result).map((key, index) => ({
             orderId: key,
-            createdAt: result[key]['info'].createdAt,
-            status: result[key]['info'].status,
-            clientId: result[key]['info'].clientId,
-            products: result[key]['product'],
+            createdAt: result[key]["info"].createdAt,
+            status: result[key]["info"].status,
+            clientId: result[key]["info"].clientId,
+            products: result[key]["product"],
           }))
         );
       }
@@ -144,26 +146,27 @@ async function confirmOrderProducts(req, res) {
 async function createProduct(req, res) {
   const v = new Validator();
   const body = v.validate(req.body, {
-    "id": "/FarmerProductRequestSchema",
-    "type": "object",
-    "properties": {
-      "productId": { "type": "integer" },
-      "quantity": { "type": "integer" },
+    id: "/FarmerProductRequestSchema",
+    type: "object",
+    properties: {
+      productId: { type: "integer" },
+      quantity: { type: "integer" },
     },
-    "required": ["quantity", "productId"]
+    required: ["quantity", "productId"],
   });
   if (!body.valid) {
-    return res.status(422).json({ errors: body.errors })
+    return res.status(422).json({ errors: body.errors });
   }
   try {
-    const { productId, quantity } = req.body
-    await models.product_farmer.create({
-      productId: productId,
-      quantity: quantity,
-      userId: req.params.farmerId,
-    })
-      .then(product => res.status(200).json({ productId: product.productId }))
-      .catch(err => res.status(503).json({ error: err.message }))
+    const { productId, quantity } = req.body;
+    await models.product_farmer
+      .create({
+        productId: productId,
+        quantity: quantity,
+        userId: req.params.farmerId,
+      })
+      .then((product) => res.status(200).json({ productId: product.productId }))
+      .catch((err) => res.status(503).json({ error: err.message }));
   } catch (err) {
     res.status(503).json({ error: err.message });
   }
@@ -172,25 +175,36 @@ async function createProduct(req, res) {
 async function updateProduct(req, res) {
   const v = new Validator();
   const body = v.validate(req.body, {
-    "id": "/FarmerProductRequestSchema",
-    "type": "object",
-    "properties": {
-      "quantity": { "type": "integer" }
+    id: "/FarmerProductRequestSchema",
+    type: "object",
+    properties: {
+      quantity: { type: "integer" },
     },
-    "required": ["quantity"]
+    required: ["quantity"],
   });
   if (!body.valid) {
-    return res.status(422).json({ status: 'failed', errors: body.errors })
+    return res.status(422).json({ status: "failed", errors: body.errors });
   }
   try {
-    const { quantity } = req.body
-    await models.product_farmer.update({
-      quantity: quantity,
-    }, { where: { productId: req.params.productId, userId: req.params.farmerId } })
+    const { quantity } = req.body;
+    await models.product_farmer
+      .update(
+        {
+          quantity: quantity,
+        },
+        {
+          where: {
+            productId: req.params.productId,
+            userId: req.params.farmerId,
+          },
+        }
+      )
       .then(() => res.status(200).json("Product updated"))
-      .catch(err => res.status(503).json({ status: 'failed', error: err.message }))
+      .catch((err) =>
+        res.status(503).json({ status: "failed", error: err.message })
+      );
   } catch (err) {
-    res.status(503).json({ status: 'failed', error: err.message });
+    res.status(503).json({ status: "failed", error: err.message });
   }
 }
 
@@ -201,5 +215,5 @@ module.exports = {
   confirmOrderProducts,
   createProduct,
   updateProduct,
-  getOrderByFarmerId
+  getOrderByFarmerId,
 };

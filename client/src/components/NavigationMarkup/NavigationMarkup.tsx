@@ -41,6 +41,26 @@ export function NavigationMarkup({ user }: any) {
             url: '/farmer/orders',
           })
         return '/farmer';
+      case 'WMANAGER':
+        items.push({
+          label: 'Orders',
+          icon: OrdersMajor,
+          onClick: () => {
+            toggleIsLoading();
+            setNavItemActive('orders');
+          },
+          url: '/orders',
+        },
+          {
+            label: 'Products',
+            icon: ProductsMajor,
+            onClick: () => {
+              toggleIsLoading();
+              setNavItemActive('products');
+            },
+            url: '/products',
+          })
+        return '/';
       default:
         items.push({
           label: 'Orders',

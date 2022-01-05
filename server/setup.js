@@ -87,6 +87,14 @@ async function reset() {
 
   await sequelize.models.user
     .bulkCreate([
+      /*{
+        password: "pass",
+        email: "ildirettore@email.com",
+        firstname: "Direttore",
+        lastname: "Centola",
+        is_tmp_password: 0,
+        role: "WMANAGER",
+      },*/
       {
         password: "pass",
         email: "antoniocentola97@gmail.com",
