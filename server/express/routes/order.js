@@ -72,7 +72,7 @@ async function create(req, res) {
         return res.status(422).json({ errors: body.errors })
     }
     try {
-        const { employeeId, clientId, products } = req.body
+        const { employeeId, clientId, products, type, datetime, address } = req.body
         if (!await models.user.findByPk(clientId) || !await models.user.findByPk(employeeId)) {
             res.status(503).json({ error: `Client or Employee not found` })
         }
@@ -81,6 +81,9 @@ async function create(req, res) {
             employeeId: employeeId,
             status: "CREATED",
             createdAt: Date.now(),
+            type: type,
+            datetime: datetime,
+            address: address
         })
             .then(async order => {
                 if (order) {
