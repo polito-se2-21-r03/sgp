@@ -143,6 +143,47 @@ async function confirmOrderProducts(req, res) {
   }
 }
 
+async function statusOrderProducts(req, res) {
+  const v = new Validator();
+  const body = v.validate(
+      req.body,
+      OrderRequestSchema.statusOrderProductSchema
+  );
+  if (!body.valid) {
+    return res.status(422).json({ errors: body.errors });
+  }
+  try {
+    const { products } = req.body;
+    if (!(await models.order.findByPk(req.params.orderId))) {
+      return res.status(503).json({ error: `Order not found` });
+    }
+    if (products.length > 0) {
+      return await Promise.all(
+          products.map(async (product) => {
+            await models.order_product.update(
+                { status: product.status },
+                {
+                  where: {
+                    userId: req.params.farmerId,
+                    orderId: req.params.orderId,
+                    productId: product.productId,
+                  },
+                }
+            );
+          })
+      )
+          .then(() =>
+              res.status(200).json("Order products status successfully reported")
+          )
+          .catch((err) => res.status(503).json({ error: err.message }));
+    } else {
+      return res.status(503).json("Error during updating order status");
+    }
+  } catch (err) {
+    res.status(503).json({ error: err.message });
+  }
+}
+
 async function createProduct(req, res) {
   const v = new Validator();
   const body = v.validate(req.body, {
@@ -213,6 +254,7 @@ module.exports = {
   getProductsByFarmerId,
   getOrdersByFarmerId,
   confirmOrderProducts,
+  statusOrderProducts,
   createProduct,
   updateProduct,
   getOrderByFarmerId,

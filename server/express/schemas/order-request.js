@@ -62,3 +62,21 @@ exports.confirmOrderProductSchema = {
     },
     "required": ["products"]
 };
+
+exports.statusOrderProductSchema = {
+    "id": "/StatusOrderProductSchema",
+    "type": "object",
+    "properties": {
+        "products": {
+            "type": "array",
+            "items": {
+                "properties": {
+                    "productId": { "type": "integer" },
+                    "status": { "type": "string" },
+                },
+                "required": ["productId","status"]
+            }
+        }
+    },
+    "required": ["products"]
+};

@@ -30,6 +30,36 @@ async function reminder(req, res) {
         .catch(err => res.status(503).json({ error: err.message }))
 }
 
+async function getByClientId(req, res) {
+    const orders = await models.order.findAll({where: {clientId: req.params.clientId}})
+    await Promise.all(orders.map(async order => {
+        const prods = await models.order_product.findAll({ where: { orderId: order.id } })
+        const result = {
+            id: order.id,
+            clientId: order.clientId,
+            employeeId: order.employeeId,
+            status: order.status,
+            type: order.type,
+            datetimeDelivery: order.datetime,
+            addressDelivery: order.address,
+            createdAt: order.createdAt,
+            updatedAt: order.updatedAt,
+            products: await Promise.all(prods.map(async prod => (await models.product.findByPk(prod.productId).then(pr => ({
+                id: prod.productId,
+                farmerId: prod.userId,
+                amount: prod.amount,
+                confirmed: prod.confirmed,
+                status: prod.status,
+                name: pr.name,
+                price: pr.price,
+                type: pr.type,
+                src: pr.src,
+            })))))
+        }
+        return res.status(200).json(result)
+    })).catch(err => res.status(503).json({ error: err.message }))
+}
+
 async function getById(req, res) {
     await models.order.findByPk(req.params.id)
         .then(async order => {
@@ -39,18 +69,21 @@ async function getById(req, res) {
                 clientId: order.clientId,
                 employeeId: order.employeeId,
                 status: order.status,
+                type: order.type,
+                datetimeDelivery: order.datetime,
+                addressDelivery: order.address,
                 createdAt: order.createdAt,
                 updatedAt: order.updatedAt,
                 products: await Promise.all(prods.map(async prod => (await models.product.findByPk(prod.productId).then(pr => ({
-                    id: pr.id,
-                    producerId: pr.producerId,
+                    id: prod.productId,
+                    farmerId: prod.userId,
                     amount: prod.amount,
+                    confirmed: prod.confirmed,
+                    status: prod.status,
                     name: pr.name,
                     price: pr.price,
                     type: pr.type,
                     src: pr.src,
-                    createdAt: pr.createdAt,
-                    updatedAt: pr.updatedAt
                 })))))
             }
             return res.status(200).json(result)
@@ -144,5 +177,6 @@ module.exports = {
     create,
     update,
     getById,
+    getByClientId,
     reminder,
 };

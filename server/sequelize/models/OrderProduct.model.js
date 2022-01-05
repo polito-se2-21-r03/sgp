@@ -23,6 +23,10 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false
         },
+        status: {
+            allowNull: true,
+            type: DataTypes.STRING,
+        },
         createdAt: {
             allowNull: true,
             type: DataTypes.DATE
