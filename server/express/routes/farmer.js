@@ -220,6 +220,12 @@ async function updateProduct(req, res) {
     type: "object",
     properties: {
       quantity: { type: "integer" },
+      name: { type: "string" },
+      price: { type: "double" },
+      type: { type: "string" },
+      src: { type: "string" },
+      unitOfMeasure: { type: "string" },
+      description: { type: "string" },
     },
     required: ["quantity"],
   });
@@ -227,16 +233,22 @@ async function updateProduct(req, res) {
     return res.status(422).json({ status: "failed", errors: body.errors });
   }
   try {
-    const { quantity } = req.body;
-    await models.product_farmer
+    const { quantity, price, name, type, src, unitOfMeasure, description } = req.body;
+    const fields = {};
+    quantity && (fields['quantity'] = quantity)
+    price && (fields['price'] = price)
+    name && (fields['name'] = name)
+    type && (fields['type'] = type)
+    src && (fields['src'] = src)
+    unitOfMeasure && (fields['unitOfMeasure'] = unitOfMeasure)
+    description && (fields['description'] = description)
+    await models.product
       .update(
-        {
-          quantity: quantity,
-        },
+        fields,
         {
           where: {
-            productId: req.params.productId,
-            userId: req.params.farmerId,
+            id: req.params.productId,
+            producerId: req.params.farmerId,
           },
         }
       )
