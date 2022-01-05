@@ -189,6 +189,10 @@ app.get(
   routes.farmer.getOrderByFarmerId
 );
 app.get(
+    "/api/warehouse/order",
+    routes.order.getDeliveredOrders
+);
+app.get(
     "/api/order/client/:clientId",
     routes.order.getByClientId
 );

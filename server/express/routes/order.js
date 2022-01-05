@@ -15,6 +15,12 @@ async function getAll(req, res) {
         .catch(err => res.status(503).json({ error: err.message }))
 }
 
+async function getDeliveredOrders(req, res) {
+    await models.order.findAll({where: {status: "DELIVERED"}})
+        .then(orders => res.status(200).json(orders))
+        .catch(err => res.status(503).json({ error: err.message }))
+}
+
 async function reminder(req, res) {
     return await models.order.findByPk(req.params.id)
         .then(async order => {
@@ -178,5 +184,6 @@ module.exports = {
     update,
     getById,
     getByClientId,
+    getDeliveredOrders,
     reminder,
 };
