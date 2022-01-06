@@ -67,7 +67,6 @@ async function getOrdersByFarmerId(req, res) {
         {
           model: models.order,
           required: true,
-          where: { status: "CREATED" },
         },
       ],
     })

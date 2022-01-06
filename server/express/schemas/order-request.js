@@ -42,7 +42,7 @@ exports.orderUpdateSchema = {
             }
         }
     },
-    "required": ["clientId","status"]
+    "required": ["status"]
 };
 
 exports.confirmOrderProductSchema = {

@@ -81,30 +81,61 @@ export function FarmersOrderDetails({ match, user }: any) {
 
       console.log(products, selectedResources);
 
-      // products.forEach(product => {
-      //   product['confirmed'] = 1
-      // })
-      // const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/farmer/${user.id}/order/${match.params.id}`, {
-      //   method: 'POST',
-      //   credentials: 'include',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({
-      //     changedBy: 'FARMER',
-      //     // Employee ID set to 1 for testing
-      //     status: 'PRODUCT CONFIRMED',
-      //     products: products
-      //   })
-      // })
-      // const response = await data.json();
+      products.forEach(product => {
+        product['confirmed'] = 1
+      })
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/farmer/${user.id}/order/${match.params.id}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          changedBy: 'FARMER',
+          // Employee ID set to 1 for testing
+          status: 'CONFIRMED',
+          products: products
+        })
+      })
+      const response = await data.json();
 
-      // if (response) {
-      //   setActive(true);
-      //   setUpdate(!update);
-      // } else {
-      //   setSaveError(true);
-      // }
+      if (response) {
+        setActive(true);
+        setUpdate(!update);
+      } else {
+        setSaveError(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setSaveError(true);
+    }
+    setIsDirty(false);
+  }, [user.id, products, update]);
+
+  /**
+   * Delivery order to Warehouse
+   */
+  const handleDelivery = useCallback(async () => {
+    try {
+      if (customer === -1) return;
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/order/${match.params.id}`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          status: 'DELIVERED',
+        })
+      })
+      const response = await data.json();
+
+      if (response) {
+        setActive(true);
+        setUpdate(!update);
+      } else {
+        setSaveError(true);
+      }
     } catch (error) {
       console.log(error);
       setSaveError(true);
@@ -298,7 +329,7 @@ export function FarmersOrderDetails({ match, user }: any) {
       case 'CREATED':
         return (<Badge progress="incomplete">Created</Badge>);
       case 'DELIVERED':
-        return (<Badge progress="partiallyComplete" status="attention">Issued</Badge>);
+        return (<Badge progress="partiallyComplete" status="attention">Delivered</Badge>);
       case 'PENDING':
         return (<Badge progress="partiallyComplete" status="warning">Pending</Badge>);
       case 'PENDING CANCELATION':
@@ -376,10 +407,17 @@ export function FarmersOrderDetails({ match, user }: any) {
         destructive: true,
       }
     }
+    // else if (status === 'CONFIRMED') {
+    //   return {
+    //     content: 'Prepare order',
+    //     onAction: handlePreparation,
+    //     primary: true,
+    //   }
+    // }
     else if (status === 'CONFIRMED') {
       return {
-        content: 'Prepare order',
-        onAction: handlePreparation,
+        content: 'Mark as Delivered',
+        onAction: handleDelivery,
         primary: true,
       }
     }

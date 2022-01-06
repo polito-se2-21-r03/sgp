@@ -190,7 +190,7 @@ export function OrderList({ user }: any) {
       case 'CREATED':
         return (<Badge progress="incomplete">Created</Badge>);
       case 'DELIVERED':
-        return (<Badge progress="partiallyComplete" status="attention">Issued</Badge>);
+        return (<Badge progress="partiallyComplete" status="attention">Delivered</Badge>);
       case 'PENDING':
         return (<Badge progress="partiallyComplete" status="warning">Pending</Badge>);
       case 'PENDING CANCELATION':
