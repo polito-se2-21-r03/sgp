@@ -5,11 +5,14 @@ import React, { useCallback, useRef, useState, useEffect } from 'react';
 import {
   Button,
   Card,
+  DatePicker,
   Frame,
   Icon,
   Layout,
   Loading,
+  Modal,
   Page,
+  Select,
   SkeletonBodyText,
   SkeletonDisplayText,
   SkeletonPage,
@@ -20,7 +23,8 @@ import {
   Banner,
   Stack,
   Sticky,
-  Heading
+  Heading,
+  FormLayout
 } from '@shopify/polaris';
 
 import { TopBarMarkup, NavigationMarkup } from '../../../components';
@@ -44,6 +48,7 @@ export function ClientsProductAll({ user }: any) {
   const [frontItems, setFrontItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
+  const [onCart, setOnCart] = useState([]);
   const toggleMobileNavigationActive = useCallback(
     () =>
       setMobileNavigationActive(
@@ -64,10 +69,60 @@ export function ClientsProductAll({ user }: any) {
 
   const toggleActive = useCallback(() => setActive((active) => !active), []);
 
+  const [modalActive, setModalActive] = useState(true);
+  const handleModalChange = useCallback(() => setModalActive(!modalActive), [modalActive]);
+  const [selected, setSelected] = useState('pickup');
+  const handleSelectChange = useCallback((value) => setSelected(value), []);
+  const options = [
+    { label: 'In store pick up', value: 'pickup' },
+    { label: 'Home bag delivery', value: 'bagdelivery' },
+  ];
+  const date = dayjs().add(1, "day").toDate();
+  const [{ month, year }, setDate] = useState({ month: date.getMonth(), year: date.getFullYear() });
+  const [selectedDates, setSelectedDates] = useState({
+    start: date,
+    end: date,
+  });
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [zip, setZip] = useState('');
+
+  const [time, setTime] = useState('08:30');
+  const [timeError, setTimeError] = useState(false);
+  const handleTimeChange = useCallback((e) => {
+    const getMs = (t) => {
+      return (Number(t.split(':')[0]) * 60 + Number(t.split(':')[1])) * 60 * 1000;
+    }
+    if (getMs(e) < getMs('08:30') || getMs(e) > getMs('17:30')) {
+      setTimeError(true);
+    }
+    else {
+      setTimeError(false);
+      setTime(e);
+    }
+  }, []);
+
   const [addedItems, setAddedItems] = useState([]);
   const [total, setTotal] = useState(0);
 
   const loadingMarkup = isLoading ? <Loading /> : null;
+
+  /** 
+   * Date picker 
+   */
+  const handleMonthChange = useCallback(
+    (month, year) => setDate({ month, year }),
+    [],
+  );
+
+  /** Date picker selected date handler */
+  const handleSelectedDate = useCallback((e) => {
+    setSelectedDates({
+      start: e.start,
+      end: e.end,
+    });
+  }, []);
+
 
   /**
    * Product list
@@ -119,12 +174,15 @@ export function ClientsProductAll({ user }: any) {
 
         if (response) {
           const tmp = [];
+          const disable = [];
           for (const item of response) {
             item.name = item.name.charAt(0).toUpperCase() + item.name.slice(1);
             item["farmer"] = farmers[item.producerId];
             tmp.push(item);
+            disable.push(false);
           }
           setItems(tmp);
+          setOnCart(disable);
           setFrontItems(tmp);
           setIsLoading(false);
         } else {
@@ -180,6 +238,7 @@ export function ClientsProductAll({ user }: any) {
   /** Handle update cart product */
   const handleUpdateCartProduct = useCallback((product, quantity) => {
     const tmp = addedItems;
+    const disable = onCart;
 
     let counter = 0;
     for (const item of tmp) {
@@ -187,6 +246,9 @@ export function ClientsProductAll({ user }: any) {
         // If quantity is zero remove product
         if (Number(quantity) === 0) {
           tmp.splice(counter, 1);
+          counter = 0;
+          disable[product.productId - 1] = false;
+          setOnCart(disable);
         } else {
           item.amount = Number(quantity);
         }
@@ -195,34 +257,15 @@ export function ClientsProductAll({ user }: any) {
       counter++;
     }
 
-    // Check if product is already present
-    // let found = 0;
-    // tmp.forEach(obj => {
-    //   // @ts-ignore
-    //   if (obj.productId === item.productId)
-    //     found = 1;
-    // });
-
-    // if (!found) {
-    //   // @ts-ignore
-    //   tmp.push(item);
-    // } else {
-    //   tmp.forEach(obj => {
-    //     if (obj.productId === item.productId) {
-    //       obj.amount = Number(quantity);
-    //     }
-    //   });
-    // }
-
+    // Calcoli del carrello
     let sum = 0;
     tmp.forEach(obj => {
       sum += obj.amount * obj.price;
     });
-
     setTotal(sum);
 
     setAddedItems(tmp);
-  }, [total]);
+  }, [total, addedItems]);
 
   /**
    * Save data
@@ -278,6 +321,8 @@ export function ClientsProductAll({ user }: any) {
               item={item}
               addProduct={handleAddProduct}
               total={total}
+              onCart={onCart}
+              setOnCart={setOnCart}
             />
           </Card>
         </Layout.Section>
@@ -286,7 +331,6 @@ export function ClientsProductAll({ user }: any) {
 
   const addedProductsMarkup = addedItems.map(
     (item, index) => {
-      const { id, name, price } = item;
 
       return (
         <Layout.Section
@@ -294,7 +338,7 @@ export function ClientsProductAll({ user }: any) {
           key={index}
         >
           <CartRow
-            key={id}
+            key={item.productId}
             item={item}
             name={frontItems[item.productId - 1].name}
             updateProduct={handleUpdateCartProduct}
@@ -320,6 +364,114 @@ export function ClientsProductAll({ user }: any) {
       <Icon source={CartMajor} />
       <Heading>Cart</Heading>
     </Stack>
+  )
+
+  /**
+ * Modal top up
+ */
+  const modalMarkup = (
+    <Modal
+      open={modalActive}
+      onClose={handleModalChange}
+      title="Plan your order"
+      primaryAction={{
+        content: 'Place order',
+        onAction: handleSave,
+      }}
+      secondaryActions={[
+        {
+          content: 'Cancel',
+          onAction: handleModalChange,
+        },
+      ]}
+    >
+      <Modal.Section>
+        <Select
+          label="Delivery type"
+          options={options}
+          onChange={handleSelectChange}
+          value={selected}
+        />
+
+        {selected === 'pickup' && (
+          <div style={{ marginTop: '1.6rem' }}>
+            <FormLayout>
+              <FormLayout.Group>
+                <Stack vertical wrap>
+                  <DatePicker
+                    month={month}
+                    year={year}
+                    onChange={handleSelectedDate}
+                    onMonthChange={handleMonthChange}
+                    selected={selectedDates}
+                    disableDatesBefore={dayjs().toDate()}
+                  />
+                  <TextField
+                    autoComplete="off"
+                    label="Time"
+                    type="time"
+                    value={time}
+                    onChange={handleTimeChange}
+                    error={timeError && "You can only pick up your order from 08:30 to 17:30"}
+                  />
+                </Stack>
+              </FormLayout.Group>
+            </FormLayout>
+          </div>
+        )}
+        {selected === 'bagdelivery' && (
+          <div style={{ marginTop: '1.6rem' }} >
+            <FormLayout>
+              <FormLayout.Group>
+                <TextField
+                  autoComplete="off"
+                  label="Address"
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e)}
+                />
+              </FormLayout.Group>
+              <FormLayout.Group>
+                <TextField
+                  autoComplete="off"
+                  label="City"
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e)}
+                />
+                <TextField
+                  autoComplete="off"
+                  label="Postal code"
+                  type="text"
+                  value={zip}
+                  onChange={(e) => setZip(e)}
+                />
+              </FormLayout.Group>
+              <FormLayout.Group>
+                <DatePicker
+                  month={month}
+                  year={year}
+                  onChange={handleSelectedDate}
+                  onMonthChange={handleMonthChange}
+                  selected={selectedDates}
+                  disableDatesBefore={dayjs().toDate()}
+                />
+              </FormLayout.Group>
+              <FormLayout.Group>
+                <TextField
+                  autoComplete="off"
+                  label="Time"
+                  type="time"
+                  value={time}
+                  onChange={handleTimeChange}
+                  error={timeError && "You can only pick up your order from 08:30 to 17:30"}
+                />
+              </FormLayout.Group>
+            </FormLayout>
+          </div>
+        )}
+      </Modal.Section>
+    </Modal>
   )
 
   /**
@@ -435,6 +587,7 @@ export function ClientsProductAll({ user }: any) {
       {pageMarkup}
       {toastMarkup}
       {cartMarkup}
+      {modalMarkup}
     </Frame >
   );
 }

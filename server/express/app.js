@@ -180,9 +180,21 @@ app.post(
   "/api/farmer/:farmerId/order/:orderId",
   routes.farmer.confirmOrderProducts
 );
+app.post(
+    "/api/farmer/:farmerId/order/:orderId/status",
+    routes.farmer.statusOrderProducts
+);
 app.get(
   "/api/farmer/:farmerId/order/:orderId",
   routes.farmer.getOrderByFarmerId
+);
+app.get(
+    "/api/warehouse/order",
+    routes.order.getDeliveredOrders
+);
+app.get(
+    "/api/order/client/:clientId",
+    routes.order.getByClientId
 );
 app.post("/api/farmer/:farmerId/product", routes.farmer.createProduct);
 app.put(
