@@ -24,7 +24,7 @@ module.exports = (sequelize) => {
         },
         datetime: {
             allowNull: true,
-            type: DataTypes.DATE,
+            type: DataTypes.STRING,
         },
         address: {
             allowNull: true,

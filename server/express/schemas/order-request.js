@@ -5,7 +5,7 @@ exports.orderRequestSchema = {
         "employeeId": {"type": "integer"},
         "clientId": {"type": "integer"},
         "type": {"type": "string"},
-        "datetime": {"type": "date"},
+        "datetime": {"type": "string"},
         "address": {"type": "string"},
         "products": {
             "type": "array",

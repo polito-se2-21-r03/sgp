@@ -69,7 +69,7 @@ export function ClientsProductAll({ user }: any) {
 
   const toggleActive = useCallback(() => setActive((active) => !active), []);
 
-  const [modalActive, setModalActive] = useState(true);
+  const [modalActive, setModalActive] = useState(false);
   const handleModalChange = useCallback(() => setModalActive(!modalActive), [modalActive]);
   const [selected, setSelected] = useState('pickup');
   const handleSelectChange = useCallback((value) => setSelected(value), []);
@@ -270,8 +270,12 @@ export function ClientsProductAll({ user }: any) {
   /**
    * Save data
    */
-  const handleSave = useCallback(async () => {
+  const handleSave = useCallback(async (selectedDates,time,address,city,zip,selected) => {
     try {
+      console.log(selectedDates.start,time,address,city,zip);
+      const milliseconds = selectedDates.start.getTime() + (Number(time.split(':')[0]) * 60 + Number(time.split(':')[1])) * 60 * 1000;
+      const newDate = (new Date(milliseconds)).toISOString();
+      console.log(newDate, selected);
       const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/order', {
         method: 'POST',
         credentials: 'include',
@@ -281,10 +285,16 @@ export function ClientsProductAll({ user }: any) {
         body: JSON.stringify({
           clientId: user.id,
           employeeId: 1,
-          products: addedItems
+          products: addedItems,
+          address: address + " " + city + " " + zip,
+          datetime: newDate,
+          type: selected == "bagdelivery" ? "DELIVERY" : "PICK-UP"
         })
       })
       const response = await data.json();
+      if(response.orderId){
+        setModalActive(false);
+      }
       if (response.status === 'not_available') {
         setAmountError(true);
       } else if (response.status === 'failed') {
@@ -376,7 +386,7 @@ export function ClientsProductAll({ user }: any) {
       title="Plan your order"
       primaryAction={{
         content: 'Place order',
-        onAction: handleSave,
+        onAction: () => handleSave(selectedDates,time,address,city,zip,selected),
       }}
       secondaryActions={[
         {
@@ -428,7 +438,11 @@ export function ClientsProductAll({ user }: any) {
                   label="Address"
                   type="text"
                   value={address}
-                  onChange={(e) => setAddress(e)}
+                  onChange={(e) => {
+                      console.log(e,address);
+                      return   setAddress(e)
+                    }
+                  }
                 />
               </FormLayout.Group>
               <FormLayout.Group>
@@ -541,10 +555,10 @@ export function ClientsProductAll({ user }: any) {
                 <div style={{ marginTop: '16px' }}>
                   <Button
                     primary
-                    onClick={handleSave}
+                    onClick={() => setModalActive(true)}
                     disabled={total === 0}
                   >
-                    Place order
+                    Plan order
                   </Button>
                 </div>
               </Card>
