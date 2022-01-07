@@ -12,7 +12,7 @@ export function AddedProductRow({ item }: any) {
   return (
     <Stack distribution="equalSpacing" alignment="center">
       <Stack.Item>
-        <TextStyle variation="strong">{item.name} - x{amount}</TextStyle>
+        <TextStyle variation="strong">{item.name} - x{amount} {item.unitOfMeasure}</TextStyle>
       </Stack.Item>
       <Stack.Item>
         <Stack alignment="center">

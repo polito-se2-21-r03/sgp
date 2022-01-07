@@ -53,7 +53,6 @@ export function FarmersOrderDetails({ match, user }: any) {
   const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
   const [status, setStatus] = useState('');
-  const [productStatus, setProductStatus] = useState(false);
 
   const toggleMobileNavigationActive = useCallback(
     () =>
@@ -253,7 +252,6 @@ export function FarmersOrderDetails({ match, user }: any) {
           const tmp = [];
           const tmp_added = [];
           let sum = 0;
-          let flag = true;
           for (const item of response.order.products) {
             item["farmer"] = farmers[user.id];
             const tmp_item = {
@@ -265,18 +263,12 @@ export function FarmersOrderDetails({ match, user }: any) {
             tmp.push(item);
             tmp_added.push(tmp_item);
             sum += item.amount * item.price;
-
-            // Check ordered product status
-            if (!item.confirmed)
-              flag = false;
           }
           clientId = response.order.clientId;
           setStatus(response.order.status);
           setAddedItems(tmp);
           setProducts(tmp_added);
           setTotal(sum);
-
-          setProductStatus(flag);
 
           setIsLoading(false);
           return clientId;
@@ -412,14 +404,14 @@ export function FarmersOrderDetails({ match, user }: any) {
         destructive: true,
       }
     }
-    else if (productStatus) {
+    else if (status === 'CONFIRMED') {
       return {
         content: 'Prepare order',
         onAction: handlePreparation,
         primary: true,
       }
     }
-    else if (status === 'CONFIRMED') {
+    else if (status === 'IN PREPARATION') {
       return {
         content: 'Mark as Delivered',
         onAction: handleDelivery,

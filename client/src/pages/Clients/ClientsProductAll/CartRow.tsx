@@ -20,11 +20,16 @@ import {
 
 export function CartRow({ item, name, updateProduct }: any) {
   const [value, setValue] = useState(String(item.amount));
+  const QUANTITY = item.amount;
 
   const handleValueChange = useCallback((newValue) => {
     if (Number(newValue) >= 0) {
-      setValue(newValue);
-      updateProduct(item, newValue);
+      if (QUANTITY - Number(newValue) < 0)
+        setValue(String(QUANTITY));
+      else {
+        setValue(newValue);
+        updateProduct(item, newValue);
+      }
     }
   }, []);
 

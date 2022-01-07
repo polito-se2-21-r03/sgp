@@ -16,7 +16,7 @@ async function getAll(req, res) {
 }
 
 async function getDeliveredOrders(req, res) {
-    await models.order.findAll({where: {status: "DELIVERED"}})
+    await models.order.findAll({ where: { status: "DELIVERED" } })
         .then(orders => res.status(200).json(orders))
         .catch(err => res.status(503).json({ error: err.message }))
 }
@@ -37,7 +37,7 @@ async function reminder(req, res) {
 }
 
 async function getByClientId(req, res) {
-    const orders = await models.order.findAll({where: {clientId: req.params.clientId}})
+    const orders = await models.order.findAll({ where: { clientId: req.params.clientId } })
     await Promise.all(orders.map(async order => {
         const prods = await models.order_product.findAll({ where: { orderId: order.id } })
         const result = {
@@ -90,6 +90,7 @@ async function getById(req, res) {
                     price: pr.price,
                     type: pr.type,
                     src: pr.src,
+                    unitOfMeasure: pr.unitOfMeasure
                 })))))
             }
             return res.status(200).json(result)
@@ -130,7 +131,7 @@ async function create(req, res) {
                         const count = await models.product.count({
                             where: {
                                 id: product.productId,
-                                quantity: { [Op.gt]: product.amount }
+                                quantity: { [Op.gte]: product.amount }
                             }
                         })
                         if (!count) {

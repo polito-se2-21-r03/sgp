@@ -29,6 +29,7 @@ import { ClipboardMinor } from '@shopify/polaris-icons';
 import { useHistory } from 'react-router';
 
 import { AddedProductRow } from './AddedProductRow';
+import dayjs from 'dayjs';
 
 export function OrderDetails({ match, user }: any) {
   const history = useHistory();
@@ -53,6 +54,9 @@ export function OrderDetails({ match, user }: any) {
   const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
   const [status, setStatus] = useState('');
+  const [deliveryType, setDeliveryType] = useState('');
+  const [deliveryDate, setDeliveryDate] = useState('');
+  const [address, setAddress] = useState('');
 
   const toggleMobileNavigationActive = useCallback(
     () =>
@@ -78,7 +82,6 @@ export function OrderDetails({ match, user }: any) {
   const handleSave = useCallback(async () => {
     try {
       if (customer === -1) return;
-      console.log(products)
 
       const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/order/${match.params.id}`, {
         method: 'PUT',
@@ -194,6 +197,10 @@ export function OrderDetails({ match, user }: any) {
           setAddedItems(tmp);
           setProducts(tmp_added);
           setTotal(sum);
+
+          setDeliveryType(response.type);
+          setDeliveryDate(response.datetimeDelivery);
+          setAddress(response.addressDelivery);
 
           setIsLoading(false);
           return clientId;
@@ -323,13 +330,13 @@ export function OrderDetails({ match, user }: any) {
   )
 
   const renderPrimaryAction = (status) => {
-    if (status === 'CREATED') {
+    if (status === 'CREATED' && user.role !== 'WMANAGER') {
       return {
         content: 'Update order',
         onAction: handleSave,
         primary: true,
       }
-    } else if (status === 'PENDING CANCELATION') {
+    } else if (status === 'PENDING CANCELATION' && user.role !== 'WMANAGER') {
       return {
         content: 'Delete',
         onAction: handleDeleteModalChange,
@@ -369,11 +376,8 @@ export function OrderDetails({ match, user }: any) {
         </Layout.Section>
         {/* Second column */}
         <Layout.Section secondary>
-          <Card title="Customer" sectioned>
-            <div>
-              <TextStyle variation="strong">{customer.firstname} {customer.lastname}</TextStyle>
-            </div>
-            <div>
+          <Card title="Customer">
+            <Card.Section title={`${customer.firstname} ${customer.lastname}`}>
               <Stack distribution="equalSpacing" spacing="extraTight">
                 <Button
                   plain
@@ -393,7 +397,11 @@ export function OrderDetails({ match, user }: any) {
                   </Tooltip>
                 </div>
               </Stack>
-            </div>
+            </Card.Section>
+            <Card.Section title={deliveryType}>
+              {deliveryDate && (<p><TextStyle variation="strong">Date:</TextStyle> {dayjs(deliveryDate).format('DD/MM/YYYY hh:mm')}</p>)}
+              {address && (<p><TextStyle variation="strong">Address:</TextStyle> {address}</p>)}
+            </Card.Section>
           </Card>
         </Layout.Section>
       </Layout>

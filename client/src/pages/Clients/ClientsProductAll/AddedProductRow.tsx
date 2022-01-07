@@ -22,14 +22,20 @@ export function AddedProductRow({ item, addProduct, onCart, setOnCart }: any) {
 
   const handleValueChange = useCallback((newValue) => {
     if (newValue >= 0) {
-      setValue(newValue);
-      setTotal(total + (Number(newValue)) * price);
+      if (item.quantity - Number(newValue) < 0)
+        setValue(String(item.quantity));
+      else {
+        setValue(newValue);
+        setTotal(total + (Number(newValue)) * price);
+      }
     }
   }, []);
 
   const handleAddProduct = useCallback(() => {
-    if (Number(value) > 0)
-      addProduct(item, value);
+    if (Number(value) > 0) {
+      if (item.quantity - Number(value) >= 0)
+        addProduct(item, value);
+    }
     setValue('0');
     const tmp = onCart;
     tmp[item.id - 1] = true;
@@ -75,6 +81,9 @@ export function AddedProductRow({ item, addProduct, onCart, setOnCart }: any) {
             </p>
           </TextContainer>
         </Collapsible>
+      </Stack.Item>
+      <Stack.Item>
+        <TextStyle variation="subdued">Availability: {item.quantity} {item.unitOfMeasure}</TextStyle>
       </Stack.Item>
       <Stack.Item>
         <Stack distribution="equalSpacing" alignment="center">
