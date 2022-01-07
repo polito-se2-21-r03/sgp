@@ -2,11 +2,11 @@ exports.orderRequestSchema = {
     "id": "/OrderRequestSchema",
     "type": "object",
     "properties": {
-        "employeeId": {"type": "integer"},
-        "clientId": {"type": "integer"},
-        "type": {"type": "string"},
-        "datetime": {"type": "string"},
-        "address": {"type": "string"},
+        "employeeId": { "type": "integer" },
+        "clientId": { "type": "integer" },
+        "type": { "type": "string" },
+        "datetime": { "type": "string" },
+        "address": { "type": "string" },
         "products": {
             "type": "array",
             "items": {
@@ -26,11 +26,11 @@ exports.orderUpdateSchema = {
     "id": "/OrderUpdateSchema",
     "type": "object",
     "properties": {
-        "clientId": {"type": "integer"},
-        "status": {"type": "string"},
-        "type": {"type": "string"},
-        "datetime": {"type": "date"},
-        "address": {"type": "string"},
+        "clientId": { "type": "integer" },
+        "status": { "type": "string" },
+        "type": { "type": "string" },
+        "datetime": { "type": "date" },
+        "address": { "type": "string" },
         "products": {
             "type": "array",
             "items": {
@@ -54,9 +54,9 @@ exports.confirmOrderProductSchema = {
             "items": {
                 "properties": {
                     "productId": { "type": "integer" },
-                    "confirmed": { "type": "integer" },
+                    "confirmed": { "type": "boolean" },
                 },
-                "required": ["productId","confirmed"]
+                "required": ["productId", "confirmed"]
             }
         }
     },
@@ -74,7 +74,7 @@ exports.statusOrderProductSchema = {
                     "productId": { "type": "integer" },
                     "status": { "type": "string" },
                 },
-                "required": ["productId","status"]
+                "required": ["productId", "status"]
             }
         }
     },

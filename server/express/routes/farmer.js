@@ -45,6 +45,8 @@ async function getOrderByFarmerId(req, res) {
           name: order_product.product.name,
           amount: order_product.amount,
           price: order_product.product.price,
+          unitOfMeasure: order_product.product.unitOfMeasure,
+          confirmed: order_product.confirmed
         }));
         return res.status(200).json({
           order: {
@@ -145,8 +147,8 @@ async function confirmOrderProducts(req, res) {
 async function statusOrderProducts(req, res) {
   const v = new Validator();
   const body = v.validate(
-      req.body,
-      OrderRequestSchema.statusOrderProductSchema
+    req.body,
+    OrderRequestSchema.statusOrderProductSchema
   );
   if (!body.valid) {
     return res.status(422).json({ errors: body.errors });
@@ -158,23 +160,23 @@ async function statusOrderProducts(req, res) {
     }
     if (products.length > 0) {
       return await Promise.all(
-          products.map(async (product) => {
-            await models.order_product.update(
-                { status: product.status },
-                {
-                  where: {
-                    userId: req.params.farmerId,
-                    orderId: req.params.orderId,
-                    productId: product.productId,
-                  },
-                }
-            );
-          })
+        products.map(async (product) => {
+          await models.order_product.update(
+            { status: product.status },
+            {
+              where: {
+                userId: req.params.farmerId,
+                orderId: req.params.orderId,
+                productId: product.productId,
+              },
+            }
+          );
+        })
       )
-          .then(() =>
-              res.status(200).json("Order products status successfully reported")
-          )
-          .catch((err) => res.status(503).json({ error: err.message }));
+        .then(() =>
+          res.status(200).json("Order products status successfully reported")
+        )
+        .catch((err) => res.status(503).json({ error: err.message }));
     } else {
       return res.status(503).json("Error during updating order status");
     }

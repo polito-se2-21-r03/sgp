@@ -20,7 +20,7 @@ export function AddedProductRow({ products, handleConfirm }: any) {
   };
 
   const resourceIDResolver = (products: any) => {
-    return products._id;
+    return products.productId;
   };
 
   const {
@@ -39,7 +39,7 @@ export function AddedProductRow({ products, handleConfirm }: any) {
   ];
 
   const rowMarkup = products.map(
-    ({ productId, name, amount, price }: any, index: number) => (
+    ({ productId, name, amount, price, unitOfMeasure, confirmed }: any, index: number) => (
       <IndexTable.Row
         id={productId}
         key={productId}
@@ -47,9 +47,13 @@ export function AddedProductRow({ products, handleConfirm }: any) {
         position={index}
       >
         <IndexTable.Cell>
-          <TextStyle variation="strong">{name}</TextStyle>
+          {(!confirmed) ? (
+            <TextStyle variation="strong">{name}</TextStyle>
+          ) : (
+            <TextStyle variation="subdued">{name}</TextStyle>
+          )}
         </IndexTable.Cell>
-        <IndexTable.Cell>{amount}</IndexTable.Cell>
+        <IndexTable.Cell>{amount} {unitOfMeasure}</IndexTable.Cell>
         <IndexTable.Cell>{Number(amount * price).toFixed(2)} €</IndexTable.Cell>
       </IndexTable.Row>
     ),

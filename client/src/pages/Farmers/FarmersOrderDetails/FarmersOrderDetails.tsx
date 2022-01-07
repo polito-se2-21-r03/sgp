@@ -53,6 +53,7 @@ export function FarmersOrderDetails({ match, user }: any) {
   const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
   const [status, setStatus] = useState('');
+  const [productStatus, setProductStatus] = useState(false);
 
   const toggleMobileNavigationActive = useCallback(
     () =>
@@ -82,7 +83,10 @@ export function FarmersOrderDetails({ match, user }: any) {
       console.log(products, selectedResources);
 
       products.forEach(product => {
-        product['confirmed'] = 1
+        for (let i = 0; i < selectedResources.length; i++) {
+          if (product.productId === selectedResources[i])
+            product['confirmed'] = true
+        }
       })
       const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/farmer/${user.id}/order/${match.params.id}`, {
         method: 'POST',
@@ -151,9 +155,9 @@ export function FarmersOrderDetails({ match, user }: any) {
       if (customer === -1) return;
 
       products.forEach(product => {
-        product['confirmed'] = 1
+        product['status'] = 'IN PREPARATION'
       })
-      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/farmer/${user.id}/order/${match.params.id}`, {
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/farmer/${user.id}/order/${match.params.id}/status`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -162,7 +166,6 @@ export function FarmersOrderDetails({ match, user }: any) {
         body: JSON.stringify({
           changedBy: 'FARMER',
           // Employee ID set to 1 for testing
-          status: 'PRODUCT CONFIRMED',
           products: products
         })
       })
@@ -250,22 +253,30 @@ export function FarmersOrderDetails({ match, user }: any) {
           const tmp = [];
           const tmp_added = [];
           let sum = 0;
+          let flag = true;
           for (const item of response.order.products) {
             item["farmer"] = farmers[user.id];
             const tmp_item = {
               productId: item.productId,
               amount: item.amount,
               price: item.price,
+              confirmed: item.confirmed
             }
             tmp.push(item);
             tmp_added.push(tmp_item);
             sum += item.amount * item.price;
+
+            // Check ordered product status
+            if (!item.confirmed)
+              flag = false;
           }
           clientId = response.order.clientId;
           setStatus(response.order.status);
           setAddedItems(tmp);
           setProducts(tmp_added);
           setTotal(sum);
+
+          setProductStatus(flag);
 
           setIsLoading(false);
           return clientId;
@@ -394,26 +405,20 @@ export function FarmersOrderDetails({ match, user }: any) {
   )
 
   const renderPrimaryAction = (status) => {
-    if (status === 'CREATED') {
-      return {
-        content: 'Confirm Products',
-        onAction: handleSave,
-        primary: true,
-      }
-    } else if (status === 'PENDING CANCELATION') {
+    if (status === 'PENDING CANCELATION') {
       return {
         content: 'Delete',
         onAction: handleDeleteModalChange,
         destructive: true,
       }
     }
-    // else if (status === 'CONFIRMED') {
-    //   return {
-    //     content: 'Prepare order',
-    //     onAction: handlePreparation,
-    //     primary: true,
-    //   }
-    // }
+    else if (productStatus) {
+      return {
+        content: 'Prepare order',
+        onAction: handlePreparation,
+        primary: true,
+      }
+    }
     else if (status === 'CONFIRMED') {
       return {
         content: 'Mark as Delivered',

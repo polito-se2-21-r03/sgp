@@ -178,7 +178,7 @@ export function OrderDetails({ match, user }: any) {
           const tmp_added = [];
           let sum = 0;
           for (const item of response.products) {
-            item["farmer"] = farmers[item.producerId];
+            item["farmer"] = farmers[item.farmerId];
             item.name = `${item.name} - Farmer: ${item.farmer}`;
             const tmp_item = {
               productId: item.id,
