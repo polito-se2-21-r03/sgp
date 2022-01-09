@@ -190,7 +190,15 @@ async function reset() {
         lastname: "Centola",
         is_tmp_password: 0,
         role: "WMANAGER",
-      }
+      },
+        {
+            password: "pass",
+            email: "pacimedina@gmail.com",
+            firstname: "Francesco",
+            lastname: "Medina",
+            is_tmp_password: 0,
+            role: "CLIENT",
+        }
     ])
     .then(async () => {
       await sequelize.models.wallet.bulkCreate([
