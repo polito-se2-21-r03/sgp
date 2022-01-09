@@ -6,6 +6,9 @@ const { models } = require("../sequelize");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
+module.exports = {
+  testTimeout: 30000,
+};
 /**
  * Test get all products
  */
@@ -498,24 +501,24 @@ describe("Test getOrderById", () => {
   });
 });
 
-// describe("Test update order_product status", () => {
-//   let server = null;
+//describe("Test update order_product status", () => {
+//  let server = null;
 //
-//   beforeAll(async () => {
-//     await reset();
-//     server = app.listen(3001, () => console.log("Listening on port 3001"));
-//   });
-//   it("tests update of status of order_product", async () => {
-//     const response = await models.order_product.update(
-//       { confirmed: true },
-//       { where: { userId: 9, orderId: 1, productId: 1 } }
-//     );
-//     expect(response.status).toBe(200);
-//   });
-//   afterAll(async () => {
-//     await server.close();
-//   });
-// });
+//  beforeAll(async () => {
+//    await reset();
+//    server = app.listen(3001, () => console.log("Listening on port 3001"));
+//  });
+//  it("tests update of status of order_product", async () => {
+//    const response = await models.order_product.update(
+//      { confirmed: true },
+//      { where: { userId: 9, orderId: 1, productId: 1 } }
+//   );
+//    expect(response.status).toBe(200));
+//  });
+//  afterAll(async () => {
+//   await server.close();
+//  });
+//});
 
 describe("Test get order by farmerId", () => {
   let server = null;
@@ -696,6 +699,24 @@ describe("Test creation of a client", () => {
       createdAt: Date.now(),
     });
     expect(response.email).toBe("ab@email.com");
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test getByPk for product", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("tests the search in product table", async () => {
+    const response = await models.product.findAll({
+      where: { producerId: 7 },
+    });
+    expect(response.length).toBeGreaterThanOrEqual(0);
   });
   afterAll(async () => {
     await server.close();
