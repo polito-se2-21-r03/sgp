@@ -1,5 +1,6 @@
 const supertest = require("supertest");
 const app = require("../express/app");
+const { virtualClock } = require("../express/utils/virtual-clock.js");
 const { reset } = require("../setup");
 const { models } = require("../sequelize");
 const Sequelize = require("sequelize");
@@ -239,7 +240,7 @@ describe("Test client creation", () => {
       role: "CLIENT",
     };
     const response = await models.user.create(body);
-    expect(response.id).toBe(13);
+    expect(response.id).toBe(14);
   });
   afterAll(async () => {
     await server.close();
@@ -529,6 +530,173 @@ describe("Test get order by farmerId", () => {
     expect(response.status).toBe(200);
   });
 
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test get order by clientId", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+
+  it("tests the base route and returns an array of orders", async () => {
+    const response = await supertest(server).get("/api/order/client/1");
+    expect(response.status).toBe(200);
+  });
+
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test error in body for order status change", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("tests the base route and return a confirmation status", async () => {
+    const response = await supertest(server).post(
+      "/api/farmer/7/order/31/status"
+    );
+    expect(response.status).toBe(422);
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+/*describe("Test error in body for order status change", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("tests the base route and return a confirmation status", async () => {
+    const response = virtualClock.getTime();
+    expect(response).toBe(VirtualClock.currTime.toISOString());
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});*/
+
+describe("Test getByPk for product", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("tests the search in product table", async () => {
+    const response = await models.product.findByPk(10);
+    expect(response.id).toBe(10);
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test getByPk for product with error", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("tests the search in product table without elements found", async () => {
+    const response = await models.product.findByPk(1000);
+    expect(response).toBe(null);
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test creation of a product", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("tests the creation of a product and return ", async () => {
+    const response = await models.product.create({
+      producerId: 7,
+      quantity: 10,
+      price: 2,
+      unitOfMeasure: "Kg",
+      description: "",
+      src: "src",
+      name: "name",
+      type: "CEREALS",
+    });
+    expect(response.id).toBe(51);
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test the search in user table with role property", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("tests the search in order_product table and return the objectj", async () => {
+    const response = await models.user.findAll({ where: { role: "CLIENT" } });
+    expect(response.length).toBe(4);
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test the search in user table with email", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("tests the search in order_product table and return the objectj", async () => {
+    const response = await models.user.findOne({
+      where: { email: "vegetables@email.com" },
+    });
+    expect(response.role).toBe("FARMER");
+  });
+  afterAll(async () => {
+    await server.close();
+  });
+});
+
+describe("Test creation of a client", () => {
+  let server = null;
+
+  beforeAll(async () => {
+    await reset();
+    server = app.listen(3001, () => console.log("Listening on port 3001"));
+  });
+  it("tests the creation of a product and return ", async () => {
+    const response = await models.user.create({
+      firstname: "a",
+      lastname: "b",
+      email: "ab@email.com",
+      is_tmp_password: 0,
+      password: "pass",
+      role: "CLIENT",
+      createdAt: Date.now(),
+    });
+    expect(response.email).toBe("ab@email.com");
+  });
   afterAll(async () => {
     await server.close();
   });
