@@ -20,12 +20,12 @@ import {
   TextStyle,
   EmptyState,
   Badge,
-  Modal
+  Modal, TextField,
 } from '@shopify/polaris';
 
 import { TopBarMarkup, NavigationMarkup, contextControlMarkup } from '../../../components';
 
-import { ClipboardMinor } from '@shopify/polaris-icons';
+import {ClipboardMinor, EmailMajor, EmailNewsletterMajor, EnvelopeMajor, ExchangeMajor} from '@shopify/polaris-icons';
 import { useHistory } from 'react-router';
 
 import { AddedProductRow } from './AddedProductRow';
@@ -33,6 +33,12 @@ import dayjs from 'dayjs';
 
 export function OrderDetails({ match, user }: any) {
   const history = useHistory();
+
+  const [modalActive, setModalActive] = useState(false);
+  const handleModalChange = useCallback(() => setModalActive(!modalActive), [modalActive]);
+  const [body, setBody] = useState('');
+  const handleEmailChange = useCallback((text) => setBody(text), []);
+  const [sent, setSent] = useState(false);
 
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,6 +51,7 @@ export function OrderDetails({ match, user }: any) {
   const [buttonSpinning, setButtonSpinning] = useState(false);
 
   const toggleActive = useCallback(() => setActive((active) => !active), []);
+  const toggleSent = useCallback(() => setSent((sent) => !sent), []);
 
   const [deleteModalActive, setDeleteModalActive] = useState(false)
   const handleDeleteModalChange = useCallback(() => setDeleteModalActive(!deleteModalActive), [deleteModalActive]);
@@ -111,6 +118,33 @@ export function OrderDetails({ match, user }: any) {
     setIsDirty(false);
   }, [user.id, products, update]);
 
+  const handleSend = useCallback(async () => {
+    try {
+
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/order/${match.params.id}/reminder`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: body
+        })
+      })
+      const response = await data.json();
+
+      if (response) {
+        setSent(true);
+        handleModalChange();
+      } else {
+        setSaveError(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setSaveError(true);
+    }
+  }, [body]);
+
   const contextualSaveBarMarkup = isDirty ? (
     <ContextualSaveBar
       message="Order not saved"
@@ -126,6 +160,34 @@ export function OrderDetails({ match, user }: any) {
   ) : null;
 
   const loadingMarkup = isLoading ? <Loading /> : null;
+
+  const modalMarkup = (
+      <Modal
+          open={modalActive}
+          onClose={handleModalChange}
+          title="Send message to customer"
+          primaryAction={{
+            content: 'Send',
+            onAction: handleSend,
+          }}
+          secondaryActions={[
+            {
+              content: 'Cancel',
+              onAction: handleModalChange,
+            },
+          ]}
+      >
+        <Modal.Section>
+          <TextField
+              label="Type the email message body"
+              value={body}
+              onChange={handleEmailChange}
+              multiline={4}
+              autoComplete="off"
+          />
+        </Modal.Section>
+      </Modal>
+  )
 
   /**
    * Fetch data:
@@ -317,6 +379,10 @@ export function OrderDetails({ match, user }: any) {
     <Toast content="Order has been updated." onDismiss={toggleActive} />
   ) : null;
 
+  const toastEmailMarkup = sent ? (
+      <Toast content="Message has been sent to the customer." onDismiss={toggleSent} />
+  ) : null;
+
   const saveErrorMarkup = saveError && (
     <Layout.Section>
       <Banner
@@ -386,13 +452,11 @@ export function OrderDetails({ match, user }: any) {
                   {customer.email}
                 </Button>
                 <div>
-                  <Tooltip content="Copy address" dismissOnMouseOut>
+                  <Tooltip content="Send Message" dismissOnMouseOut>
                     <Button
                       plain
-                      icon={ClipboardMinor}
-                      onClick={() => {
-                        navigator.clipboard.writeText(customer.email);
-                      }}
+                      icon={EmailMajor}
+                      onClick={handleModalChange}
                     />
                   </Tooltip>
                 </div>
@@ -458,7 +522,9 @@ export function OrderDetails({ match, user }: any) {
     >
       {loadingMarkup}
       {pageMarkup}
+      {modalMarkup}
       {toastMarkup}
+      {toastEmailMarkup}
       {deleteModalMarkup}
     </Frame>
   );
