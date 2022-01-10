@@ -28,6 +28,16 @@ export function NavigationMarkup({ user }: any) {
   const getRoute = () => {
     switch (user.role) {
       case 'CLIENT':
+        items.push(
+          {
+              label: 'Orders',
+              icon: OrdersMajor,
+              onClick: () => {
+                  toggleIsLoading();
+                  setNavItemActive('orders');
+              },
+              url: '/client/orders',
+          })
         return '/client';
       case 'FARMER':
         items.push(

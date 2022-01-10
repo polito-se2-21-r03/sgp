@@ -78,7 +78,17 @@ export function OrderList({ user }: any) {
       try {
         console.log(user);
         setIsLoading(true);
-        const endpoint = (user.role === 'FARMER') ? `/farmer/${user.id}/order` : `/order`;
+        let endpoint = "";
+        switch (user.role){
+          case "FARMER":
+            endpoint = `/farmer/${user.id}/order`;
+            break
+          case "CLIENT":
+            endpoint = `/order/client/${user.id}`;
+            break;
+          default:
+            endpoint = `/order`;
+        }
         const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + endpoint, {
           method: 'GET',
           credentials: 'include',
@@ -91,6 +101,7 @@ export function OrderList({ user }: any) {
         console.log(response);
         if (response) {
           const tmp = [];
+          console.log(response);
           for (const item of response) {
             item["client"] = clients[item.clientId]
             tmp.push(item);
@@ -204,6 +215,17 @@ export function OrderList({ user }: any) {
   const rowMarkup = frontItems.map(
     (item, index) => {
       const key = user.role === "FARMER" ? item.orderId : item.id;
+      let target;
+      switch (user.role) {
+        case "FARMER":
+          target = '/farmer'
+          break
+        case "CLIENT":
+          target = '/client';
+          break
+        default:
+          target = ''
+      }
 
       return (
         <IndexTable.Row
@@ -214,7 +236,7 @@ export function OrderList({ user }: any) {
         >
           <IndexTable.Cell>
             <TextStyle variation="strong">
-              <Link url={(user.role === "FARMER" ? '/farmer' : '') + `/orders/${key}`} removeUnderline monochrome passHref>
+              <Link url={target + `/orders/${key}`} removeUnderline monochrome passHref>
                 <a
                   style={{ color: 'inherit', textDecoration: 'none' }}
                   data-primary-link>#{key}</a>

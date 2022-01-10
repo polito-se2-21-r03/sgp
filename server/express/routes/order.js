@@ -53,7 +53,7 @@ async function getByClientId(req, res) {
       const prods = await models.order_product.findAll({
         where: { orderId: order.id },
       });
-      const result = {
+      return {
         id: order.id,
         clientId: order.clientId,
         employeeId: order.employeeId,
@@ -80,9 +80,10 @@ async function getByClientId(req, res) {
           )
         ),
       };
-      return res.status(200).json(result);
     })
-  ).catch((err) => res.status(503).json({ error: err.message }));
+  )
+      .then( o => res.status(200).json(o))
+      .catch((err) => res.status(503).json({ error: err.message }));
 }
 
 async function getById(req, res) {

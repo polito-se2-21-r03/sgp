@@ -18,7 +18,7 @@ import {
   FarmersProductAll,
   UnregisteredUserProductAll,
   FarmersOrderDetails,
-  FarmersProductDetails,
+  FarmersProductDetails, ClientOrderDetails,
 } from "./pages";
 
 const routes = [
@@ -139,6 +139,20 @@ const routes = [
     name: "Cliente",
     roles: ["CLIENT"],
     component: ClientsProductAll,
+    exact: true,
+  },
+  {
+    path: "/client/orders",
+    name: "Cliente",
+    roles: ["CLIENT"],
+    component: OrderAll,
+    exact: true,
+  },
+  {
+    path: "/client/orders/:id",
+    name: "Cliente",
+    roles: ["CLIENT"],
+    component: OrderDetails,
     exact: true,
   },
   /** Farmers */

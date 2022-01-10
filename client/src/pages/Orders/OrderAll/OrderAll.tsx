@@ -40,7 +40,7 @@ export function OrderAll({ user }: any) {
     <Page
       fullWidth
       title="Orders"
-      primaryAction={user.role === 'FARMER' ? null : (
+      primaryAction={user.role === 'FARMER' || user.role === 'WMANAGER' ? null : (
         <Button
           primary
           url='/orders/new'

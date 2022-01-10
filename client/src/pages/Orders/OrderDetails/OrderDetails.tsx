@@ -39,6 +39,7 @@ export function OrderDetails({ match, user }: any) {
   const [body, setBody] = useState('');
   const handleEmailChange = useCallback((text) => setBody(text), []);
   const [sent, setSent] = useState(false);
+  const [amountValue, setAmountValue] = useState('');
 
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,6 +56,7 @@ export function OrderDetails({ match, user }: any) {
 
   const [deleteModalActive, setDeleteModalActive] = useState(false)
   const handleDeleteModalChange = useCallback(() => setDeleteModalActive(!deleteModalActive), [deleteModalActive]);
+  const handleAmountCallback = useCallback((a) => setAmountValue(a), []);
 
   const [customer, setCustomer] = useState({});
   const [addedItems, setAddedItems] = useState([]);
@@ -72,7 +74,6 @@ export function OrderDetails({ match, user }: any) {
       ),
     [],
   );
-
   const handleMobileNavigation = (data: any) => {
     setMobileNavigationActive(
       (data) => !data,
@@ -304,7 +305,8 @@ export function OrderDetails({ match, user }: any) {
    */
   const addedProductsMarkup = addedItems.map(item => {
     const { id } = item;
-
+    item['handleAmountCallback'] = handleAmountCallback
+    item['isUpdate'] = true
     return (
       <AddedProductRow
         key={id}
@@ -441,33 +443,35 @@ export function OrderDetails({ match, user }: any) {
           </Card>
         </Layout.Section>
         {/* Second column */}
-        <Layout.Section secondary>
-          <Card title="Customer">
-            <Card.Section title={`${customer.firstname} ${customer.lastname}`}>
-              <Stack distribution="equalSpacing" spacing="extraTight">
-                <Button
-                  plain
-                  url={`mailto:${customer.email}`}
-                >
-                  {customer.email}
-                </Button>
-                <div>
-                  <Tooltip content="Send Message" dismissOnMouseOut>
+        {user.role != "CLIENT" && (
+            <Layout.Section secondary>
+              <Card title="Customer">
+                <Card.Section title={`${customer.firstname} ${customer.lastname}`}>
+                  <Stack distribution="equalSpacing" spacing="extraTight">
                     <Button
-                      plain
-                      icon={EmailMajor}
-                      onClick={handleModalChange}
-                    />
-                  </Tooltip>
-                </div>
-              </Stack>
-            </Card.Section>
-            <Card.Section title={deliveryType}>
-              {deliveryDate && (<p><TextStyle variation="strong">Date:</TextStyle> {dayjs(deliveryDate).format('DD/MM/YYYY hh:mm')}</p>)}
-              {address && (<p><TextStyle variation="strong">Address:</TextStyle> {address}</p>)}
-            </Card.Section>
-          </Card>
-        </Layout.Section>
+                        plain
+                        url={`mailto:${customer.email}`}
+                    >
+                      {customer.email}
+                    </Button>
+                    <div>
+                      <Tooltip content="Send Message" dismissOnMouseOut>
+                        <Button
+                            plain
+                            icon={EmailMajor}
+                            onClick={handleModalChange}
+                        />
+                      </Tooltip>
+                    </div>
+                  </Stack>
+                </Card.Section>
+                <Card.Section title={deliveryType}>
+                  {deliveryDate && (<p><TextStyle variation="strong">Date:</TextStyle> {dayjs(deliveryDate).format('DD/MM/YYYY hh:mm')}</p>)}
+                  {address && (<p><TextStyle variation="strong">Address:</TextStyle> {address}</p>)}
+                </Card.Section>
+              </Card>
+            </Layout.Section>
+        )}
       </Layout>
     </Page>
   );

@@ -222,31 +222,31 @@ async function reset() {
 
       await sequelize.models.order_product.bulkCreate([
         {
-          orderId: 1,
+          orderId: 3,
           productId: 1,
           userId: 9,
           amount: 2,
         },
         {
-          orderId: 2,
+          orderId: 4,
           productId: 4,
           userId: 9,
           amount: 45,
         },
         {
-          orderId: 1,
+          orderId: 5,
           productId: 12,
           userId: 9,
           amount: 21,
         },
         {
-          orderId: 4,
+          orderId: 7,
           productId: 19,
           userId: 9,
           amount: 35,
         },
         {
-          orderId: 1,
+          orderId: 8,
           productId: 9,
           userId: 8,
           amount: 33,
@@ -254,6 +254,44 @@ async function reset() {
       ]);
     })
     .catch((err) => console.log(err));
+
+    await sequelize.models.order_product.bulkCreate([
+        {
+            orderId: 8,
+            productId: 2,
+            userId: 9,
+            amount: 12,
+            confirmed: 0
+        },
+        {
+            orderId: 7,
+            productId: 6,
+            userId: 9,
+            amount: 12,
+            confirmed: 1
+        },
+        {
+            orderId: 5,
+            productId: 4,
+            userId: 9,
+            amount: 23,
+            confirmed: 0
+        },
+        {
+            orderId: 4,
+            productId: 7,
+            userId: 9,
+            amount: 2,
+            confirmed: 0
+        },
+        {
+            orderId: 3,
+            productId: 12,
+            userId: 9,
+            amount: 5,
+            confirmed: 1
+        }
+    ]);
 }
 
 module.exports = { reset };
