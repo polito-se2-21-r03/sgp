@@ -52,53 +52,53 @@ async function reset() {
     },
   ]);
 
-    await sequelize.models.product.bulkCreate([
-        {
-            producerId: 9,
-            quantity: 150,
-            price: 1.67,
-            unitOfMeasure: "Kg",
-            src: "https://images.unsplash.com/photo-1590868309235-ea34bed7bd7f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80",
-            name: "carrots",
-            type: "VEGETABLES",
-        },
-        {
-            producerId: 9,
-            quantity: 50,
-            price: 0.99,
-            unitOfMeasure: "Kg",
-            src: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-            name: "apples",
-            type: "FRUITS",
-        },
-        {
-            producerId: 9,
-            quantity: 50,
-            price: 0.99,
-            unitOfMeasure: "Kg",
-            src: "https://images.unsplash.com/photo-1566842600175-97dca489844f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
-            name: "cauliflower",
-            type: "VEGETABLES",
-        },
-        {
-            producerId: 9,
-            quantity: 50,
-            price: 0.99,
-            unitOfMeasure: "Kg",
-            src: "https://images.unsplash.com/photo-1587351177732-5b0739d1bd44?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80",
-            name: "broccoli",
-            type: "VEGETABLES",
-        },
-        {
-            producerId: 9,
-            quantity: 50,
-            price: 0.99,
-            unitOfMeasure: "Kg",
-            src: "https://images.unsplash.com/photo-1509622905150-fa66d3906e09?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80",
-            name: "pumpkin",
-            type: "FRUITS",
-        }
-    ]);
+  await sequelize.models.product.bulkCreate([
+    {
+      producerId: 9,
+      quantity: 150,
+      price: 1.67,
+      unitOfMeasure: "Kg",
+      src: "https://images.unsplash.com/photo-1590868309235-ea34bed7bd7f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80",
+      name: "carrots",
+      type: "VEGETABLES",
+    },
+    {
+      producerId: 9,
+      quantity: 50,
+      price: 0.99,
+      unitOfMeasure: "Kg",
+      src: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+      name: "apples",
+      type: "FRUITS",
+    },
+    {
+      producerId: 9,
+      quantity: 50,
+      price: 0.99,
+      unitOfMeasure: "Kg",
+      src: "https://images.unsplash.com/photo-1566842600175-97dca489844f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
+      name: "cauliflower",
+      type: "VEGETABLES",
+    },
+    {
+      producerId: 9,
+      quantity: 50,
+      price: 0.99,
+      unitOfMeasure: "Kg",
+      src: "https://images.unsplash.com/photo-1587351177732-5b0739d1bd44?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80",
+      name: "broccoli",
+      type: "VEGETABLES",
+    },
+    {
+      producerId: 9,
+      quantity: 50,
+      price: 0.99,
+      unitOfMeasure: "Kg",
+      src: "https://images.unsplash.com/photo-1509622905150-fa66d3906e09?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80",
+      name: "pumpkin",
+      type: "FRUITS",
+    },
+  ]);
   await sequelize.models.product.bulkCreate(
     Array.from({ length: 21 }, (_, i) => ({
       producerId: randomInt(7, 8),
@@ -176,14 +176,6 @@ async function reset() {
       },
       {
         password: "pass",
-        email: "mariorossi@email.com",
-        firstname: "Mario",
-        lastname: "Rossi",
-        is_tmp_password: 0,
-        role: "EMPLOYEE",
-      },
-      {
-        password: "pass",
         email: "robert@email.com",
         firstname: "Robert",
         lastname: "Wesley",
@@ -253,6 +245,14 @@ async function reset() {
         lastname: "Medina",
         is_tmp_password: 0,
         role: "CLIENT",
+      },
+      {
+        password: "pass",
+        email: "mariorossi@email.com",
+        firstname: "Mario",
+        lastname: "Rossi",
+        is_tmp_password: 0,
+        role: "EMPLOYEE",
       },
     ])
     .then(async () => {
