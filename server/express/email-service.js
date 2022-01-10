@@ -1,10 +1,9 @@
 exports.config = {
-    port: 465,               // true for 465, false for other ports
-    host: "smtp.gmail.com",
     auth: {
         user: 'team.r03.se2@gmail.com',
-        pass: 'Teamr03se2@',
+        pass: 'Teamr03se2@1',
     },
+    service: 'gmail',
     secure: true,
 }
 
