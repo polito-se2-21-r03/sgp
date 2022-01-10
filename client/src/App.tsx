@@ -40,8 +40,6 @@ function App() {
                 exact={route.exact}
                 //@ts-ignore
                 roles={route.roles}
-                vcDate={vcDate}
-                setVcDate={addDataIntoCache}
                 component={route.component}
               />
             )

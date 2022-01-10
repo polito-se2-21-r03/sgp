@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
 import './TopBarDatePicker.scss';
+import {addDataIntoCache, getCachedData} from "../../utils/CacheUtils";
 
 export function TopBarDatePicker({ vcDate, setVcDate }: any) {
   /**
@@ -15,7 +16,17 @@ export function TopBarDatePicker({ vcDate, setVcDate }: any) {
   }
 
   const [popoverActive, setPopoverActive] = useState(false);
-  const [defaultInput, setDefaultInput] = useState(dayjs(vcDate).format('YYYY/MM/DD'));
+  const [defaultInput, setDefaultInput] = useState(dayjs().format('YYYY/MM/DD'));
+  useEffect(() => {
+    const getVirtualTime = async () => {
+      const virtualTime = await getCachedData('virtual-clock','http://localhost:3000')
+      if(virtualTime){
+        setDefaultInput(dayjs(virtualTime).format('YYYY/MM/DD'));
+      }
+    }
+    getVirtualTime();
+    }, [])
+
   const [input, setInput] = useState('This month');
 
   // Used on first load 
@@ -64,6 +75,8 @@ export function TopBarDatePicker({ vcDate, setVcDate }: any) {
       'https://localhost:3000', e);
   }, []);
 
+  // const handleVcDate = addDataIntoCache();
+
   const handleSubmit = useCallback(async () => {
     try {
       setDefaultInput(parseDateLabel(selectedDates.start));
@@ -84,7 +97,9 @@ export function TopBarDatePicker({ vcDate, setVcDate }: any) {
 
       if (response) {
         setPopoverActive(false);
-        handleVcDate(response.time);
+        // handleVcDate(response.time);
+        console.log(response);
+        addDataIntoCache('virtual-clock', 'http://localhost:3000', response.time);
       } else {
       }
     } catch (error) {
