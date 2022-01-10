@@ -119,6 +119,41 @@ export function OrderDetails({ match, user, vcDate, setVcDate }: any) {
     setIsDirty(false);
   }, [user.id, products, update]);
 
+  /**
+   * Save deliver
+   */
+  const handleDeliver = useCallback(async () => {
+    try {
+      if (customer === -1) return;
+
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + `/order/${match.params.id}`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          changedBy: 'EMPLOYEE',
+          // Employee ID set to 1 for testing
+          status: 'DELIVERED',
+          products: products
+        })
+      })
+      const response = await data.json();
+
+      if (response) {
+        setActive(true);
+        setUpdate(!update);
+      } else {
+        setSaveError(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setSaveError(true);
+    }
+    setIsDirty(false);
+  }, [user.id, products, update]);
+
   const handleSend = useCallback(async () => {
     try {
 
@@ -327,7 +362,7 @@ export function OrderDetails({ match, user, vcDate, setVcDate }: any) {
       case 'CREATED':
         return (<Badge progress="incomplete">Created</Badge>);
       case 'DELIVERED':
-        return (<Badge progress="partiallyComplete" status="attention">Delivered</Badge>);
+        return (<Badge progress="complete" status="success">Delivered</Badge>);
       case 'PENDING':
         return (<Badge progress="partiallyComplete" status="warning">Pending</Badge>);
       case 'PENDING CANCELATION':
@@ -408,6 +443,12 @@ export function OrderDetails({ match, user, vcDate, setVcDate }: any) {
         content: 'Delete',
         onAction: handleDeleteModalChange,
         destructive: true,
+      }
+    } else if (status === 'CONFIRMED' && user.role === 'EMPLOYEE') {
+      return {
+        content: 'Deliver',
+        onAction: handleDeliver,
+        primary: true,
       }
     }
   }

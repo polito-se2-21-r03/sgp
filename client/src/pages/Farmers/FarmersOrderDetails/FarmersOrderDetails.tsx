@@ -328,11 +328,11 @@ export function FarmersOrderDetails({ match, user, vcDate, setVcDate }: any) {
       case 'COMPLETED':
         return (<Badge progress="complete" status="success">Completed</Badge>);
       case 'CONFIRMED':
-        return (<Badge progress="incomplete" status="attention">Confirmed</Badge>);
+        return (<Badge progress="incomplete" status="attention">Completed</Badge>);
       case 'CREATED':
         return (<Badge progress="incomplete">Created</Badge>);
       case 'DELIVERED':
-        return (<Badge progress="partiallyComplete" status="attention">Delivered</Badge>);
+        return (<Badge progress="complete" status="success">Delivered</Badge>);
       case 'PENDING':
         return (<Badge progress="partiallyComplete" status="warning">Pending</Badge>);
       case 'PENDING CANCELATION':

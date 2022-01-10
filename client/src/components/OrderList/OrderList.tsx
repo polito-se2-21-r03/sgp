@@ -79,7 +79,7 @@ export function OrderList({ user }: any) {
         console.log(user);
         setIsLoading(true);
         let endpoint = "";
-        switch (user.role){
+        switch (user.role) {
           case "FARMER":
             endpoint = `/farmer/${user.id}/order`;
             break
@@ -192,16 +192,21 @@ export function OrderList({ user }: any) {
     handleSelectionChange,
   } = useIndexResourceState(frontItems);
 
+  /**
+   * Render status
+   * @param status 
+   * @returns 
+   */
   const renderStatusMarkup = (status) => {
     switch (status) {
       case 'COMPLETED':
         return (<Badge progress="complete" status="success">Completed</Badge>);
       case 'CONFIRMED':
-        return (<Badge progress="incomplete" status="attention">Confirmed</Badge>);
+        return (<Badge progress="incomplete" status="attention">Completed</Badge>);
       case 'CREATED':
         return (<Badge progress="incomplete">Created</Badge>);
       case 'DELIVERED':
-        return (<Badge progress="partiallyComplete" status="attention">Delivered</Badge>);
+        return (<Badge progress="complete" status="success">Delivered</Badge>);
       case 'PENDING':
         return (<Badge progress="partiallyComplete" status="warning">Pending</Badge>);
       case 'PENDING CANCELATION':
