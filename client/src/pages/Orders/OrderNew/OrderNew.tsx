@@ -525,7 +525,8 @@ export function OrderNew({ user, vcDate, setVcDate }: any) {
         productId: product.id,
         amount: 1,
         price: product.price,
-        producerId: product.producerId
+        producerId: product.producerId,
+        unitOfMeasure: product.unitOfMeasure
       }
 
       // Check if product is already present
