@@ -77,11 +77,12 @@ export function TopBarMarkup({ handleMobileNavigation }: any) {
     <TopBar.UserMenu
       actions={userMenuActions}
       name={user.firstname + ' ' + user.lastname}
-      initials={user.firstname[0] + user.lastname[0]}
+      initials={user.firstname[0].toUpperCase() + user.lastname[0].toUpperCase()}
       open={userMenuActive}
       onToggle={toggleUserMenuActive}
       colorScheme="dark"
       accessibilityLabel="User menu"
+      detail={user.role}
     />
   );
 
