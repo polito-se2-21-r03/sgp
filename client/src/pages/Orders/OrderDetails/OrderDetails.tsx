@@ -305,8 +305,6 @@ export function OrderDetails({ match, user }: any) {
    */
   const addedProductsMarkup = addedItems.map(item => {
     const { id } = item;
-    item['handleAmountCallback'] = handleAmountCallback
-    item['isUpdate'] = true
     return (
       <AddedProductRow
         key={id}
