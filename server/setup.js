@@ -129,6 +129,14 @@ async function reset() {
       },
       {
         password: "pass",
+        email: "mariorossi@email.com",
+        firstname: "Mario",
+        lastname: "Rossi",
+        is_tmp_password: 0,
+        role: "EMPLOYEE",
+      },
+      {
+        password: "pass",
         email: "robert@email.com",
         firstname: "Robert",
         lastname: "Wesley",
@@ -191,14 +199,14 @@ async function reset() {
         is_tmp_password: 0,
         role: "WMANAGER",
       },
-        {
-            password: "pass",
-            email: "pacimedina@gmail.com",
-            firstname: "Francesco",
-            lastname: "Medina",
-            is_tmp_password: 0,
-            role: "CLIENT",
-        }
+      {
+        password: "pass",
+        email: "pacimedina@gmail.com",
+        firstname: "Francesco",
+        lastname: "Medina",
+        is_tmp_password: 0,
+        role: "CLIENT",
+      },
     ])
     .then(async () => {
       await sequelize.models.wallet.bulkCreate([
@@ -255,43 +263,43 @@ async function reset() {
     })
     .catch((err) => console.log(err));
 
-    await sequelize.models.order_product.bulkCreate([
-        {
-            orderId: 8,
-            productId: 2,
-            userId: 9,
-            amount: 12,
-            confirmed: 0
-        },
-        {
-            orderId: 7,
-            productId: 6,
-            userId: 9,
-            amount: 12,
-            confirmed: 1
-        },
-        {
-            orderId: 5,
-            productId: 4,
-            userId: 9,
-            amount: 23,
-            confirmed: 0
-        },
-        {
-            orderId: 4,
-            productId: 7,
-            userId: 9,
-            amount: 2,
-            confirmed: 0
-        },
-        {
-            orderId: 3,
-            productId: 12,
-            userId: 9,
-            amount: 5,
-            confirmed: 1
-        }
-    ]);
+  await sequelize.models.order_product.bulkCreate([
+    {
+      orderId: 8,
+      productId: 2,
+      userId: 9,
+      amount: 12,
+      confirmed: 0,
+    },
+    {
+      orderId: 7,
+      productId: 6,
+      userId: 9,
+      amount: 12,
+      confirmed: 1,
+    },
+    {
+      orderId: 5,
+      productId: 4,
+      userId: 9,
+      amount: 23,
+      confirmed: 0,
+    },
+    {
+      orderId: 4,
+      productId: 7,
+      userId: 9,
+      amount: 2,
+      confirmed: 0,
+    },
+    {
+      orderId: 3,
+      productId: 12,
+      userId: 9,
+      amount: 5,
+      confirmed: 1,
+    },
+  ]);
 }
 
 module.exports = { reset };

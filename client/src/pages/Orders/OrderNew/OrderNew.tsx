@@ -5,10 +5,14 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Card,
   ContextualSaveBar,
+  DatePicker,
   Frame,
+  FormLayout,
   Layout,
   Loading,
+  Modal,
   Page,
+  Select,
   SkeletonBodyText,
   SkeletonDisplayText,
   SkeletonPage,
@@ -16,6 +20,7 @@ import {
   Autocomplete,
   Icon,
   Banner,
+  TextField,
   Toast,
   Stack,
   TextStyle,
@@ -27,6 +32,8 @@ import { SearchMinor } from '@shopify/polaris-icons';
 import { useHistory } from 'react-router';
 
 import { AddedProductRow } from './AddedProductRow';
+
+import dayjs from 'dayjs';
 
 export function OrderNew({ user }: any) {
   const history = useHistory();
@@ -43,6 +50,56 @@ export function OrderNew({ user }: any) {
   const [customer, setCustomer] = useState(-1);
   const [addedItems, setAddedItems] = useState([]);
   const [total, setTotal] = useState(0);
+
+  const [modalActive, setModalActive] = useState(false);
+  const handleModalChange = useCallback(() => setModalActive(!modalActive), [modalActive]);
+  const [selected, setSelected] = useState('pickup');
+  const handleSelectChange = useCallback((value) => setSelected(value), []);
+  const options = [
+    { label: 'In store pick up', value: 'pickup' },
+    { label: 'Home bag delivery', value: 'bagdelivery' },
+  ];
+  const date = dayjs().add(1, "day").toDate();
+  const [{ month, year }, setDate] = useState({ month: date.getMonth(), year: date.getFullYear() });
+  const [selectedDates, setSelectedDates] = useState({
+    start: date,
+    end: date,
+  });
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [zip, setZip] = useState('');
+
+  const [time, setTime] = useState('08:30');
+  const [timeError, setTimeError] = useState(false);
+  const handleTimeChange = useCallback((e) => {
+    const getMs = (t) => {
+      return (Number(t.split(':')[0]) * 60 + Number(t.split(':')[1])) * 60 * 1000;
+    }
+    if (getMs(e) < getMs('08:30') || getMs(e) > getMs('17:30')) {
+      setTimeError(true);
+    }
+    else {
+      setTimeError(false);
+      setTime(e);
+    }
+  }, []);
+
+  /** 
+   * Date picker 
+   */
+  const handleMonthChange = useCallback(
+    (month, year) => setDate({ month, year }),
+    [],
+  );
+
+  /** Date picker selected date handler */
+  const handleSelectedDate = useCallback((e) => {
+    setSelectedDates({
+      start: e.start,
+      end: e.end,
+    });
+  }, []);
+
 
   const toggleMobileNavigationActive = useCallback(
     () =>
@@ -68,6 +125,50 @@ export function OrderNew({ user }: any) {
   /**
    * Save data
    */
+  const handleSave = useCallback(async (selectedDates, time, address, city, zip, selected) => {
+    try {
+      if (customer === -1) return;
+      console.log(addedItems)
+
+      console.log(selectedDates.start, time, address, city, zip);
+      const milliseconds = selectedDates.start.getTime() + (Number(time.split(':')[0]) * 60 + Number(time.split(':')[1])) * 60 * 1000;
+      const newDate = (new Date(milliseconds)).toISOString();
+      console.log(newDate, selected);
+      const data = await fetch(((process.env.REACT_APP_API_URL) ? process.env.REACT_APP_API_URL : '/api') + '/order', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          clientId: customer,
+          employeeId: user.id,
+          products: addedItems,
+          address: address + " " + city + " " + zip,
+          datetime: newDate,
+          type: selected == "bagdelivery" ? "DELIVERY" : "PICK-UP"
+        })
+      })
+      const response = await data.json();
+      console.log(response);
+      if (response.orderId) {
+        setModalActive(false);
+      }
+      if (response.status === 'not_available') {
+        setAmountError(true);
+      } else if (response.status === 'failed') {
+        setSaveError(true);
+      } else {
+        setActive(true);
+        setAddedItems([]);
+        setTotal(0);
+      }
+    } catch (error) {
+      console.log(error);
+      setSaveError(true);
+    }
+  }, [addedItems, customer]);
+  /*
   const handleSave = useCallback(async () => {
     try {
       if (customer === -1) return;
@@ -102,12 +203,12 @@ export function OrderNew({ user }: any) {
     }
     setIsDirty(false);
   }, [customer, addedItems, user.id, history]);
-
+*/
   const contextualSaveBarMarkup = isDirty ? (
     <ContextualSaveBar
       message="Order not saved"
       saveAction={{
-        onAction: handleSave,
+        onAction: handleModalChange,
       }}
       discardAction={{
         onAction: handleDiscard,
@@ -118,7 +219,117 @@ export function OrderNew({ user }: any) {
   ) : null;
 
   const loadingMarkup = isLoading ? <Loading /> : null;
+  /**
+  * Modal top up
+  */
+  const modalMarkup = (
+    <Modal
+      open={modalActive}
+      onClose={handleModalChange}
+      title="Plan your order"
+      primaryAction={{
+        content: 'Place order',
+        onAction: () => handleSave(selectedDates, time, address, city, zip, selected),
+      }}
+      secondaryActions={[
+        {
+          content: 'Cancel',
+          onAction: handleModalChange,
+        },
+      ]}
+    >
+      <Modal.Section>
+        <Select
+          label="Delivery type"
+          options={options}
+          onChange={handleSelectChange}
+          value={selected}
+        />
 
+        {selected === 'pickup' && (
+          <div style={{ marginTop: '1.6rem' }}>
+            <FormLayout>
+              <FormLayout.Group>
+                <Stack vertical wrap>
+                  <DatePicker
+                    month={month}
+                    year={year}
+                    onChange={handleSelectedDate}
+                    onMonthChange={handleMonthChange}
+                    selected={selectedDates}
+                    disableDatesBefore={dayjs().toDate()}
+                  />
+                  <TextField
+                    autoComplete="off"
+                    label="Time"
+                    type="time"
+                    value={time}
+                    onChange={handleTimeChange}
+                    error={timeError && "You can only pick up your order from 08:30 to 17:30"}
+                  />
+                </Stack>
+              </FormLayout.Group>
+            </FormLayout>
+          </div>
+        )}
+        {selected === 'bagdelivery' && (
+          <div style={{ marginTop: '1.6rem' }} >
+            <FormLayout>
+              <FormLayout.Group>
+                <TextField
+                  autoComplete="off"
+                  label="Address"
+                  type="text"
+                  value={address}
+                  onChange={(e) => {
+                    console.log(e, address);
+                    return setAddress(e)
+                  }
+                  }
+                />
+              </FormLayout.Group>
+              <FormLayout.Group>
+                <TextField
+                  autoComplete="off"
+                  label="City"
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e)}
+                />
+                <TextField
+                  autoComplete="off"
+                  label="Postal code"
+                  type="text"
+                  value={zip}
+                  onChange={(e) => setZip(e)}
+                />
+              </FormLayout.Group>
+              <FormLayout.Group>
+                <DatePicker
+                  month={month}
+                  year={year}
+                  onChange={handleSelectedDate}
+                  onMonthChange={handleMonthChange}
+                  selected={selectedDates}
+                  disableDatesBefore={dayjs().toDate()}
+                />
+              </FormLayout.Group>
+              <FormLayout.Group>
+                <TextField
+                  autoComplete="off"
+                  label="Time"
+                  type="time"
+                  value={time}
+                  onChange={handleTimeChange}
+                  error={timeError && "You can only pick up your order from 08:30 to 17:30"}
+                />
+              </FormLayout.Group>
+            </FormLayout>
+          </div>
+        )}
+      </Modal.Section>
+    </Modal>
+  )
   /**
    * Search products
    */
@@ -475,6 +686,7 @@ export function OrderNew({ user }: any) {
       onNavigationDismiss={toggleMobileNavigationActive}
       skipToContentTarget={skipToContentRef}
     >
+      {modalMarkup}
       {contextualSaveBarMarkup}
       {loadingMarkup}
       {pageMarkup}
