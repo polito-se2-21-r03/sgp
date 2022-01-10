@@ -128,9 +128,7 @@ export function OrderNew({ user, vcDate, setVcDate }: any) {
   const handleSave = useCallback(async (selectedDates, time, address, city, zip, selected) => {
     try {
       if (customer === -1) return;
-      console.log(addedItems)
 
-      console.log(selectedDates.start, time, address, city, zip);
       const milliseconds = selectedDates.start.getTime() + (Number(time.split(':')[0]) * 60 + Number(time.split(':')[1])) * 60 * 1000;
       const newDate = (new Date(milliseconds)).toISOString();
       console.log(newDate, selected);
@@ -527,6 +525,7 @@ export function OrderNew({ user, vcDate, setVcDate }: any) {
         productId: product.id,
         amount: 1,
         price: product.price,
+        producerId: product.producerId
       }
 
       // Check if product is already present

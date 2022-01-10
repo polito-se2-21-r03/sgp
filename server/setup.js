@@ -288,6 +288,14 @@ async function reset() {
           userId: 3,
           credit: 1233.45,
         },
+        {
+          userId: 4,
+          credit: 10,
+        },
+        {
+          userId: 14,
+          credit: 0,
+        },
       ]);
 
       await sequelize.models.order_product.bulkCreate([

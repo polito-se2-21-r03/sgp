@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
 import './TopBarDatePicker.scss';
-import {addDataIntoCache, getCachedData} from "../../utils/CacheUtils";
+import { addDataIntoCache, getCachedData } from "../../utils/CacheUtils";
 
 export function TopBarDatePicker({ vcDate, setVcDate }: any) {
   /**
@@ -19,13 +19,17 @@ export function TopBarDatePicker({ vcDate, setVcDate }: any) {
   const [defaultInput, setDefaultInput] = useState(dayjs().format('YYYY/MM/DD'));
   useEffect(() => {
     const getVirtualTime = async () => {
-      const virtualTime = await getCachedData('virtual-clock','http://localhost:3000')
-      if(virtualTime){
-        setDefaultInput(dayjs(virtualTime).format('YYYY/MM/DD'));
+      try {
+        const virtualTime = await getCachedData('virtual-clock', 'http://localhost:3000');
+        if (virtualTime) {
+          setDefaultInput(dayjs(virtualTime).format('YYYY/MM/DD'));
+        }
+      } catch (err) {
+        console.log(err);
       }
     }
     getVirtualTime();
-    }, [])
+  }, [])
 
   const [input, setInput] = useState('This month');
 

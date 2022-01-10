@@ -3,7 +3,7 @@ const { applyExtraSetup } = require('./relations');
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: 'server/se2.db',
+    storage: '../server/se2.db',
     logQueryParameters: true,
     benchmark: true
 });

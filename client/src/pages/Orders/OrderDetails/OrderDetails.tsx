@@ -396,13 +396,14 @@ export function OrderDetails({ match, user, vcDate, setVcDate }: any) {
   )
 
   const renderPrimaryAction = (status) => {
-    if (status === 'CREATED' && user.role !== 'WMANAGER') {
-      return {
-        content: 'Update order',
-        onAction: handleSave,
-        primary: true,
-      }
-    } else if (status === 'PENDING CANCELATION' && user.role !== 'WMANAGER') {
+    // if (status === 'CREATED' && user.role !== 'WMANAGER') {
+    //   return {
+    //     content: 'Update order',
+    //     onAction: handleSave,
+    //     primary: true,
+    //   }
+    // } else 
+    if (status === 'PENDING CANCELATION' && user.role !== 'WMANAGER') {
       return {
         content: 'Delete',
         onAction: handleDeleteModalChange,
