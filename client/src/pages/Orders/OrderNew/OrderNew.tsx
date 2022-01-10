@@ -35,7 +35,7 @@ import { AddedProductRow } from './AddedProductRow';
 
 import dayjs from 'dayjs';
 
-export function OrderNew({ user }: any) {
+export function OrderNew({ user, vcDate, setVcDate }: any) {
   const history = useHistory();
 
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
@@ -150,9 +150,10 @@ export function OrderNew({ user }: any) {
         })
       })
       const response = await data.json();
-      console.log(response);
       if (response.orderId) {
-        setModalActive(false);
+        setTimeout(() => {
+          history.push(`/orders`);
+        }, 3000);
       }
       if (response.status === 'not_available') {
         setAmountError(true);
@@ -167,6 +168,7 @@ export function OrderNew({ user }: any) {
       console.log(error);
       setSaveError(true);
     }
+    handleModalChange();
   }, [addedItems, customer]);
   /*
   const handleSave = useCallback(async () => {
@@ -449,6 +451,38 @@ export function OrderNew({ user }: any) {
     fetchClients();
   }, []);
 
+  /** Handle update cart product */
+  const handleUpdateCartProduct = useCallback((product, quantity) => {
+    const tmp = addedItems;
+    // const disable = onCart;
+
+    let counter = 0;
+    for (const item of tmp) {
+      if (item.productId === product.productId) {
+        // If quantity is zero remove product
+        if (Number(quantity) === 0) {
+          tmp.splice(counter, 1);
+          // counter = 0;
+          // disable[product.productId - 1] = false;
+          // setOnCart(disable);
+        } else {
+          item.amount = Number(quantity);
+        }
+        break;
+      }
+      counter++;
+    }
+
+    // Calcoli del carrello
+    let sum = 0;
+    tmp.forEach(obj => {
+      sum += obj.amount * obj.price;
+    });
+    setTotal(sum);
+
+    setAddedItems(tmp);
+  }, [total, addedItems]);
+
   /**
    * Autocomplete Controls
    */
@@ -510,6 +544,7 @@ export function OrderNew({ user }: any) {
       }
 
       setAddedItems(tmp);
+      setInputValue('');
     },
     [productOptions, items, total]
   );
@@ -578,12 +613,14 @@ export function OrderNew({ user }: any) {
   const addedProductsMarkup = addedItems.map(item => {
     const { productId, amount, price } = item;
 
+    console.log(item);
+
     return (
       <AddedProductRow
         key={productId}
         item={item}
         label={deselectedOptions[productId - 1].label}
-        updateTotal={setTotal}
+        updateProduct={handleUpdateCartProduct}
         total={total}
       />
     );
@@ -679,7 +716,7 @@ export function OrderNew({ user }: any) {
   return (
     <Frame
       topBar={
-        <TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}

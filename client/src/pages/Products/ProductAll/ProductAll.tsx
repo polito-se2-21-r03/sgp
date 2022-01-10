@@ -17,7 +17,7 @@ import { TopBarMarkup, NavigationMarkup, ProductList } from '../../../components
 
 import './ProductAll.scss';
 
-export function ProductAll({ user }: any) {
+export function ProductAll({ user, vcDate, setVcDate }: any) {
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
@@ -80,7 +80,7 @@ export function ProductAll({ user }: any) {
   return (
     <Frame
       topBar={
-        < TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}

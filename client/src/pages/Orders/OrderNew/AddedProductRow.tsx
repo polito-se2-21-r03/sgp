@@ -6,13 +6,24 @@ import {
   TextStyle
 } from '@shopify/polaris';
 
-export function AddedProductRow({ item, label, total, updateTotal }: any) {
+export function AddedProductRow({ item, label, total, updateProduct }: any) {
   const { productId, amount, price } = item;
   const [value, setValue] = useState(String(amount));
 
+  // const handleValueChange = useCallback((newValue) => {
+  //   setValue(newValue);
+  //   updateTotal(total + (Number(newValue) - 1) * price);
+  // }, []);
+
   const handleValueChange = useCallback((newValue) => {
-    setValue(newValue);
-    updateTotal(total + (Number(newValue) - 1) * price);
+    if (Number(newValue) >= 0) {
+      if (Number(newValue) < 0)
+        setValue('1');
+      else {
+        setValue(newValue);
+        updateProduct(item, newValue);
+      }
+    }
   }, []);
 
   return (
@@ -31,7 +42,7 @@ export function AddedProductRow({ item, label, total, updateTotal }: any) {
             />
           </Stack.Item>
           <Stack.Item>
-            {price}
+            {Number(price).toFixed(2)} €
           </Stack.Item>
         </Stack>
       </Stack.Item>

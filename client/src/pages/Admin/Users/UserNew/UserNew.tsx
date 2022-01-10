@@ -23,7 +23,7 @@ import { TopBarMarkup, NavigationMarkup, contextControlMarkup } from '../../../.
 import './UserNew.scss';
 import { useHistory } from 'react-router';
 
-export function UserNew({ match, user }: any) {
+export function UserNew({ match, user, vcDate, setVcDate }: any) {
   const history = useHistory();
 
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
@@ -265,7 +265,7 @@ export function UserNew({ match, user }: any) {
   return (
     <Frame
       topBar={
-        <TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}

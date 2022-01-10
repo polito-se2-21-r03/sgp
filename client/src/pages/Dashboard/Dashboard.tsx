@@ -19,7 +19,7 @@ import { TopBarMarkup, NavigationMarkup, DashboardDatePicker } from '../../compo
 
 import './Dashboard.scss';
 
-export function Dashboard({ user }: any) {
+export function Dashboard({ user, vcDate, setVcDate }: any) {
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
@@ -187,7 +187,7 @@ export function Dashboard({ user }: any) {
   return (
     <Frame
       topBar={
-        <TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}

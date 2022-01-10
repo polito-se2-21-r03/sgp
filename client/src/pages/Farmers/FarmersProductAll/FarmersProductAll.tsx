@@ -17,7 +17,7 @@ import { TopBarMarkup, NavigationMarkup, FarmerProductList } from '../../../comp
 
 import './FarmersProductAll.scss';
 
-export function FarmersProductAll({ user }: any) {
+export function FarmersProductAll({ user, vcDate, setVcDate }: any) {
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
@@ -79,7 +79,7 @@ export function FarmersProductAll({ user }: any) {
   return (
     <Frame
       topBar={
-        < TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}

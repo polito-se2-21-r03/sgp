@@ -9,7 +9,7 @@ import { useHistory } from 'react-router';
 
 import { TopBarDatePicker } from '../TopBarDatePicker';
 
-export function TopBarMarkup({ handleMobileNavigation }: any) {
+export function TopBarMarkup({ handleMobileNavigation, vcDate, setVcDate }: any) {
   const history = useHistory();
 
   const [searchActive, setSearchActive] = useState(false);
@@ -108,7 +108,7 @@ export function TopBarMarkup({ handleMobileNavigation }: any) {
       //     <VisuallyHidden>Secondary menu</VisuallyHidden>
       //   </span>
       // }
-      activatorContent={<TopBarDatePicker />}
+      activatorContent={<TopBarDatePicker vcDate={vcDate} setVcDate={setVcDate} />}
       open={isSecondaryMenuOpen}
       onOpen={toggleIsSecondaryMenuOpen}
       onClose={toggleIsSecondaryMenuOpen}

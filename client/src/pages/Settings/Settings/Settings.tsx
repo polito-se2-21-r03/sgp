@@ -19,7 +19,7 @@ import { TopBarMarkup, NavigationMarkup } from '../../../components';
 import './Settings.scss';
 import { BankMajor, CategoriesMajor, ProfileMajor, SettingsMajor } from '@shopify/polaris-icons';
 
-export function Settings({ user }: any) {
+export function Settings({ user, vcDate, setVcDate }: any) {
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
@@ -124,7 +124,7 @@ export function Settings({ user }: any) {
   return (
     <Frame
       topBar={
-        <TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}

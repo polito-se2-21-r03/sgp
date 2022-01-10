@@ -25,7 +25,7 @@ import { TopBarMarkup, NavigationMarkup } from '../../../../components';
 import './UserDetails.scss';
 import asyncLocalStorage from '../../../../utils/async-localstorage';
 
-export function UserDetails({ match, user }: any) {
+export function UserDetails({ match, user, vcDate, setVcDate }: any) {
   const history = useHistory();
 
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
@@ -523,7 +523,7 @@ export function UserDetails({ match, user }: any) {
   return (
     <Frame
       topBar={
-        <TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}
