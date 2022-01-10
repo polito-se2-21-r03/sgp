@@ -137,6 +137,7 @@ async function reset() {
       {
         password: "pass",
         email: "antoniocentola97@gmail.com",
+        phone: "123456789",
         firstname: "Antonio",
         lastname: "Centola",
         is_tmp_password: 0,
@@ -145,6 +146,7 @@ async function reset() {
       {
         password: "pass",
         email: "mark@email.com",
+        phone: "123456789",
         firstname: "Mark",
         lastname: "Mendez",
         is_tmp_password: 0,
@@ -153,6 +155,7 @@ async function reset() {
       {
         password: "pass",
         email: "john@email.com",
+        phone: "123456789",
         firstname: "John",
         lastname: "White",
         is_tmp_password: 0,
@@ -161,6 +164,7 @@ async function reset() {
       {
         password: "pass",
         email: "maria@email.com",
+        phone: "123456789",
         firstname: "Maria",
         lastname: "Brown",
         is_tmp_password: 0,
@@ -169,6 +173,7 @@ async function reset() {
       {
         password: "pass",
         email: "pippo@email.com",
+        phone: "123456789",
         firstname: "Pippo",
         lastname: "Rossi",
         is_tmp_password: 0,
@@ -177,6 +182,7 @@ async function reset() {
       {
         password: "pass",
         email: "robert@email.com",
+        phone: "123456789",
         firstname: "Robert",
         lastname: "Wesley",
         is_tmp_password: 0,
@@ -185,6 +191,7 @@ async function reset() {
       {
         password: "pass",
         email: "nicole@email.com",
+        phone: "123456789",
         firstname: "Nicole",
         lastname: "s.p.a",
         is_tmp_password: 0,
@@ -193,6 +200,7 @@ async function reset() {
       {
         password: "pass",
         email: "frank@email.com",
+        phone: "123456789",
         firstname: "Frank",
         lastname: "s.n.c",
         is_tmp_password: 0,
@@ -201,6 +209,7 @@ async function reset() {
       {
         password: "pass",
         email: "albertengo@email.com",
+        phone: "123456789",
         firstname: "Albertengo",
         lastname: "s.a.s",
         is_tmp_password: 0,
@@ -209,6 +218,7 @@ async function reset() {
       {
         password: "pass",
         email: "bio@email.com",
+        phone: "123456789",
         firstname: "Bio",
         lastname: "s.n.c",
         is_tmp_password: 0,
@@ -217,6 +227,7 @@ async function reset() {
       {
         password: "pass",
         email: "fruttafresca@email.com",
+        phone: "123456789",
         firstname: "FruttaFresca",
         lastname: "s.r.l.s",
         is_tmp_password: 0,
@@ -225,6 +236,7 @@ async function reset() {
       {
         password: "pass",
         email: "vegetables@email.com",
+        phone: "123456789",
         firstname: "Yummy Vegetables",
         lastname: "s.r.l.s",
         is_tmp_password: 0,
@@ -233,6 +245,7 @@ async function reset() {
       {
         password: "pass",
         email: "ildirettore@email.com",
+        phone: "123456789",
         firstname: "Direttore",
         lastname: "Centola",
         is_tmp_password: 0,
@@ -241,6 +254,7 @@ async function reset() {
       {
         password: "pass",
         email: "pacimedina@gmail.com",
+        phone: "123456789",
         firstname: "Francesco",
         lastname: "Medina",
         is_tmp_password: 0,
@@ -249,6 +263,7 @@ async function reset() {
       {
         password: "pass",
         email: "mariorossi@email.com",
+        phone: "123456789",
         firstname: "Mario",
         lastname: "Rossi",
         is_tmp_password: 0,

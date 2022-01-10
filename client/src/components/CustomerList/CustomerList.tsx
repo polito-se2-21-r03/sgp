@@ -173,7 +173,7 @@ export function CustomerList({ handleModal, update }: any) {
               <TextStyle variation="strong">{name}</TextStyle>
             </div>
             <div>
-              <TextStyle>{item.email}</TextStyle>
+              <TextStyle>Email: {item.email} - {item.phone && (`Phone: ${item.phone}`)}</TextStyle>
             </div>
           </Stack.Item>
           <Stack.Item>

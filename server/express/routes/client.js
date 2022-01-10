@@ -14,7 +14,8 @@ async function getById(req, res) {
             const obj = {
                 firstname: user.firstname,
                 lastname: user.lastname,
-                email: user.email
+                email: user.email,
+                phone: user.phone,
             };
             res.status(200).json(obj);
         })
@@ -28,7 +29,7 @@ async function create(req, res) {
         return res.status(422).json({ errors: body.errors })
     }
     try {
-        const { firstname, lastname, email, password, is_tmp_password } = req.body
+        const { firstname, lastname, email, phone, password, is_tmp_password } = req.body
         if (await models.user.findOne({ where: { email: email } })) {
             return res.status(503).json({ status: 'customer_exists', error: `Client already present` })
         }
@@ -36,6 +37,7 @@ async function create(req, res) {
             firstname: firstname,
             lastname: lastname,
             email: email,
+            phone: phone,
             is_tmp_password: 0,
             password: password,
             role: "CLIENT",
@@ -62,7 +64,7 @@ async function update(req, res) {
         return res.status(422).json({ errors: body.errors })
     }
     try {
-        const { firstname, lastname, email, password, is_tmp_password } = req.body
+        const { firstname, lastname, email, phone, password, is_tmp_password } = req.body
         if (await models.user.findByPk(email)) {
             return res.status(503).json({ error: `Client already present` })
         }
@@ -70,6 +72,7 @@ async function update(req, res) {
             firstname: firstname,
             lastname: lastname,
             email: email,
+            phone: phone,
             is_tmp_password: is_tmp_password,
             password: password,
             role: "CLIENT",

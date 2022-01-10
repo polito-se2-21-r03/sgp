@@ -25,7 +25,7 @@ import {
 
 import { TopBarMarkup, NavigationMarkup, contextControlMarkup } from '../../../components';
 
-import { ClipboardMinor, EmailMajor, EmailNewsletterMajor, EnvelopeMajor, ExchangeMajor } from '@shopify/polaris-icons';
+import { ClipboardMinor, EmailMajor, EmailNewsletterMajor, EnvelopeMajor, ExchangeMajor, PhoneMajor } from '@shopify/polaris-icons';
 import { useHistory } from 'react-router';
 
 import { AddedProductRow } from './AddedProductRow';
@@ -462,10 +462,27 @@ export function OrderDetails({ match, user, vcDate, setVcDate }: any) {
                     </Tooltip>
                   </div>
                 </Stack>
+                <Stack distribution="equalSpacing" spacing="extraTight">
+                  <Button
+                    plain
+                    url={`tel:${customer.phone}`}
+                  >
+                    {customer.phone}
+                  </Button>
+                  <div>
+                    <Tooltip content="Call" dismissOnMouseOut>
+                      <Button
+                        plain
+                        icon={PhoneMajor}
+                        url={`tel:${customer.phone}`}
+                      />
+                    </Tooltip>
+                  </div>
+                </Stack>
               </Card.Section>
               <Card.Section title={deliveryType}>
                 {deliveryDate && (<p><TextStyle variation="strong">Date:</TextStyle> {dayjs(deliveryDate).format('DD/MM/YYYY hh:mm')}</p>)}
-                {String(address).trim().length > 0 && (<p><TextStyle variation="strong">Address:</TextStyle> {address}</p>)}
+                {(address && String(address).trim().length > 0) && (<p><TextStyle variation="strong">Address:</TextStyle> {address}</p>)}
               </Card.Section>
             </Card>
           </Layout.Section>

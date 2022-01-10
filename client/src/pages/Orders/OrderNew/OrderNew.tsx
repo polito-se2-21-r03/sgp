@@ -612,13 +612,7 @@ export function OrderNew({ user, vcDate, setVcDate }: any) {
    */
   const addedProductsMarkup = addedItems.map(item => {
     const { productId, amount, price } = item;
-<<<<<<< HEAD
-    console.log(item);
-=======
 
-    console.log(item);
-
->>>>>>> a26b940791cb8889781ec9958babbedf883e6d53
     return (
       <AddedProductRow
         key={productId}
