@@ -41,6 +41,7 @@ import dayjs from 'dayjs';
 
 import './ClientsProductAll.scss';
 import { transform } from 'typescript';
+import {getCachedData} from "../../../utils/CacheUtils";
 
 export function ClientsProductAll({ user, vcDate, setVcDate }: any) {
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
@@ -106,6 +107,21 @@ export function ClientsProductAll({ user, vcDate, setVcDate }: any) {
   const [total, setTotal] = useState(0);
 
   const loadingMarkup = isLoading ? <Loading /> : null;
+
+  const [defaultInput, setDefaultInput] = useState(dayjs().format('YYYY/MM/DD'));
+  const [virtualDate, setVirtualDate] = useState(dayjs().format('YYYY/MM/DD'));
+  const [virtualTime, setVirtualTime] = useState(dayjs().format('HH:mm'));
+  useEffect(() => {
+    const getVirtualTime = async () => {
+      const virtualTime = await getCachedData('virtual-clock','http://localhost:3000')
+      if(virtualTime){
+        setDefaultInput(dayjs(virtualTime).format('YYYY/MM/DD'));
+        setVirtualDate(dayjs(virtualTime).format('YYYY/MM/DD'))
+        setVirtualTime(dayjs(virtualTime).format('HH:mm'))
+      }
+    }
+    getVirtualTime();
+  }, [])
 
   /** 
    * Date picker 

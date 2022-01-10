@@ -3,7 +3,7 @@ import { Redirect, Route } from 'react-router-dom';
 import asyncLocalStorage from './async-localstorage';
 import { verifyToken } from './Common';
 
-export function PrivateRoute({ component: Compontent, path, roles, vcDate, setVcDate, ...rest }: any) {
+export function PrivateRoute({ component: Compontent, path, roles, ...rest }: any) {
 
   const [auth, setAuth] = useState(false);
   const [goOn, setGoOn] = useState(false);
@@ -48,7 +48,7 @@ export function PrivateRoute({ component: Compontent, path, roles, vcDate, setVc
     } else {
       // @ts-ignore
       if ((roles && roles.includes(user.role)) || !roles)
-        res = <Route {...rest} render={props => <Compontent path={props.location.pathname} user={user} vcDate={vcDate} setVcDate={setVcDate} {...props} />
+        res = <Route {...rest} render={props => <Compontent path={props.location.pathname} user={user} {...props} />
         } />
       else
         // @ts-ignore
