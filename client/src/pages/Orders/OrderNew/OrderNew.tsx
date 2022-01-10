@@ -577,7 +577,7 @@ export function OrderNew({ user }: any) {
    */
   const addedProductsMarkup = addedItems.map(item => {
     const { productId, amount, price } = item;
-
+    console.log(item);
     return (
       <AddedProductRow
         key={productId}
