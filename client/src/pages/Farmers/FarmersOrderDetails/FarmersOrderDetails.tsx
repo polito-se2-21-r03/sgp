@@ -30,7 +30,7 @@ import { useHistory } from 'react-router';
 
 import { AddedProductRow } from './AddedProductRow';
 
-export function FarmersOrderDetails({ match, user }: any) {
+export function FarmersOrderDetails({ match, user, vcDate, setVcDate }: any) {
   const history = useHistory();
 
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
@@ -523,7 +523,7 @@ export function FarmersOrderDetails({ match, user }: any) {
   return (
     <Frame
       topBar={
-        <TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}

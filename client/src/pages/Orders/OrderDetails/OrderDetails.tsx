@@ -25,13 +25,13 @@ import {
 
 import { TopBarMarkup, NavigationMarkup, contextControlMarkup } from '../../../components';
 
-import {ClipboardMinor, EmailMajor, EmailNewsletterMajor, EnvelopeMajor, ExchangeMajor} from '@shopify/polaris-icons';
+import { ClipboardMinor, EmailMajor, EmailNewsletterMajor, EnvelopeMajor, ExchangeMajor } from '@shopify/polaris-icons';
 import { useHistory } from 'react-router';
 
 import { AddedProductRow } from './AddedProductRow';
 import dayjs from 'dayjs';
 
-export function OrderDetails({ match, user }: any) {
+export function OrderDetails({ match, user, vcDate, setVcDate }: any) {
   const history = useHistory();
 
   const [modalActive, setModalActive] = useState(false);
@@ -163,31 +163,31 @@ export function OrderDetails({ match, user }: any) {
   const loadingMarkup = isLoading ? <Loading /> : null;
 
   const modalMarkup = (
-      <Modal
-          open={modalActive}
-          onClose={handleModalChange}
-          title="Send message to customer"
-          primaryAction={{
-            content: 'Send',
-            onAction: handleSend,
-          }}
-          secondaryActions={[
-            {
-              content: 'Cancel',
-              onAction: handleModalChange,
-            },
-          ]}
-      >
-        <Modal.Section>
-          <TextField
-              label="Type the email message body"
-              value={body}
-              onChange={handleEmailChange}
-              multiline={4}
-              autoComplete="off"
-          />
-        </Modal.Section>
-      </Modal>
+    <Modal
+      open={modalActive}
+      onClose={handleModalChange}
+      title="Send message to customer"
+      primaryAction={{
+        content: 'Send',
+        onAction: handleSend,
+      }}
+      secondaryActions={[
+        {
+          content: 'Cancel',
+          onAction: handleModalChange,
+        },
+      ]}
+    >
+      <Modal.Section>
+        <TextField
+          label="Type the email message body"
+          value={body}
+          onChange={handleEmailChange}
+          multiline={4}
+          autoComplete="off"
+        />
+      </Modal.Section>
+    </Modal>
   )
 
   /**
@@ -380,7 +380,7 @@ export function OrderDetails({ match, user }: any) {
   ) : null;
 
   const toastEmailMarkup = sent ? (
-      <Toast content="Message has been sent to the customer." onDismiss={toggleSent} />
+    <Toast content="Message has been sent to the customer." onDismiss={toggleSent} />
   ) : null;
 
   const saveErrorMarkup = saveError && (
@@ -442,33 +442,33 @@ export function OrderDetails({ match, user }: any) {
         </Layout.Section>
         {/* Second column */}
         {user.role != "CLIENT" && (
-            <Layout.Section secondary>
-              <Card title="Customer">
-                <Card.Section title={`${customer.firstname} ${customer.lastname}`}>
-                  <Stack distribution="equalSpacing" spacing="extraTight">
-                    <Button
+          <Layout.Section secondary>
+            <Card title="Customer">
+              <Card.Section title={`${customer.firstname} ${customer.lastname}`}>
+                <Stack distribution="equalSpacing" spacing="extraTight">
+                  <Button
+                    plain
+                    url={`mailto:${customer.email}`}
+                  >
+                    {customer.email}
+                  </Button>
+                  <div>
+                    <Tooltip content="Send Message" dismissOnMouseOut>
+                      <Button
                         plain
-                        url={`mailto:${customer.email}`}
-                    >
-                      {customer.email}
-                    </Button>
-                    <div>
-                      <Tooltip content="Send Message" dismissOnMouseOut>
-                        <Button
-                            plain
-                            icon={EmailMajor}
-                            onClick={handleModalChange}
-                        />
-                      </Tooltip>
-                    </div>
-                  </Stack>
-                </Card.Section>
-                <Card.Section title={deliveryType}>
-                  {deliveryDate && (<p><TextStyle variation="strong">Date:</TextStyle> {dayjs(deliveryDate).format('DD/MM/YYYY hh:mm')}</p>)}
-                  {address && (<p><TextStyle variation="strong">Address:</TextStyle> {address}</p>)}
-                </Card.Section>
-              </Card>
-            </Layout.Section>
+                        icon={EmailMajor}
+                        onClick={handleModalChange}
+                      />
+                    </Tooltip>
+                  </div>
+                </Stack>
+              </Card.Section>
+              <Card.Section title={deliveryType}>
+                {deliveryDate && (<p><TextStyle variation="strong">Date:</TextStyle> {dayjs(deliveryDate).format('DD/MM/YYYY hh:mm')}</p>)}
+                {String(address).trim().length > 0 && (<p><TextStyle variation="strong">Address:</TextStyle> {address}</p>)}
+              </Card.Section>
+            </Card>
+          </Layout.Section>
         )}
       </Layout>
     </Page>
@@ -515,7 +515,7 @@ export function OrderDetails({ match, user }: any) {
   return (
     <Frame
       topBar={
-        <TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}

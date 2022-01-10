@@ -29,7 +29,7 @@ import './CustomerNew.scss';
 import { SearchMinor } from '@shopify/polaris-icons';
 import { useHistory } from 'react-router';
 
-export function CustomerNew({ user }: any) {
+export function CustomerNew({ user, vcDate, setVcDate }: any) {
   const history = useHistory();
 
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
@@ -254,7 +254,7 @@ export function CustomerNew({ user }: any) {
   return (
     <Frame
       topBar={
-        <TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}

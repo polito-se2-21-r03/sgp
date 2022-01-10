@@ -42,7 +42,7 @@ import dayjs from 'dayjs';
 import './ClientsProductAll.scss';
 import { transform } from 'typescript';
 
-export function ClientsProductAll({ user }: any) {
+export function ClientsProductAll({ user, vcDate, setVcDate }: any) {
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
   const [items, setItems] = useState([]);
   const [frontItems, setFrontItems] = useState([]);
@@ -270,9 +270,9 @@ export function ClientsProductAll({ user }: any) {
   /**
    * Save data
    */
-  const handleSave = useCallback(async (selectedDates,time,address,city,zip,selected) => {
+  const handleSave = useCallback(async (selectedDates, time, address, city, zip, selected) => {
     try {
-      console.log(selectedDates.start,time,address,city,zip);
+      console.log(selectedDates.start, time, address, city, zip);
       const milliseconds = selectedDates.start.getTime() + (Number(time.split(':')[0]) * 60 + Number(time.split(':')[1])) * 60 * 1000;
       const newDate = (new Date(milliseconds)).toISOString();
       console.log(newDate, selected);
@@ -292,7 +292,7 @@ export function ClientsProductAll({ user }: any) {
         })
       })
       const response = await data.json();
-      if(response.orderId){
+      if (response.orderId) {
         setModalActive(false);
       }
       if (response.status === 'not_available') {
@@ -386,7 +386,7 @@ export function ClientsProductAll({ user }: any) {
       title="Plan your order"
       primaryAction={{
         content: 'Place order',
-        onAction: () => handleSave(selectedDates,time,address,city,zip,selected),
+        onAction: () => handleSave(selectedDates, time, address, city, zip, selected),
       }}
       secondaryActions={[
         {
@@ -439,9 +439,9 @@ export function ClientsProductAll({ user }: any) {
                   type="text"
                   value={address}
                   onChange={(e) => {
-                      console.log(e,address);
-                      return   setAddress(e)
-                    }
+                    console.log(e, address);
+                    return setAddress(e)
+                  }
                   }
                 />
               </FormLayout.Group>
@@ -590,7 +590,7 @@ export function ClientsProductAll({ user }: any) {
   return (
     <Frame
       topBar={
-        < TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}

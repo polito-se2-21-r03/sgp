@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { PrivateRoute } from './utils/PrivateRoute';
 import routes from './routes';
@@ -8,6 +8,22 @@ import { LoginPage } from './pages/LoginPage/LoginPage';
 import { ForgotPasswordPage, RegisterPage, UnregisteredUserProductAll } from './pages';
 
 function App() {
+  const [vcDate, setVcDate] = useState(new Date().toISOString())
+
+  // Function to add our give data into cache
+  const addDataIntoCache = (cacheName: any, url: any, response: any) => {
+    // Converting our respons into Actual Response form
+    const data = new Response(JSON.stringify(response));
+
+    if ('caches' in window) {
+      // Opening given cache and putting our data into it
+      caches.open(cacheName).then((cache) => {
+        cache.put(url, data);
+        alert('Data Added into cache!')
+      });
+    }
+  };
+
   return (
     <div className="App">
       <Router >
@@ -24,6 +40,8 @@ function App() {
                 exact={route.exact}
                 //@ts-ignore
                 roles={route.roles}
+                vcDate={vcDate}
+                setVcDate={addDataIntoCache}
                 component={route.component}
               />
             )

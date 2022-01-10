@@ -44,7 +44,7 @@ import { parseDateLabel } from '../../../utils/Common';
 import './CustomerDetails.scss';
 import { useHistory } from 'react-router';
 
-export function CustomerDetails({ match, user }: any) {
+export function CustomerDetails({ match, user, vcDate, setVcDate }: any) {
   const history = useHistory();
 
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
@@ -1249,7 +1249,7 @@ export function CustomerDetails({ match, user }: any) {
   return (
     <Frame
       topBar={
-        <TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}

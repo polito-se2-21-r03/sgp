@@ -34,7 +34,7 @@ import dayjs from 'dayjs';
 
 import './UnregisteredUserProductAll.scss';
 
-export function UnregisteredUserProductAll({ user }: any) {
+export function UnregisteredUserProductAll({ user, vcDate, setVcDate }: any) {
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
   const [items, setItems] = useState([]);
   const [frontItems, setFrontItems] = useState([]);

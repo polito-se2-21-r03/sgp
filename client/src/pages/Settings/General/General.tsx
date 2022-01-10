@@ -21,7 +21,7 @@ import { TopBarMarkup, NavigationMarkup, contextControlMarkup } from '../../../c
 
 import './General.scss';
 
-export function General({ match, user }: any) {
+export function General({ match, user, vcDate, setVcDate }: any) {
   const skipToContentRef = useRef<HTMLAnchorElement>(null);
   const [active, setActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -342,7 +342,7 @@ export function General({ match, user }: any) {
   return (
     <Frame
       topBar={
-        <TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}
