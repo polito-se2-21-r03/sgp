@@ -41,7 +41,7 @@ export function AddedProductRow({ item, label, total, updateProduct }: any) {
             />
           </Stack.Item>
           <Stack.Item>
-            {Number(price).toFixed(2)} €
+            {Number(price).toFixed(2)} €/{item.unitOfMeasure}
           </Stack.Item>
         </Stack>
       </Stack.Item>
