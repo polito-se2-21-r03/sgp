@@ -89,7 +89,7 @@ async function update(req, res) {
                               { where: { userId: req.params.id } }
                             )
                             .then(async () => {
-                              //await transporter.sendMail(confirmed(user));
+                              await transporter.sendMail(confirmed(user));
                               await models.order.update(
                                 { status: "CONFIRMED" },
                                 {

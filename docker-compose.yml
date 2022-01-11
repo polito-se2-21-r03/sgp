@@ -5,7 +5,7 @@ services:
       context: ./server
       dockerfile: ./Dockerfile
     container_name: server
-    image: francescomedina/se2-r03-spg-server:release1
+    image: francescomedina/se2-r03-spg-server:release2
     ports:
       - "3001:3001"
   client:
@@ -14,7 +14,7 @@ services:
       dockerfile: ./Dockerfile
     stdin_open: true
     container_name: client
-    image: francescomedina/se2-r03-spg-client:release1
+    image: francescomedina/se2-r03-spg-client:release2
     ports:
       - "3000:3000"
     depends_on:

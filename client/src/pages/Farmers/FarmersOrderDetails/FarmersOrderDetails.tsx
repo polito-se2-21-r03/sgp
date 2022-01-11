@@ -128,7 +128,7 @@ export function FarmersOrderDetails({ match, user, vcDate, setVcDate }: any) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          status: 'DELIVERED',
+          status: 'DELIVERED TO WAREHOUSE',
         })
       })
       const response = await data.json();
@@ -329,6 +329,10 @@ export function FarmersOrderDetails({ match, user, vcDate, setVcDate }: any) {
         return (<Badge progress="complete" status="success">Completed</Badge>);
       case 'CONFIRMED':
         return (<Badge progress="incomplete" status="attention">Confirmed</Badge>);
+      case 'IN PREPARATION':
+        return (<Badge progress="incomplete" status="attention">In Preparation</Badge>);
+      case 'DELIVERED TO WAREHOUSE':
+        return (<Badge progress="incomplete" status="attention">Delivered to Warehouse</Badge>);
       case 'CREATED':
         return (<Badge progress="incomplete">Created</Badge>);
       case 'DELIVERED':

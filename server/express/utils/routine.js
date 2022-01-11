@@ -27,12 +27,12 @@ module.exports = class Routine {
                     const wallet = await models.wallet.findOne({ where: { userId: order.clientId } })
                     const user = await models.user.findByPk(order.clientId)
                     if (wallet.credit < total) {
-                        // await transporter.sendMail(pendingCancellation(user));
+                        await transporter.sendMail(pendingCancellation(user));
                         return await models.order.update({ status: "PENDING CANCELATION" }, { where: { id: order.id } })
                     }
                     return await models.wallet.update({ credit: Sequelize.literal('credit - ' + total) }, { where: { userId: order.clientId } })
                         .then(async () => {
-                            // await transporter.sendMail(confirmed(user));
+                            await transporter.sendMail(confirmed(user));
                             await models.order.update({ status: "CONFIRMED" }, { where: { id: order.id } })
                         })
                     // .catch(err => throw Error("Error on Routine" + err.message))

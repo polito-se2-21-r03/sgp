@@ -173,9 +173,12 @@ async function statusOrderProducts(req, res) {
           );
         })
       )
-        .then(() =>
-          res.status(200).json("Order products status successfully reported")
-        )
+        .then(async () => {
+          return await models.order
+              .update({ status: 'IN PREPARATION' }, { where: { id: req.params.orderId } })
+              .then(() => res.status(200).json("Order status updated"))
+              .catch((err) => res.status(503).json({ error: err.message }));
+        })
         .catch((err) => res.status(503).json({ error: err.message }));
     } else {
       return res.status(503).json("Error during updating order status");
