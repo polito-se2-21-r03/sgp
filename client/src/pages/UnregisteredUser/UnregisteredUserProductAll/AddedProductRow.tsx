@@ -43,6 +43,9 @@ export function AddedProductRow({ item }: any) {
               />
             )}
           </Stack>
+          <Stack.Item>
+            <TextStyle variation="subdued">Availability: {item.quantity} {item.unitOfMeasure}</TextStyle>
+          </Stack.Item>
         </p>
         <Collapsible
           open={open}
