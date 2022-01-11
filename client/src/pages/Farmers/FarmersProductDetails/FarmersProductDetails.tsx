@@ -322,7 +322,7 @@ export function FarmersProductDetails({ user, match }: any) {
   return (
     <Frame
       topBar={
-        <TopBarMarkup vcDate={vcDate} setVcDate={setVcDate} handleMobileNavigation={handleMobileNavigation} />
+        <TopBarMarkup handleMobileNavigation={handleMobileNavigation} />
       }
       navigation={<NavigationMarkup user={user} />}
       showMobileNavigation={mobileNavigationActive}

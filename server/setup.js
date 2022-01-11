@@ -269,6 +269,24 @@ async function reset() {
         is_tmp_password: 0,
         role: "EMPLOYEE",
       },
+      {
+        password: "pass",
+        email: "miriamcustomer@email.com",
+        phone: "321321312",
+        firstname: "Miriam",
+        lastname: "Customer",
+        is_tmp_password: 0,
+        role: "CLIENT",
+      },
+      {
+        password: "pass",
+        email: "giovanni@rossi.com",
+        phone: "344556677",
+        firstname: "Giovanni",
+        lastname: "Rossi",
+        is_tmp_password: 0,
+        role: "CLIENT",
+      },
     ])
     .then(async () => {
       await sequelize.models.wallet.bulkCreate([
@@ -295,6 +313,14 @@ async function reset() {
         {
           userId: 14,
           credit: 0,
+        },
+        {
+          userId: 16,
+          credit: 150,
+        },
+        {
+          userId: 17,
+          credit: 50,
         },
       ]);
 
