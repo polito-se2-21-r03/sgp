@@ -39,8 +39,8 @@ sections:
 | _#20_ |    2    |   13   |     4h     |      4h      |
 | _#21_ |    1    |   21   |     3h     |      8h      |
 
-- Hours per task (average, standard deviation):
-- Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
+- Hours per task (average, standard deviation): average = 6.67, standard deviation = 4.93
+- Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table -> 1
 
 ## QUALITY MEASURES
 
@@ -48,7 +48,7 @@ sections:
   - Total hours estimated: 8
   - Total hours spent: 8
   - Nr of automated unit test cases: 2
-  - Coverage: 40.0%
+  - Coverage: 46.5%
 - E2E testing:
   - Total hours estimated: 3
   - Total hours spent: 3
@@ -58,7 +58,7 @@ sections:
 - Technical Debt management:
   - Total hours estimated: 10h
   - Total hours spent: 10h
-  - Hours estimated for remediation by SonarQube: 1h 25min
+  - Hours estimated for remediation by SonarQube: 2h 21min
   - Hours estimated for remediation by SonarQube only for the selected and planned issues
   - Hours spent on remediation: 1h 18min
   - debt ratio (as reported by SonarQube under "Measures-Maintainability"): 0.2%
@@ -79,4 +79,4 @@ sections:
   We've decided to focus on implementing more stories so we have neglected client testing.
 
 - One thing you are proud of as a Team!!
-  We have worked well together and synchronized our skills in order to accomplish the result
+  We have worked well together and synchronized our skills in order to accomplish the result.
