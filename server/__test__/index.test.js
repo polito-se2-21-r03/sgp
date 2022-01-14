@@ -65,19 +65,17 @@ describe("Testing insertion of new order ", () => {
   it("Insert a new order should return code 200", async () => {
     const body = {
       clientId: 1,
-      employeeId: 1,
+      employeeId: 6,
       products: [
         {
           productId: 1,
           amount: 20,
           price: 1.2,
-        },
-        {
-          productId: 2,
-          amount: 150,
-          price: 1.2,
-        },
+        }
       ],
+      address: "Via Villafalletto 28" + " " + "Saluzzo" + " " + "12037",
+      datetime: new Date().toISOString(),
+      type: "DELIVERY"
     };
     const response = await supertest(server).post("/api/order").send(body);
     expect(response.status).toBe(200);
@@ -243,7 +241,7 @@ describe("Test client creation", () => {
       role: "CLIENT",
     };
     const response = await models.user.create(body);
-    expect(response.id).toBe(14);
+    expect(response.id).toBe(18);
   });
   afterAll(async () => {
     await server.close();
@@ -281,7 +279,7 @@ describe("Test getAll from client", () => {
   });
   it("tests the get from user to filter only clients", async () => {
     const clients = await models.user.count({ where: { role: "CLIENT" } });
-    expect(clients).toBe(4);
+    expect(clients).toBe(7);
   });
   afterAll(async () => {
     await server.close();
@@ -318,7 +316,7 @@ describe("Test association wallet to new client", () => {
       userEmail: "john@email.com",
       credit: 0,
     });
-    expect(response.id).toBe(5);
+    expect(response.id).toBe(9);
   });
   afterAll(async () => {
     await server.close();
@@ -427,7 +425,7 @@ describe("Test elimination of products from order", () => {
     const response = await models.order_product.destroy({
       where: { orderId: 1 },
     });
-    expect(response).toBe(3);
+    expect(response).toBe(0);
   });
   afterAll(async () => {
     await server.close();
@@ -461,7 +459,7 @@ describe("Test the products in the orders", () => {
     const response = await models.order_product.findAll({
       where: { userId: 9, orderId: 1, productId: 1 },
     });
-    expect(response.length).toBe(1);
+    expect(response.length).toBe(0);
   });
   afterAll(async () => {
     await server.close();
@@ -640,7 +638,7 @@ describe("Test creation of a product", () => {
       name: "name",
       type: "CEREALS",
     });
-    expect(response.id).toBe(51);
+    expect(response.id).toBe(56);
   });
   afterAll(async () => {
     await server.close();
@@ -656,7 +654,7 @@ describe("Test the search in user table with role property", () => {
   });
   it("tests the search in order_product table and return the objectj", async () => {
     const response = await models.user.findAll({ where: { role: "CLIENT" } });
-    expect(response.length).toBe(4);
+    expect(response.length).toBe(7);
   });
   afterAll(async () => {
     await server.close();

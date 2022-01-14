@@ -45,32 +45,33 @@ sections:
 ## QUALITY MEASURES
 
 - Unit Testing:
-  - Total hours estimated
-  - Total hours spent
-  - Nr of automated unit test cases
-  - Coverage (if available)
+  - Total hours estimated: 8
+  - Total hours spent: 8
+  - Nr of automated unit test cases: 2
+  - Coverage: 40.0%
 - E2E testing:
-  - Total hours estimated
-  - Total hours spent
-- Code review
-  - Total hours estimated
-  - Total hours spent
+  - Total hours estimated: 3
+  - Total hours spent: 3
+- Code review:
+  - Total hours estimated: 6
+  - Total hours spent: 6
 - Technical Debt management:
-  - Total hours estimated
-  - Total hours spent
-  - Hours estimated for remediation by SonarQube
+  - Total hours estimated: 10h
+  - Total hours spent: 10h
+  - Hours estimated for remediation by SonarQube: 1h 25min
   - Hours estimated for remediation by SonarQube only for the selected and planned issues
-  - Hours spent on remediation
-  - debt ratio (as reported by SonarQube under "Measures-Maintainability")
-  - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability )
+  - Hours spent on remediation: 1h 18min
+  - debt ratio (as reported by SonarQube under "Measures-Maintainability"): 0.2%
+  - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability ): Reliability A, Security A, Mantainability A
 
 ## ASSESSMENT
 
 - What caused your errors in estimation (if any)?
-  Difficulties encountered during the delelopement
+  Difficulties encountered during the development.
 
 - What lessons did you learn (both positive and negative) in this sprint?
-  Errors can always occur
+  Negative: errors can always occur.
+  Positive: we think that we have successfully accomplished a nice result with the platform that we have developed.
 
 - Which improvement goals set in the previous retrospective were you able to achieve?
 
@@ -78,3 +79,4 @@ sections:
   We've decided to focus on implementing more stories so we have neglected client testing.
 
 - One thing you are proud of as a Team!!
+  We have worked well together and synchronized our skills in order to accomplish the result
